@@ -1,6 +1,5 @@
 <?php
     include "includes/config.inc.php";
-    include "includes/variables.php";
 ?>
 
 <!DOCTYPE html>
