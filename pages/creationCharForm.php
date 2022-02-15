@@ -12,7 +12,22 @@ if (isset($_POST['img']) || isset($_POST['name'])) {
         && isAGoodNumber($_POST['wisdom'])
         && isAGoodNumber($_POST['luck'])
     ) {
-        $request = new Character($_POST);
+        $newChar = new Character();
+        $newChar->setName($_POST['name'])
+            ->setHpMax($_POST['hpMax'])
+            ->setCurrentHp($_POST['hpMax'])
+            ->setMpMax($_POST['mpMax'])
+            ->setCurrentMp($_POST['mpMax'])
+            ->setStrength($_POST['strength'])
+            ->setDexterity($_POST['dexterity'])
+            ->setConstitution($_POST['constitution'])
+            ->setInteligence($_POST['inteligence'])
+            ->setWisdom($_POST['wisdom'])
+            ->setLuck($_POST['luck'])
+            ->setImg($_POST['img']);
+
+        $request = "INSERT INTO `character_sheets` (`name`,`hpMax`,`currentHp`,`mpMax`,`currentMp`,`strength`,`dexterity`,`constitution`,`inteligence`,`wisdom`,`luck`,`img`) VALUES ('" . $newChar->getName() . "'," . $newChar->getHpMax() . "," . $newChar->getCurrentHp() . "," . $newChar->getMpMax() . "," . $newChar->getCurrentMp() . "," . $newChar->getStrength() . "," . $newChar->getDexterity() . "," . $newChar->getConstitution() . "," . $newChar->getInteligence() . "," . $newChar->getWisdom() . "," . $newChar->getLuck() . ",'" . $newChar->getImg() . "')";
+        $count = $connection->exec($request);
     }
 }
 
@@ -63,11 +78,11 @@ if (isset($_POST['img']) || isset($_POST['name'])) {
             <button type="submit" class="btn btn-primary mb-3">Création</button>
             <span>
                 <?php if (isset($_POST['name'])) {
-    if (!filter_var($_POST['name'], FILTER_CALLBACK, array('options' => 'isAString'))) { ?>
+                    if (!filter_var($_POST['name'], FILTER_CALLBACK, array('options' => 'isAString'))) { ?>
                         <?= 'Veuillez entrer un nom valide !' ?>
                 <?php
                     }
-} ?>
+                } ?>
             </span>
         </div>
     </form>

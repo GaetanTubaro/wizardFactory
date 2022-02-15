@@ -2,7 +2,7 @@
 include_once 'includes/header.php';
 
 if (empty($_GET['page'])) {
-    $page = 'login';
+    $page = 'creationCharForm';
 } else {
     $page = $_GET["page"];
 }

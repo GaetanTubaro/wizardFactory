@@ -274,4 +274,3 @@ class Character {
         return $this;
     }
 }
-?>
