@@ -1,3 +1,7 @@
+<?php if(isset($_SESSION["login"])){
+    header('Location: ?page=list');
+}
+?>
 <form class="d-flex flex-column justify-content-center w-25 mx-auto p-5 " method="POST">
     <div class="mb-3">
         <label for="inputId" class="form-label">Identifiant</label>
@@ -13,4 +17,5 @@
 if (isset($_POST["pass"]) && $_POST["pass"] != $myPass) {
     echo 'Mauvais mot de passe';
 }
+
 ?>
