@@ -8,6 +8,7 @@ $searchCharacters->execute();
 $characters = $searchCharacters->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+<a href="?page=creationCharForm"><button class="btn btn-primary">Créer un nouveau personnage</button></a>
 
 <div class="liste">
 <?php foreach ($characters as $character) {?>
