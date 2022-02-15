@@ -1,12 +1,12 @@
 <?php
+session_start();
 include "includes/config.inc.php";
+
 spl_autoload_register(function ($class) {
     require_once "classes/$class.php";
 });
-session_start();
 
 require_once 'includes/functions.php';
-include "includes/config.inc.php";
 
 // recupId
 $myPass = "Mekouy";
