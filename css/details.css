@@ -1,0 +1,8 @@
+h2.stat {
+    font-size: 1.2rem;
+    margin-bottom: 0.2rem;
+}
+
+h2 + p {
+    margin-bottom: 0.5rem;
+}

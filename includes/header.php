@@ -3,7 +3,7 @@ include "includes/config.inc.php";
 spl_autoload_register(function ($class) {
     require_once "classes/$class.php";
 });
-require_once 'includes/functions.php'
+require_once 'includes/functions.php';
 
 session_start();
     include "includes/config.inc.php";
@@ -46,4 +46,3 @@ if (isset($_SESSION["login"])) {
     if (isset($_SESSION["login"])) {
         echo 'Bienvenue ' . $_SESSION["login"] . '!! :D';
     }
-
