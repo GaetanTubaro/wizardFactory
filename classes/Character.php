@@ -2,18 +2,80 @@
 class Character
 {
     protected string $name;
-    protected int $id;
-    protected int $hpMax;
-    protected int $currentHp;
-    protected int $mpMax;
-    protected int $currentMp;
-    protected int $strength;
-    protected int $dexterity;
-    protected int $constitution;
-    protected int $intelligence;
-    protected int $wisdom;
-    protected int $luck;
-    protected string $img;
+    protected ?int $id;
+    protected int $hpMax = 100;
+    protected int $currentHp = 100;
+    protected int $mpMax = 50;
+    protected int $currentMp = 50;
+    protected int $init = 5;
+    protected int $strength = 10;
+    protected int $dexterity = 10;
+    protected int $constitution = 10;
+    protected int $intelligence = 10;
+    protected int $wisdom = 10;
+    protected int $luck = 10;
+    protected string $img = "src/blank-avatar.png";
+    public function __construct(array $arr)
+    {
+        $this->setName($arr['name']);
+        $this->setHpMax(intval($arr['hpMax']));
+        $this->setCurrentHp(intval($arr['hpMax']));
+        $this->setMpMax(intval($arr['mpMax']));
+        $this->setCurrentMp(intval($arr['mpMax']));
+        $this->setInit(intval($arr['init']));
+        $this->setStrength(intval($arr['strength']));
+        $this->setDexterity(intval($arr['dexterity']));
+        $this->setConstitution(intval($arr['constitution']));
+        $this->setIntelligence(intval($arr['intelligence']));
+        $this->setWisdom(intval($arr['wisdom']));
+        $this->setLuck(intval($arr['luck']));
+    }
+    public function validateInt(): array
+    {
+        $errors = [];
+        if (!is_numeric($this->getHpMax()) || $this->getHpMax() < 0) {
+            $errors['hpMax'] = "Point de vie invalide";
+        }
+        if (!is_numeric($this->getMpMax()) || $this->getMpMax() < 0) {
+            $errors['mpMax'] = "Point de mana invalide";
+        }
+        if ($this->getInit() > 10 || $this->getInit() <= 0 || !is_numeric($this->getInit())) {
+            $errors['init'] = "Initiative invalide";
+        }
+        if (!isAGoodNumber($this->getStrength())) {
+            $errors['strength'] = "Force invalide";
+        }
+        if (!isAGoodNumber($this->getDexterity())) {
+            $errors['dexterity'] = "Dextérité invalide";
+        }
+        if (!isAGoodNumber($this->getConstitution())) {
+            $errors['constitution'] = "Constitution invalide";
+        }
+        if (!isAGoodNumber($this->getIntelligence())) {
+            $errors['intelligence'] = "Intélligence invalide";
+        }
+        if (!isAGoodNumber($this->getWisdom())) {
+            $errors['wisdom'] = "Sagesse invalide";
+        }
+        if (!isAGoodNumber($this->getLuck())) {
+            $errors['luck'] = "Chance invalide";
+        }
+        return $errors;
+    }
+    public function validateCount(): bool
+    {
+        return $this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() >= 60 && $this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() <= 80;
+    }
+    public function validateName(): bool
+    {
+        return isAString($this->getName());
+    }
+    public function checkImg($value)
+    {
+        if (isset($value) && isAString($value)) {
+            $this->setImg($value);
+        }
+    }
 
     /**
      * Get the value of name
@@ -271,6 +333,46 @@ class Character
     public function setImg($img)
     {
         $this->img = $img;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of init
+     */
+    public function getInit()
+    {
+        return $this->init;
+    }
+
+    /**
+     * Set the value of init
+     *
+     * @return  self
+     */
+    public function setInit($init)
+    {
+        $this->init = $init;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of charPost
+     */
+    public function getCharPost()
+    {
+        return $this->charPost;
+    }
+
+    /**
+     * Set the value of charPost
+     *
+     * @return  self
+     */
+    public function setCharPost($charPost)
+    {
+        $this->charPost = $charPost;
 
         return $this;
     }

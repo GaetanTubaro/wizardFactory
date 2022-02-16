@@ -11,5 +11,6 @@ function isAString($value)
 
 function isAGoodNumber($value)
 {
+    $value = intval($value);
     return $value >= 5 && $value <= 20;
 }

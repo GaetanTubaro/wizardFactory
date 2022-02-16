@@ -7,6 +7,9 @@ spl_autoload_register(function ($class) {
 });
 
 require_once 'includes/functions.php';
+session_start();
+include "includes/config.inc.php";
+
 
 // recupId
 $myPass = "Mekouy";
@@ -28,7 +31,7 @@ if (isset($_POST["id"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wizard Factory</title>
 </head>
-    <body>
+ <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Wizard Factory</a>
@@ -52,3 +55,4 @@ if (isset($_POST["id"])) {
                 </div>
             </div>
         </nav>
+
