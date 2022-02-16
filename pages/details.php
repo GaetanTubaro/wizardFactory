@@ -24,16 +24,26 @@ $equipements = $findEquipements->fetchAll(PDO::FETCH_CLASS, Equipement::class);
 //
 
 //Création d'une compétence
-if (isset($_POST['skill_name']) && isset($_POST['skill_level']) && isset($_POST['skill_stat'])) {
+if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat'])) {
     $skillAdded = new Skill();
     $skillAdded
     ->setName($_POST['skill_name'])
     ->setLevel($_POST['skill_level'])
     ->setStats($_POST['skill_stat'])
     ->setOwner($id);
-    $addSkill = $connection->prepare('INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $skillAdded->getName() . '","' . $skillAdded->getStats() . '",' . $skillAdded->getLevel() . ',' . $skillAdded->getOwner() . ')');
-    $addSkill->execute();
-    header('Location: ?page=details&id=' . $id);
+    $errors = $skillAdded->checkData();
+    if (empty($errors)) {
+        $addSkill = $connection->prepare('INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $skillAdded->getName() . '","' . $skillAdded->getStats() . '",' . $skillAdded->getLevel() . ',' . $skillAdded->getOwner() . ')');
+        $addSkill->execute();
+        header('Location: ?page=details&id=' . $id);
+    } else {
+        foreach ($errors as $error) { ?>
+        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+          <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée valide.</p>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php }
+    }
 }
 //
 ?>
