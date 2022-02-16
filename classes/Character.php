@@ -7,6 +7,7 @@ class Character
     protected int $currentHp = 100;
     protected int $mpMax = 50;
     protected int $currentMp = 50;
+    protected int $init = 5;
     protected int $strength = 10;
     protected int $dexterity = 10;
     protected int $constitution = 10;
@@ -14,43 +15,67 @@ class Character
     protected int $wisdom = 10;
     protected int $luck = 10;
     protected string $img = "src/blank-avatar.png";
-
     public function __construct(array $arr)
     {
-        // if (isset($arr['img']) && filter_var($arr['img'], FILTER_CALLBACK, array('options' => 'isAString'))) {
-        $this->setImg($arr['img']);
-        // }
-        // if (!is_string($arr['hpMax']) && is_int($arr['hpMax']) && is_numeric($arr['hpMax'])) {
-        $this->setHpMax($arr['hpMax']);
-        $this->setCurrentHp($arr['hpMax']);
-        // }
-        // if (!is_string($arr['mpMax']) && is_int($arr['mpMax']) && is_numeric($arr['mpMax'])) {
-        $this->setMpMax($arr['mpMax']);
-        $this->setCurrentMp($arr['mpMax']);
-        // }
-        // if (filter_var($arr['name'], FILTER_CALLBACK, array('options' => 'isAString'))) {
         $this->setName($arr['name']);
-        // }
-        // if (isAGoodNumber($arr['strength'])) {
-        $this->setStrength($arr['strength']);
-        // }
-        // if (isAGoodNumber($arr['dexterity'])) {
-        $this->setDexterity($arr['dexterity']);
-        // }
-        // if (isAGoodNumber($arr['constitution'])) {
-        $this->setConstitution($arr['constitution']);
-        // }
-        // if (isAGoodNumber($arr['intelligence'])) {
-        $this->setConstitution($arr['intelligence']);
-        // }
-        // if (isAGoodNumber($arr['wisdom'])) {
-        $this->setWisdom($arr['wisdom']);
-        // }
-        // if (isAGoodNumber($arr['luck'])) {
-        $this->setLuck($arr['luck']);
-        // }
+        $this->setHpMax(intval($arr['hpMax']));
+        $this->setCurrentHp(intval($arr['hpMax']));
+        $this->setMpMax(intval($arr['mpMax']));
+        $this->setCurrentMp(intval($arr['mpMax']));
+        $this->setInit(intval($arr['init']));
+        $this->setStrength(intval($arr['strength']));
+        $this->setDexterity(intval($arr['dexterity']));
+        $this->setConstitution(intval($arr['constitution']));
+        $this->setIntelligence(intval($arr['intelligence']));
+        $this->setWisdom(intval($arr['wisdom']));
+        $this->setLuck(intval($arr['luck']));
     }
-
+    public function validateInt(): array
+    {
+        $errors = [];
+        if (!is_numeric($this->getHpMax()) || $this->getHpMax() < 0) {
+            $errors['hpMax'] = "Point de vie invalide";
+        }
+        if (!is_numeric($this->getMpMax()) || $this->getMpMax() < 0) {
+            $errors['mpMax'] = "Point de mana invalide";
+        }
+        if ($this->getInit() > 10 || $this->getInit() <= 0 || !is_numeric($this->getInit())) {
+            $errors['init'] = "Initiative invalide";
+        }
+        if (!isAGoodNumber($this->getStrength())) {
+            $errors['strength'] = "Force invalide";
+        }
+        if (!isAGoodNumber($this->getDexterity())) {
+            $errors['dexterity'] = "Dextérité invalide";
+        }
+        if (!isAGoodNumber($this->getConstitution())) {
+            $errors['constitution'] = "Constitution invalide";
+        }
+        if (!isAGoodNumber($this->getIntelligence())) {
+            $errors['intelligence'] = "Intélligence invalide";
+        }
+        if (!isAGoodNumber($this->getWisdom())) {
+            $errors['wisdom'] = "Sagesse invalide";
+        }
+        if (!isAGoodNumber($this->getLuck())) {
+            $errors['luck'] = "Chance invalide";
+        }
+        return $errors;
+    }
+    public function validateCount(): bool
+    {
+        return $this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() >= 60 && $this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() <= 80;
+    }
+    public function validateName(): bool
+    {
+        return isAString($this->getName());
+    }
+    public function checkImg($value)
+    {
+        if (isset($value) && isAString($value)) {
+            $this->setImg($value);
+        }
+    }
     /**
      * Get the value of name
      */
@@ -307,6 +332,46 @@ class Character
     public function setImg($img)
     {
         $this->img = $img;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of init
+     */
+    public function getInit()
+    {
+        return $this->init;
+    }
+
+    /**
+     * Set the value of init
+     *
+     * @return  self
+     */
+    public function setInit($init)
+    {
+        $this->init = $init;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of charPost
+     */
+    public function getCharPost()
+    {
+        return $this->charPost;
+    }
+
+    /**
+     * Set the value of charPost
+     *
+     * @return  self
+     */
+    public function setCharPost($charPost)
+    {
+        $this->charPost = $charPost;
 
         return $this;
     }
