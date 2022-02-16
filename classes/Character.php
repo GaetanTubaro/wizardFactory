@@ -15,20 +15,23 @@ class Character
     protected int $wisdom = 10;
     protected int $luck = 10;
     protected string $img = "src/blank-avatar.png";
-    public function __construct(array $arr)
+
+    public function __construct(array $arr = [])
     {
-        $this->setName($arr['name']);
-        $this->setHpMax(intval($arr['hpMax']));
-        $this->setCurrentHp(intval($arr['hpMax']));
-        $this->setMpMax(intval($arr['mpMax']));
-        $this->setCurrentMp(intval($arr['mpMax']));
-        $this->setInit(intval($arr['init']));
-        $this->setStrength(intval($arr['strength']));
-        $this->setDexterity(intval($arr['dexterity']));
-        $this->setConstitution(intval($arr['constitution']));
-        $this->setIntelligence(intval($arr['intelligence']));
-        $this->setWisdom(intval($arr['wisdom']));
-        $this->setLuck(intval($arr['luck']));
+        if (!empty($arr)) {
+            $this->setName($arr['name']);
+            $this->setHpMax(intval($arr['hpMax']));
+            $this->setCurrentHp(intval($arr['hpMax']));
+            $this->setMpMax(intval($arr['mpMax']));
+            $this->setCurrentMp(intval($arr['mpMax']));
+            $this->setInit(intval($arr['init']));
+            $this->setStrength(intval($arr['strength']));
+            $this->setDexterity(intval($arr['dexterity']));
+            $this->setConstitution(intval($arr['constitution']));
+            $this->setIntelligence(intval($arr['intelligence']));
+            $this->setWisdom(intval($arr['wisdom']));
+            $this->setLuck(intval($arr['luck']));
+        }
     }
     public function validateInt(): array
     {

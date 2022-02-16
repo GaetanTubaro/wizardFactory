@@ -2,7 +2,7 @@
 
 <?php
 $id_user = 1;
-$searchCharacters = $connection->prepare('SELECT name, img, id FROM `character_sheets` WHERE id_user = ? ORDER BY name');
+$searchCharacters = $connection->prepare('SELECT * FROM `character_sheets` WHERE id_user = ? ORDER BY name');
 $searchCharacters->bindParam(1, $id_user, PDO::PARAM_STR);
 $searchCharacters->execute();
 $characters = $searchCharacters->fetchAll(PDO::FETCH_CLASS, Character::class);
