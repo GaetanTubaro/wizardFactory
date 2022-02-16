@@ -2,13 +2,25 @@
 
 class Skill
 {
+    const POSSIBLE_STATS = ['Force','Dextérité','Constitution','Sagesse','Intelligence','Chance'];
+
     protected ?int $id;
     protected string $name;
     protected string $stats;
     protected int $level;
     protected int $id_charac;
 
-    
+    public function checkData() : array
+    {
+        $errors = [];
+        if (!in_array($this->stats, Skill::POSSIBLE_STATS)) {
+            $errors['stat'] = 'Statistique liée invalide.';
+        }
+        if ($this->level > 5 || $this->level < 0) {
+            $errors['level'] = 'Niveau invalide.';
+        }
+        return $errors;
+    }
 
     /**
      * Get the value of stats
