@@ -76,6 +76,7 @@ class Character
             $this->setImg($value);
         }
     }
+
     /**
      * Get the value of name
      */
