@@ -13,7 +13,7 @@ $myPass = "Mekouy";
 if (isset($_POST["id"])) {
     if ($_POST["pass"] == $myPass) {
         $_SESSION["login"] = $_POST["id"];
-        // header('Location:?page=creationCharForm');
+        header('Location:?page=list');
     }
 }
 ?>
@@ -45,7 +45,7 @@ if (isset($_POST["id"])) {
                             echo '<a class="nav-link"> Bienvenue ' . $_SESSION["login"] . '!! :D</a>';
                         } else {
                             echo '<a class="nav-link" href="?page=login">Connexion</a>';
-                            echo '<a class="nav-link" href="#">Inscription</a>';
+                            echo '<a class="nav-link" href="?page=signup">Inscription</a>';
                         }
                             ?>
                     </div>
