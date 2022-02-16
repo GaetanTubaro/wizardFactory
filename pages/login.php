@@ -1,6 +1,7 @@
 <?php if(isset($_SESSION["login"])){
     header('Location: ?page=list');
 }
+
 ?>
 <form class="d-flex flex-column justify-content-center w-25 mx-auto p-5 " method="POST">
     <div class="mb-3">
@@ -13,9 +14,20 @@
     </div>
     <button type="submit" class="btn btn-primary">Se connecter</button>
 </form>
+
 <?php
-if (isset($_POST["pass"]) && $_POST["pass"] != $myPass) {
-    echo 'Mauvais mot de passe';
+if (isset($_POST['id'])){
+    $statement = $connection->query("SELECT * FROM users WHERE pseudo = '".$_POST['id']."'");
+    $statement->setFetchMode(PDO::FETCH_CLASS,"Users");
+    $user = $statement->fetch();
+    if ($user->getPassword() == $_POST['pass']) {
+        echo 'Connectated';
+        
+    }
+    var_dump($user);
 }
+// if (isset($_POST["pass"]) && $_POST["pass"] != $myPass) {
+//     echo 'Mauvais mot de passe';
+// }
 
 ?>
