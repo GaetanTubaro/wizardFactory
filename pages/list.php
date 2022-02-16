@@ -12,7 +12,7 @@ $characters = $searchCharacters->fetchAll(PDO::FETCH_CLASS, Character::class);
 
 <div class="liste mx-2">
     <?php foreach ($characters as $character) { ?>
-        <a href="?page=details&id=<?= $character->getId() ?>"><div class="card mx-2" style="width: 15rem;">
+        <a href="?page=details&character=<?= $character->getId() ?>"><div class="card mx-2" style="width: 15rem;">
             <img src="<?= $character->getImg() ?>" class="card-img-top">
             <div class="card-body">
                 <h2 class="card-title text-center"><?= $character->getName() ?></h2>
