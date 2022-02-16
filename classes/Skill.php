@@ -2,7 +2,7 @@
 
 class Skill
 {
-    protected int $id;
+    protected ?int $id;
     protected string $name;
     protected string $stats;
     protected int $level;

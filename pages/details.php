@@ -1,4 +1,6 @@
 <?php
+
+//Récupération du personnage et de ses compétences
 if (isset($_GET["id"])) {
     $id = $_GET["id"];
 } else {
@@ -19,6 +21,21 @@ $findEquipements = $connection->prepare('SELECT * FROM `equipements` WHERE id_ch
 $findEquipements->bindParam(1, $id, PDO::PARAM_STR);
 $findEquipements->execute();
 $equipements = $findEquipements->fetchAll(PDO::FETCH_CLASS, Equipement::class);
+//
+
+//Création d'une compétence
+if (isset($_POST['skill_name']) && isset($_POST['skill_level']) && isset($_POST['skill_stat'])) {
+    $skillAdded = new Skill();
+    $skillAdded
+    ->setName($_POST['skill_name'])
+    ->setLevel($_POST['skill_level'])
+    ->setStats($_POST['skill_stat'])
+    ->setOwner($id);
+    $addSkill = $connection->prepare('INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $skillAdded->getName() . '","' . $skillAdded->getStats() . '",' . $skillAdded->getLevel() . ',' . $skillAdded->getOwner() . ')');
+    $addSkill->execute();
+    header('Location: ?page=details&id=' . $id);
+}
+//
 ?>
 
 <link href="css/details.css" rel="stylesheet">
@@ -58,7 +75,7 @@ $equipements = $findEquipements->fetchAll(PDO::FETCH_CLASS, Equipement::class);
     <div class="col-4">
       <h2>Compétences</h2>
       <?php foreach ($skills as $skill) { ?>
-        <div class="card" style="width: 100%;">
+        <div class="card mb-3" style="width: 100%;">
           <div class="card-body">
             <h5 class="card-title"><?= $skill->getName() ?></h5>
             <p class="card-text"><span style='font-style:bold'>Statistique liée :</span> <?= $skill->getStats() ?></p>
@@ -66,6 +83,43 @@ $equipements = $findEquipements->fetchAll(PDO::FETCH_CLASS, Equipement::class);
           </div>
         </div>
       <?php } ?>
+      <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#skillForm">Créer une nouvelle compétence</button>
+      <!-- Modal -->
+      <div class="modal fade" id="skillForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Ajouter une compétence</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form action="" method="POST">
+                <div class="mb-3">
+                  <label class="form-label">Nom</label>
+                  <input type="text" class="form-control" name="skill_name" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Statistique liée</label>
+                  <select class="form-select" name="skill_stat">
+                    <option value="Force" selected>Force</option>
+                    <option value="Dextérité">Dextérité</option>
+                    <option value="Constitution">Constitution</option>
+                    <option value="Intelligence">Intelligence</option>
+                    <option value="Sagesse">Sagesse</option>
+                    <option value="Chance">Chance</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Niveau</label>
+                  <span class="form-text mt-0 ms-3">Compris entre 0 et 5</span>
+                  <input type="number" class="form-control" name="skill_level" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-4">
       <h2>Equipements</h2>
