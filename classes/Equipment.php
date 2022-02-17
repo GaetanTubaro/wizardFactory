@@ -1,6 +1,6 @@
 <?php
 
-class Equipement
+class Equipment
 {
     protected int $id;
     protected string $name;
@@ -8,7 +8,17 @@ class Equipement
     protected int $range_area;
     protected int $id_charac;
 
-    
+    public function checkData() : array
+    {
+        $errors = [];
+        if ($this->damages < 0) {
+            $errors['damages'] = 'Dégâts invalides.';
+        }
+        if ($this->range_area > 5 || $this->range_area < 0) {
+            $errors['range'] = 'Portée invalide.';
+        }
+        return $errors;
+    }
 
     /**
      * Get the value of owner
