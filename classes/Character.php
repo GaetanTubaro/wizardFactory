@@ -1,4 +1,5 @@
 <?php
+
 class Character
 {
     protected string $name;
@@ -40,7 +41,7 @@ class Character
             $this->setIntelligence(intval($arr['intelligence']));
             $this->setWisdom(intval($arr['wisdom']));
             $this->setLuck(intval($arr['luck']));
-            $this->setId_user(1);
+            $this->setId_user($_SESSION['id']);
         }
     }
     public function validateInt(): array

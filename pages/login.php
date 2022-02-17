@@ -5,8 +5,8 @@
 ?>
 <form class="d-flex flex-column justify-content-center w-25 mx-auto p-5 " method="POST">
     <div class="mb-3">
-        <label for="inputId" class="form-label">Identifiant</label>
-        <input type="text" class="form-control" name="id" required>
+        <label for="inputId" class="form-label">Pseudo</label>
+        <input type="text" class="form-control" name="pseudo" required>
     </div>
     <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -16,13 +16,14 @@
 </form>
 
 <?php
-if (isset($_POST['id'])) {
-    $statement = $connection->query("SELECT * FROM users WHERE pseudo = '".$_POST['id']."'");
+if (isset($_POST['pseudo'])) {
+    $statement = $connection->query("SELECT * FROM users WHERE pseudo = '".$_POST['pseudo']."'");
     $statement->setFetchMode(PDO::FETCH_CLASS, "Users");
     $user = $statement->fetch();
     if ($user->getPassword() == $_POST['pass']) {
         echo 'Connectated';
-        $_SESSION["login"] = $_POST["id"];
+        $_SESSION["login"] = $user->getPseudo();
+        $_SESSION["id"] = $user->getId();
         header('Location:?page=list');
     } else {
         echo "Identifiants Incorrects";
