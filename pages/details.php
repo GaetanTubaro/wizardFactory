@@ -123,6 +123,11 @@ if (isset($_GET['type'])) {
                         }
                     }
                     break;
+                case 'deleteEquipment':
+                    $deleteEquipment = $connection->prepare('DELETE FROM equipments WHERE id=' . $_GET['idEquipment']);
+                    $deleteEquipment->execute();
+                    header('Location: ?page=details&character=' . $id_character);
+                    break;
                 case 'charChange':
                     if (isset($_POST['name']) && isset($_POST['currentHp']) && isset($_POST['hpMax']) && isset($_POST['mpMax']) && isset($_POST['currentMp']) && isset($_POST['init']) && isset($_POST['strength']) && isset($_POST['dexterity']) && isset($_POST['constitution']) && isset($_POST['intelligence']) && isset($_POST['wisdom']) && isset($_POST['luck'])) {
                         $changeChar = new Character($_POST);
@@ -309,7 +314,7 @@ if (isset($_GET['type'])) {
     <!-- ----------------------------------------------------------------------------------------------------- -->
     <!---------------------------------------fin modal modif character ------------------------------------------>
     <!-- ----------------------------------------------------------------------------------------------------- -->
-    <div class="row mt-4 d-flex justify-content-center align-items-start">
+    <div class="row mt-4 d-flex justify-content-center">
         <div class="col-4">
             <h2>Compétences</h2>
             <?php foreach ($skills as $skill) { ?>
@@ -378,7 +383,7 @@ if (isset($_GET['type'])) {
                 <!-- Fin modal modif compétence -->
 
             <?php } ?>
-            <button class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#skillAddForm">Créer une nouvelle compétence</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#skillAddForm">Créer une nouvelle compétence</button>
 
             <!---------------------------------------------------------->
             <!-------------- Modal de création compétence -------------->
@@ -421,7 +426,7 @@ if (isset($_GET['type'])) {
             <!-- Fin Modal de création compétence -->
 
         </div>
-        <div class="col-4 d-flex flex-column">
+        <div class="col-4">
             <h2>Equipements</h2>
             <?php foreach ($equipments as $equipment) { ?>
                 <div class="card mb-3" style="width: 100%;">
@@ -482,7 +487,7 @@ if (isset($_GET['type'])) {
                 </div>
                 <!-- Fin modal modif compétence -->
             <?php } ?>
-            <button class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#equipmentAddForm">Créer un nouvel équipement</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#equipmentAddForm">Créer un nouvel équipement</button>
 
             <!---------------------------------------------------------->
             <!-------------- Modal de création équipements ------------->
