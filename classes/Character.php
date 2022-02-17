@@ -7,13 +7,14 @@ class Character
     protected int $currentHp = 100;
     protected int $mpMax = 50;
     protected int $currentMp = 50;
-    protected int $init = 5;
+    protected int $initiative = 5;
     protected int $strength = 10;
     protected int $dexterity = 10;
     protected int $constitution = 10;
     protected int $intelligence = 10;
     protected int $wisdom = 10;
     protected int $luck = 10;
+    protected ?int $id_user;
     protected string $img = "src/blank-avatar.png";
 
     public function __construct(array $arr = [])
@@ -21,9 +22,17 @@ class Character
         if (!empty($arr)) {
             $this->setName($arr['name']);
             $this->setHpMax(intval($arr['hpMax']));
-            $this->setCurrentHp(intval($arr['hpMax']));
             $this->setMpMax(intval($arr['mpMax']));
-            $this->setCurrentMp(intval($arr['mpMax']));
+            if (isset($arr['currentHp'])) {
+                $this->setCurrentHp(intval($arr['currentHp']));
+            } else {
+                $this->setCurrentHp(intval($arr['hpMax']));
+            }
+            if (isset($arr['currentMp'])) {
+                $this->setCurrentMp(intval($arr['currentMp']));
+            } else {
+                $this->setCurrentMp(intval($arr['mpMax']));
+            }
             $this->setInit(intval($arr['init']));
             $this->setStrength(intval($arr['strength']));
             $this->setDexterity(intval($arr['dexterity']));
@@ -31,6 +40,7 @@ class Character
             $this->setIntelligence(intval($arr['intelligence']));
             $this->setWisdom(intval($arr['wisdom']));
             $this->setLuck(intval($arr['luck']));
+            $this->setId_user(1);
         }
     }
     public function validateInt(): array
@@ -63,6 +73,12 @@ class Character
         if (!isAGoodNumber($this->getLuck())) {
             $errors['luck'] = "Chance invalide";
         }
+        if (!($this->getHpMax() >= $this->getCurrentHp())) {
+            $errors['currentHp'] = "Point de vie actuel invalide";
+        }
+        if (!($this->getMpMax() >= $this->getCurrentMp())) {
+            $errors['currentMp'] = "Point de mana actuel invalide";
+        }
         return $errors;
     }
     public function validateCount(): bool
@@ -79,7 +95,6 @@ class Character
             $this->setImg($value);
         }
     }
-
     /**
      * Get the value of name
      */
@@ -345,7 +360,7 @@ class Character
      */
     public function getInit()
     {
-        return $this->init;
+        return $this->initiative;
     }
 
     /**
@@ -355,7 +370,7 @@ class Character
      */
     public function setInit($init)
     {
-        $this->init = $init;
+        $this->initiative = $init;
 
         return $this;
     }
@@ -376,6 +391,26 @@ class Character
     public function setCharPost($charPost)
     {
         $this->charPost = $charPost;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_user
+     */
+    public function getId_user()
+    {
+        return $this->id_user;
+    }
+
+    /**
+     * Set the value of id_user
+     *
+     * @return  self
+     */
+    public function setId_user($id_user)
+    {
+        $this->id_user = $id_user;
 
         return $this;
     }

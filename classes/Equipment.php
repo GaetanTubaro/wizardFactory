@@ -8,7 +8,7 @@ class Equipment
     protected int $range_area;
     protected int $id_charac;
 
-    public function checkData() : array
+    public function checkData(): array
     {
         $errors = [];
         if ($this->damages < 0) {
