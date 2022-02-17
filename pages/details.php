@@ -17,10 +17,10 @@ $findSkills->bindParam(1, $id_character, PDO::PARAM_STR);
 $findSkills->execute();
 $skills = $findSkills->fetchAll(PDO::FETCH_CLASS, Skill::class);
 
-$findEquipements = $connection->prepare('SELECT * FROM `equipements` WHERE id_charac = ?');
-$findEquipements->bindParam(1, $id_character, PDO::PARAM_STR);
-$findEquipements->execute();
-$equipements = $findEquipements->fetchAll(PDO::FETCH_CLASS, Equipement::class);
+$findEquipments = $connection->prepare('SELECT * FROM `equipments` WHERE id_charac = ?');
+$findEquipments->bindParam(1, $id_character, PDO::PARAM_STR);
+$findEquipments->execute();
+$equipments = $findEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
 //
 
 if (isset($_GET['type'])) {
@@ -61,7 +61,6 @@ if (isset($_GET['type'])) {
                 if (empty($errors)) {
                     $changeSkill = $connection->prepare('UPDATE skills SET name = "' . $skillChange->getName() . '", level = ' . $skillChange->getLevel() . ', stats = "' . $skillChange->getStats() . '" WHERE id =' . $skillChange->getId());
                     $changeSkill->execute();
-                    var_dump('UPDATE skills SET name = "' . $skillChange->getName() . '", level = ' . $skillChange->getLevel() . ', stats = "' . $skillChange->getStats() . '" WHERE id =' . $skillChange->getId());
                     header('Location: ?page=details&character=' . $id_character);
                 } else {
                     foreach ($errors as $error) { ?>
@@ -76,8 +75,30 @@ if (isset($_GET['type'])) {
         case 'deleteSkill':
             $deleteSkill = $connection->prepare('DELETE FROM skills WHERE id=' . $_GET['idSkill']);
             $deleteSkill->execute();
-            var_dump('DELETE FROM skills WHERE id=' . $_GET['idSkill']);
             header('Location: ?page=details&character=' . $id_character);
+            break;
+        case 'addEquipment':
+            if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
+                $equipmentAdded = new Equipment();
+                $equipmentAdded
+                    ->setName($_POST['equipment_name'])
+                    ->setDamages($_POST['equipment_damages'])
+                    ->setRange($_POST['equipment_range'])
+                    ->setOwner($id_character);
+                $errors = $equipmentAdded->checkData();
+                if (empty($errors)) {
+                    $addEquipment = $connection->prepare('INSERT INTO equipments (name, damages, range_area, id_charac) VALUES ("' . $equipmentAdded->getName() . '","' . $equipmentAdded->getDamages() . '",' . $equipmentAdded->getRange() . ',' . $equipmentAdded->getOwner() . ')');
+                    $addEquipment->execute();
+                    header('Location: ?page=details&character=' . $id_character);
+                } else {
+                    foreach ($errors as $error) {?>
+                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée valide.</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div><?php
+                    }
+                }
+            }
             break;
     }
 }
@@ -116,8 +137,8 @@ if (isset($_GET['type'])) {
             </div>
         </div>
     </div>
-    <div class="row mt-4 d-flex justify-content-center align-items-start">
-        <div class="col-4">
+    <div class="row mt-4 d-flex justify-content-center">
+        <div class="col-4 d-flex flex-column">
             <h2>Compétences</h2>
             <?php foreach ($skills as $skill) { ?>
                 <div class="card mb-3" style="width: 100%;">
@@ -143,7 +164,10 @@ if (isset($_GET['type'])) {
                         <p class="card-text mb-1"><span style='font-style:bold'>Niveau :</span> <?= $skill->getLevel() ?></p>
                     </div>
                 </div>
-                <!-- Modal modif compétence -->
+
+                <!---------------------------------------------------------->
+                <!----------------- Modal modif compétence ----------------->
+                <!---------------------------------------------------------->
                 <div class="modal fade" id="skillChangeForm<?= $skill->getId() ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -152,7 +176,7 @@ if (isset($_GET['type'])) {
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form name="addSkill" action="" method="POST">
+                                <form name="changeSkill" action="" method="POST">
                                     <div class="mb-3">
                                         <label class="form-label">Nom</label>
                                         <input type="text" class="form-control" name="skill_name" value="<?= $skill->getName() ?>" required>
@@ -180,9 +204,13 @@ if (isset($_GET['type'])) {
                     </div>
                 </div>
                 <!-- Fin modal modif compétence -->
+
             <?php } ?>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#skillAddForm">Créer une nouvelle compétence</button>
-            <!-- Modal de création compétence -->
+            <button class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#skillAddForm">Créer une nouvelle compétence</button>
+            
+            <!---------------------------------------------------------->
+            <!-------------- Modal de création compétence -------------->
+            <!---------------------------------------------------------->
             <div class="modal fade" id="skillAddForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -191,7 +219,7 @@ if (isset($_GET['type'])) {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="" method="POST">
+                            <form name="addSkill" action="" method="POST">
                                 <div class="mb-3">
                                     <label class="form-label">Nom</label>
                                     <input type="text" class="form-control" name="skill_name" required>
@@ -219,18 +247,70 @@ if (isset($_GET['type'])) {
                 </div>
             </div>
             <!-- Fin Modal de création compétence -->
+        
         </div>
-        <div class="col-4">
+        <div class="col-4 d-flex flex-column">
             <h2>Equipements</h2>
-            <?php foreach ($equipements as $equipement) { ?>
-                <div class="card" style="width: 100%;">
+            <?php foreach ($equipments as $equipment) { ?>
+                <div class="card mb-3" style="width: 100%;">
                     <div class="card-body">
-                        <h5 class="card-title"><?= $equipement->getName() ?></h5>
-                        <p class="card-text"><span style='font-style:bold'>Dégâts :</span> <?= $equipement->getDamages() ?></p>
-                        <p class="card-text"><span style='font-style:bold'>Portée :</span> <?= $equipement->getRange() ?></p>
+                        <div class="card-title d-flex align-items-center">
+                            <h5 class="m-0 d-inline"><?= $equipment->getName() ?></h5>
+                            <span class="ms-auto">
+                                <button class="btn m-1 p-1" data-bs-toggle="modal" data-bs-target="#skillChangeForm<?= $equipment->getId() ?>">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                    </svg>
+                                </button>
+                                <a href="?page=details&character=<?= $_GET['character']?>&type=deleteSkill&idSkill=<?= $equipment->getId()?>"><button class="btn m-1 p-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                    </svg>
+                                </button></a>
+                            </span>
+                        </div>
+                        <p class="card-text mb-1"><span style='font-style:bold'>Dégâts :</span> <?= $equipment->getDamages() ?></p>
+                        <p class="card-text mb-1"><span style='font-style:bold'>Portée :</span> <?= $equipment->getRange() ?></p>
                     </div>
                 </div>
             <?php } ?>
+            <button class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#equipmentAddForm">Créer un nouvel équipement</button>
+            
+            <!---------------------------------------------------------->
+            <!-------------- Modal de création équipements ------------->
+            <!---------------------------------------------------------->
+            <div class="modal fade" id="equipmentAddForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Ajouter un équipement</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form name="addEquipment" action="" method="POST">
+                                <div class="mb-3">
+                                    <label class="form-label">Nom</label>
+                                    <input type="text" class="form-control" name="equipment_name" required>
+                                </div>
+                                <div class="mb-3">
+                                <label class="form-label">Dégâts</label>
+                                    <span class="form-text mt-0 ms-3">Supérieur à 0</span>
+                                    <input type="number" class="form-control" name="equipment_damages" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Portée</label>
+                                    <span class="form-text mt-0 ms-3">Comprise entre 0 et 5</span>
+                                    <input type="number" class="form-control" name="equipment_range" required>
+                                </div>
+                                <button formaction="?page=details&character=<?= $id_character ?>&type=addEquipment" type="submit" class="btn btn-primary">Ajouter</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin Modal de création équipement -->
         </div>
     </div>
 </div>
