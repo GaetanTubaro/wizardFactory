@@ -1,7 +1,7 @@
 <link href="css/charForm.css" rel="stylesheet">
 
 <?php
-if (isset($_POST['img']) || isset($_POST['name']) && isset($_POST['hpMax']) && isset($_POST['mpMax']) && isset($_POST['init']) && isset($_POST['strength']) && isset($_POST['dexterity']) && isset($_POST['constitution']) && isset($_POST['intelligence']) && isset($_POST['wisdom']) && isset($_POST['luck'])) {
+if (isset($_POST['name']) && isset($_POST['hpMax']) && isset($_POST['mpMax']) && isset($_POST['init']) && isset($_POST['strength']) && isset($_POST['dexterity']) && isset($_POST['constitution']) && isset($_POST['intelligence']) && isset($_POST['wisdom']) && isset($_POST['luck'])) {
     $newChar = new Character($_POST);
     $newChar->checkImg($_POST['img']);
     $testChar = $newChar->validateInt();

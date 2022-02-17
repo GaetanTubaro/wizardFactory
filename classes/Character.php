@@ -7,7 +7,7 @@ class Character
     protected int $currentHp = 100;
     protected int $mpMax = 50;
     protected int $currentMp = 50;
-    protected int $init = 5;
+    protected int $initiative = 5;
     protected int $strength = 10;
     protected int $dexterity = 10;
     protected int $constitution = 10;
@@ -22,9 +22,17 @@ class Character
         if (!empty($arr)) {
             $this->setName($arr['name']);
             $this->setHpMax(intval($arr['hpMax']));
-            $this->setCurrentHp(intval($arr['hpMax']));
             $this->setMpMax(intval($arr['mpMax']));
-            $this->setCurrentMp(intval($arr['mpMax']));
+            if (isset($arr['currentHp'])) {
+                $this->setCurrentHp(intval($arr['currentHp']));
+            } else {
+                $this->setCurrentHp(intval($arr['hpMax']));
+            }
+            if (isset($arr['currentMp'])) {
+                $this->setCurrentMp(intval($arr['currentMp']));
+            } else {
+                $this->setCurrentMp(intval($arr['mpMax']));
+            }
             $this->setInit(intval($arr['init']));
             $this->setStrength(intval($arr['strength']));
             $this->setDexterity(intval($arr['dexterity']));
@@ -347,7 +355,7 @@ class Character
      */
     public function getInit()
     {
-        return $this->init;
+        return $this->initiative;
     }
 
     /**
@@ -357,7 +365,7 @@ class Character
      */
     public function setInit($init)
     {
-        $this->init = $init;
+        $this->initiative = $init;
 
         return $this;
     }
