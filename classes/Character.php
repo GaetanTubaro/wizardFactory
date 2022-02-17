@@ -14,6 +14,7 @@ class Character
     protected int $intelligence = 10;
     protected int $wisdom = 10;
     protected int $luck = 10;
+    protected ?int $id_user;
     protected string $img = "src/blank-avatar.png";
 
     public function __construct(array $arr = [])
@@ -31,6 +32,7 @@ class Character
             $this->setIntelligence(intval($arr['intelligence']));
             $this->setWisdom(intval($arr['wisdom']));
             $this->setLuck(intval($arr['luck']));
+            $this->setId_user(1);
         }
     }
     public function validateInt(): array
@@ -376,6 +378,26 @@ class Character
     public function setCharPost($charPost)
     {
         $this->charPost = $charPost;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_user
+     */
+    public function getId_user()
+    {
+        return $this->id_user;
+    }
+
+    /**
+     * Set the value of id_user
+     *
+     * @return  self
+     */
+    public function setId_user($id_user)
+    {
+        $this->id_user = $id_user;
 
         return $this;
     }

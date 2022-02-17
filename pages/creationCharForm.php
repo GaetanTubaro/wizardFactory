@@ -6,7 +6,7 @@ if (isset($_POST['img']) || isset($_POST['name']) && isset($_POST['hpMax']) && i
     $newChar->checkImg($_POST['img']);
     $testChar = $newChar->validateInt();
     if (empty($testChar) && $newChar->validateCount() && $newChar->validateName()) {
-        $request = "INSERT INTO `character_sheets` (`name`,`hpMax`,`currentHp`,`mpMax`,`currentMp`,`initiative`,`strength`,`dexterity`,`constitution`,`intelligence`,`wisdom`,`luck`,`img`) VALUES ('" . $newChar->getName() . "'," . $newChar->getHpMax() . "," . $newChar->getCurrentHp() . "," . $newChar->getMpMax() . "," . $newChar->getCurrentMp() . "," . $newChar->getInit() . "," . $newChar->getStrength() . "," . $newChar->getDexterity() . "," . $newChar->getConstitution() . "," . $newChar->getIntelligence() . "," . $newChar->getWisdom() . "," . $newChar->getLuck() . ",'" . $newChar->getImg() . "')";
+        $request = "INSERT INTO `character_sheets` (`name`,`hpMax`,`currentHp`,`mpMax`,`currentMp`,`initiative`,`strength`,`dexterity`,`constitution`,`intelligence`,`wisdom`,`luck`,`img`,`id_user`) VALUES ('" . $newChar->getName() . "'," . $newChar->getHpMax() . "," . $newChar->getCurrentHp() . "," . $newChar->getMpMax() . "," . $newChar->getCurrentMp() . "," . $newChar->getInit() . "," . $newChar->getStrength() . "," . $newChar->getDexterity() . "," . $newChar->getConstitution() . "," . $newChar->getIntelligence() . "," . $newChar->getWisdom() . "," . $newChar->getLuck() . ",'" . $newChar->getImg() . "'," . $newChar->getId_user() . ")";
         $count = $connection->exec($request);
     }
 }
