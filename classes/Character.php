@@ -73,6 +73,12 @@ class Character
         if (!isAGoodNumber($this->getLuck())) {
             $errors['luck'] = "Chance invalide";
         }
+        if (!($this->getHpMax() >= $this->getCurrentHp())) {
+            $errors['currentHp'] = "Point de vie actuel invalide";
+        }
+        if (!($this->getMpMax() >= $this->getCurrentMp())) {
+            $errors['currentMp'] = "Point de mana actuel invalide";
+        }
         return $errors;
     }
     public function validateCount(): bool
@@ -89,7 +95,6 @@ class Character
             $this->setImg($value);
         }
     }
-
     /**
      * Get the value of name
      */
