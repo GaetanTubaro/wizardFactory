@@ -133,7 +133,7 @@ if (isset($_GET['type'])) {
                         $changeChar = new Character($_POST);
                         $changeChar->checkImg($_POST['img']);
                         $errorChar = $changeChar->validateInt();
-                        if (empty($errorChar) && $changeChar->validateName()) {
+                        if (empty($errorChar)) {
                             $requestChange = $connection->prepare("UPDATE `character_sheets` SET name = '" . $changeChar->getName() . "', currentHp = " . $changeChar->getCurrentHp() . ", currentMp = " . $changeChar->getCurrentMp() . ", hpMax = " . $changeChar->getHpMax() . ", initiative = " . $changeChar->getInit() . ", strength = " . $changeChar->getStrength() . ", dexterity = " . $changeChar->getDexterity() . ", mpMax = " . $changeChar->getMpMax() . ", constitution = " . $changeChar->getConstitution() . ", intelligence = " . $changeChar->getIntelligence() . ", wisdom = " . $changeChar->getWisdom() . ", luck = " . $changeChar->getLuck() . ", img = '" . $changeChar->getImg() . "' WHERE id =" . $id_character);
                             $requestChange->execute();
                             header('Location: ?page=details&character=' . $id_character);
