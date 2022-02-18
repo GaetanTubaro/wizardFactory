@@ -8,7 +8,7 @@ $searchCharacters->execute();
 $characters = $searchCharacters->fetchAll(PDO::FETCH_CLASS, Character::class);
 ?>
 
-<div class="liste mt-4 mx-2 d-flex flex-wrap align-items-stretch">
+<div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
     <?php foreach ($characters as $character) { ?>
 
         <div class="card mx-2" style="width: 15rem;">
