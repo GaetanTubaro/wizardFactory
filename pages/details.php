@@ -5,8 +5,9 @@
 if (isset($_GET["character"])) {
     $id_character = $_GET["character"];
 } else {
-    $id_character = 1;
+    header('Location: ?page=list');
 }
+
 $findCharacter = $connection->prepare('SELECT * FROM `character_sheets` WHERE id = ?');
 $findCharacter->bindParam(1, $id_character, PDO::PARAM_STR);
 $findCharacter->setFetchMode(PDO::FETCH_CLASS, Character::class);
@@ -163,16 +164,11 @@ $equipments = $findEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                     header('Location: ?page=list');
                     break;
             }
-}
+    }
                                 ?>
 
 <link href="css/details.css" rel="stylesheet">
-<?php
-$id_chara_user = $connection->query("SELECT (*) FROM character_sheets WHERE id ='".$id_character."'");
-var_dump($id_chara_user);
-if ($_SESSION['id'] != $id_chara_user) {
-    echo "Vous ne pouvez pas consulter cette fiche.";
-} else { ?>
+
 <div class="container-fluid p-5">
     <div class="row d-flex justify-content-center align-items-start">
         <div class="col-3 d-flex justify-content-center align-items-center">
@@ -237,7 +233,6 @@ if ($_SESSION['id'] != $id_chara_user) {
             </div>
         </div>
     </div>
-    <?php } ?>
     <!-- ----------------------------------------------------------------------------------------------------- -->
     <!-----------------------------------début modal modif character------------------------------------------ -->
     <!-- ----------------------------------------------------------------------------------------------------- -->
