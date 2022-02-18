@@ -142,7 +142,7 @@ $equipments = $findEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                         $changeChar = new Character($_POST);
                         $changeChar->checkImg($_POST['img']);
                         $errorChar = $changeChar->validateInt();
-                        if (empty($errorChar) && $changeChar->validateName()) {
+                        if (empty($errorChar)) {
                             $requestChange = $connection->prepare("UPDATE `character_sheets` SET name = '" . $changeChar->getName() . "', currentHp = " . $changeChar->getCurrentHp() . ", currentMp = " . $changeChar->getCurrentMp() . ", hpMax = " . $changeChar->getHpMax() . ", initiative = " . $changeChar->getInit() . ", strength = " . $changeChar->getStrength() . ", dexterity = " . $changeChar->getDexterity() . ", mpMax = " . $changeChar->getMpMax() . ", constitution = " . $changeChar->getConstitution() . ", intelligence = " . $changeChar->getIntelligence() . ", wisdom = " . $changeChar->getWisdom() . ", luck = " . $changeChar->getLuck() . ", img = '" . $changeChar->getImg() . "' WHERE id =" . $id_character);
                             $requestChange->execute();
                             header('Location: ?page=details&character=' . $id_character);
@@ -157,9 +157,13 @@ $equipments = $findEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                         }
                     }
                     break;
+                case 'deleteChar':
+                    $deleteChar = $connection->prepare('DELETE FROM character_sheets WHERE id=' . $_GET['character']);
+                    $deleteChar->execute();
+                    header('Location: ?page=list');
+                    break;
             }
-    }
-
+}
                                 ?>
 
 <link href="css/details.css" rel="stylesheet">
@@ -189,15 +193,13 @@ if ($_SESSION['id'] != $id_chara_user) {
                                 d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
                         </svg>
                     </button>
-                    <button class="btn m-1 p-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-trash" viewBox="0 0 16 16">
-                            <path
-                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                            <path fill-rule="evenodd"
-                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+
+                    <a href="?page=details&character=<?= $character->getId() ?>&type=deleteChar"><button class="btn m-1 p-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
                         </svg>
-                    </button>
+                    </button></a>
                 </span>
             </div>
             <div class="row">
@@ -418,52 +420,41 @@ if ($_SESSION['id'] != $id_chara_user) {
                     </p>
                 </div>
             </div>
-
-            <!---------------------------------------------------------->
-            <!----------------- Modal modif compétence ----------------->
-            <!---------------------------------------------------------->
-            <div class="modal fade"
-                id="skillChangeForm<?= $skill->getId() ?>"
-                data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Modifier une compétence</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form name="changeSkill" action="" method="POST">
-                                <div class="mb-3">
-                                    <label class="form-label">Nom</label>
-                                    <input type="text" class="form-control" name="skill_name"
-                                        value="<?= $skill->getName() ?>"
-                                        required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Statistique liée</label>
-                                    <select class="form-select" name="skill_stat">
-                                        <?php foreach (Skill::POSSIBLE_STATS as $statistique) { ?>
-                                        <option
-                                            value="<?= $statistique ?>"
-                                            <?php if ($skill->getStats() == $statistique) {
-    echo "selected";
-} ?>><?= $statistique ?>
-                                        </option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Niveau</label>
-                                    <span class="form-text mt-0 ms-3">Compris entre 0 et 5</span>
-                                    <input type="number" class="form-control" name="skill_level"
-                                        value="<?= $skill->getLevel() ?>"
-                                        required>
-                                </div>
-                                <button
-                                    formaction="?page=details&character=<?= $id_character ?>&type=changeSkill&idSkill=<?= $skill->getId() ?>"
-                                    type="submit" class="btn btn-primary">Modifier</button></formaction=>
-                            </form>
+                <!---------------------------------------------------------->
+                <!----------------- Modal modif compétence ----------------->
+                <!---------------------------------------------------------->
+                <div class="modal fade" id="skillChangeForm<?= $skill->getId() ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Modifier une compétence</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form name="changeSkill" action="" method="POST">
+                                    <div class="mb-3">
+                                        <label class="form-label">Nom</label>
+                                        <input type="text" class="form-control" name="skill_name" value="<?= $skill->getName() ?>" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Statistique liée</label>
+                                        <select class="form-select" name="skill_stat">
+                                            <?php foreach (Skill::POSSIBLE_STATS as $statistique) { ?>
+                                                <option value="<?= $statistique ?>" <?php if ($skill->getStats() == $statistique) {
+                                    echo "selected";
+                                } ?>><?= $statistique ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Niveau</label>
+                                        <span class="form-text mt-0 ms-3">Compris entre 0 et 5</span>
+                                        <input type="number" class="form-control" name="skill_level" value="<?= $skill->getLevel() ?>" required>
+                                    </div>
+                                    <button formaction="?page=details&character=<?= $id_character ?>&type=changeSkill&idSkill=<?= $skill->getId() ?>" type="submit" class="btn btn-primary">Modifier</button></formaction=>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
