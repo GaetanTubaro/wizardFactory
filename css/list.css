@@ -16,3 +16,12 @@
 .card .card-footer {
     transition: 0.3s;
 }
+
+div.card.card-add {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+a {
+    text-decoration: none;
+    color:inherit;
+}
