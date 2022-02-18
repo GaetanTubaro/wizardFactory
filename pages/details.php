@@ -13,6 +13,11 @@ $findCharacter->setFetchMode(PDO::FETCH_CLASS, Character::class);
 $findCharacter->execute();
 $character = $findCharacter->fetch();
 
+
+if (($character==false) || $_SESSION["id"]!=($character->getId_user())) {
+    header('Location: ?page=list');
+}
+
 $findSkills = $connection->prepare('SELECT * FROM `skills` WHERE id_charac = ?');
 $findSkills->bindParam(1, $id_character, PDO::PARAM_STR);
 $findSkills->execute();
