@@ -80,15 +80,14 @@ class Character
         if (!($this->getMpMax() >= $this->getCurrentMp())) {
             $errors['currentMp'] = "Point de mana actuel invalide";
         }
+        if (!isAString($this->getName())) {
+            $errors['name'] = "Nom invalide";
+        }
         return $errors;
     }
     public function validateCount(): bool
     {
         return $this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() >= 60 && $this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() <= 80;
-    }
-    public function validateName(): bool
-    {
-        return isAString($this->getName());
     }
     public function checkImg($value)
     {
