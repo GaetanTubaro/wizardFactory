@@ -85,9 +85,16 @@ class Character
         }
         return $errors;
     }
-    public function validateCount(): bool
+    public function validateCount(): array
     {
-        return $this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() >= 60 && $this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() <= 80;
+        $errorCount = [];
+        if (!($this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() >= 60)) {
+            $errorCount['moins'] = "Vous devez remplir les statistiques avec plus de 60 points";
+        }
+        if (!($this->getInit() + $this->getStrength() + $this->getDexterity() + $this->getConstitution() + $this->getIntelligence() + $this->getWisdom() + $this->getLuck() <= 80)) {
+            $errorCount['plus'] = "Vous devez remplir les statistiques avec moins de 80 points";
+        }
+        return $errorCount;
     }
     public function checkImg($value)
     {
