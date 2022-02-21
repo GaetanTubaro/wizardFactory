@@ -5,12 +5,21 @@ if (isset($_POST['name']) && isset($_POST['hpMax']) && isset($_POST['mpMax']) &&
     $newChar = new Character($_POST);
     $newChar->checkImg($_POST['img']);
     $testChar = $newChar->validateInt();
-    if (empty($testChar) && $newChar->validateCount()) {
+    $testCount = $newChar->validateCount();
+    if (empty($testChar) && empty($testCount)) {
         $request = "INSERT INTO `character_sheets` (`name`,`hpMax`,`currentHp`,`mpMax`,`currentMp`,`initiative`,`strength`,`dexterity`,`constitution`,`intelligence`,`wisdom`,`luck`,`img`,`id_user`) VALUES ('" . $newChar->getName() . "'," . $newChar->getHpMax() . "," . $newChar->getCurrentHp() . "," . $newChar->getMpMax() . "," . $newChar->getCurrentMp() . "," . $newChar->getInit() . "," . $newChar->getStrength() . "," . $newChar->getDexterity() . "," . $newChar->getConstitution() . "," . $newChar->getIntelligence() . "," . $newChar->getWisdom() . "," . $newChar->getLuck() . ",'" . $newChar->getImg() . "'," . $newChar->getId_user() . ")";
         $count = $connection->exec($request);
         header('location: ?page=list');
     } else {
-        foreach ($testChar as $error) { ?>
+        if (!empty($testCount)) {
+            foreach ($testCount as $error) { ?>
+                <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+                    <p class="mb-0"><?= $error ?></p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div><?php
+                    }
+                }
+                foreach ($testChar as $error) { ?>
             <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
                 <p class="mb-0"><?= $error ?>. Veuillez entrer une donnée valide.</p>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
