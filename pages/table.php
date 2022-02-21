@@ -14,13 +14,19 @@ $gameChar = $connection->prepare('SELECT * FROM `character_sheets` JOIN `game_ch
 $gameChar->execute();
 $characters = $gameChar->fetchAll(PDO::FETCH_CLASS, Character::class);
 
+$pocessChar = $connection->prepare('SELECT * FROM `users` JOIN `game_character` ON  users.id = game_character.id_user WHERE id_charac = :id AND id_game =' . $game->getId());
+$pocessChar->setFetchMode(PDO::FETCH_CLASS, Users::class);
+$pocessChar->bindParam(":id", $charac_id);
+
 
 ?>
 
-
+<h1 class="mx-3 pt-3">Personnages de la partie : <?= $game->getName() ?>.</h1>
 <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
-    <?php foreach ($characters as $character) { ?>
-
+    <?php foreach ($characters as $character) {;
+        $charac_id = $character->getId();
+        $pocessChar->execute();
+        $pocess = $pocessChar->fetch(); ?>
         <div class="card mx-2" style="width: 15rem;">
 
             <div class="d-flex flex-column align-items-center" style="height:15rem; width:100%;box-sizing:border-box">
@@ -34,6 +40,7 @@ $characters = $gameChar->fetchAll(PDO::FETCH_CLASS, Character::class);
                     </h2>
                 </a>
             </div>
+            <h5 class="mx-auto pb-2">Jouer par : <?= $pocess->getPseudo() ?> </h5>
             <div class="card-footer d-flex justify-content-center">
                 <a href="?page=details&character=<?= $character->getId() ?>&type=deleteChar" class="w-100">
                     <button class="btn m-0 p-0 w-100">
@@ -45,6 +52,7 @@ $characters = $gameChar->fetchAll(PDO::FETCH_CLASS, Character::class);
                 </a>
             </div>
         </div>
+
     <?php
     }
     ?>
