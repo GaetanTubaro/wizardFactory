@@ -1,4 +1,4 @@
-<link href="css/list.css" rel="stylesheet">
+<link href="css/table.css" rel="stylesheet">
 
 <?php
 $id_user = $_SESSION["id"];
