@@ -1,12 +1,22 @@
 <link href="css/table.css" rel="stylesheet">
 
 <?php
-$id_user = $_SESSION["id"];
-$searchCharacters = $connection->prepare('SELECT * FROM `character_sheets` WHERE id_user = ? ORDER BY name');
-$searchCharacters->bindParam(1, $id_user, PDO::PARAM_STR);
-$searchCharacters->execute();
-$characters = $searchCharacters->fetchAll(PDO::FETCH_CLASS, Character::class);
+
+$id_game = $_GET["table"];
+$searchGame = $connection->prepare('SELECT * FROM `games` WHERE id = ?');
+$searchGame->bindParam(1, $id_game, PDO::PARAM_STR);
+$searchGame->setFetchMode(PDO::FETCH_CLASS, Game::class);
+$searchGame->execute();
+$game = $searchGame->fetch();
+
+$id_game = $game->getId();
+$gameChar = $connection->prepare('SELECT * FROM `character_sheets` JOIN `game_character` ON  character_sheets.id = game_character.id_charac WHERE id_game =' . $game->getId());
+$gameChar->execute();
+$characters = $gameChar->fetchAll(PDO::FETCH_CLASS, Character::class);
+
+
 ?>
+
 
 <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
     <?php foreach ($characters as $character) { ?>

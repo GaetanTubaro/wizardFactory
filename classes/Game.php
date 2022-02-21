@@ -6,6 +6,12 @@ class Game
     protected string $name;
     protected int $id_mj;
 
+
+
+    public function validateMj(): bool
+    {
+        return $this->getId_mj() == $_SESSION['id'];
+    }
     /**
      * Get the value of name
      */
