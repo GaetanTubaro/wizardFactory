@@ -16,7 +16,7 @@ if (isset($_POST['pseudo'])) {
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div><?php
             }
-        }
+}
                 ?>
 
 <form class="d-flex flex-column justify-content-center w-25 mx-auto p-5 " method="POST">
