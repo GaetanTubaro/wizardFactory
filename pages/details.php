@@ -17,7 +17,7 @@ $findCharacter->setFetchMode(PDO::FETCH_CLASS, Character::class);
 $findCharacter->execute();
 $character = $findCharacter->fetch();
 
-$is_mj = $_SESSION["id"] = $character->id_mj;
+$is_mj = $_SESSION["id"] == $character->id_mj;
 
 $playerChar = $connection->prepare('SELECT * FROM `users` JOIN `game_character` ON  users.id = game_character.id_user WHERE id_charac = 4 AND id_game = 1');
 $playerChar->setFetchMode(PDO::FETCH_CLASS, Users::class);
@@ -172,6 +172,10 @@ if (isset($_GET['type'])) {
                     $deleteChar->execute();
                     header('Location: ?page=list');
                     break;
+                case 'changePlayer':
+                    $seekPlayer = $connection->prepare('SELECT pseudo, id FROM users');
+                    $seekPlayer->execute();
+                    $players = $seekPlayer->fetchAll(PDO::FETCH_CLASS, Users::class);
             }
         }
                                 ?>
@@ -355,7 +359,7 @@ if (isset($_GET['type'])) {
                             <label class="form-label">Image</label>
                             <input type="text" class="form-control" name="img" value="<?= $character->getImg() ?>" required>
                         </div>
-                        <button formaction="?page=details&character=<?= $id_character ?>&type=charChange" type="submit" class="btn btn-primary">Modifier</button></formaction=>
+                        <button formaction="?page=details&character=<?= $id_character ?>&type=charChange" type="submit" class="btn btn-primary">Modifier</button>
                     </form>
                 </div>
             </div>
@@ -426,7 +430,7 @@ if (isset($_GET['type'])) {
                                         <span class="form-text mt-0 ms-3">Compris entre 0 et 5</span>
                                         <input type="number" class="form-control" name="skill_level" value="<?= $skill->getLevel() ?>" required>
                                     </div>
-                                    <button formaction="?page=details&character=<?= $id_character ?>&type=changeSkill&idSkill=<?= $skill->getId() ?>" type="submit" class="btn btn-primary">Modifier</button></formaction=>
+                                    <button formaction="?page=details&character=<?= $id_character ?>&type=changeSkill&idSkill=<?= $skill->getId() ?>" type="submit" class="btn btn-primary">Modifier</button>
                                 </form>
                             </div>
                         </div>
@@ -536,7 +540,7 @@ if (isset($_GET['type'])) {
                                         <span class="form-text mt-0 ms-3">Comprise entre 0 et 5</span>
                                         <input type="number" class="form-control" name="equipment_range" value="<?= $equipment->getRange() ?>" required>
                                     </div>
-                                    <button formaction="?page=details&character=<?= $id_character ?>&type=changeEquipment&idEquipment=<?= $equipment->getId() ?>" type="submit" class="btn btn-primary">Modifier</button></formaction=>
+                                    <button formaction="?page=details&character=<?= $id_character ?>&type=changeEquipment&idEquipment=<?= $equipment->getId() ?>" type="submit" class="btn btn-primary">Modifier</button>
                                 </form>
                             </div>
                         </div>
@@ -580,6 +584,26 @@ if (isset($_GET['type'])) {
                 </div>
             </div>
             <!-- Fin Modal de création équipement -->
+            <!-- -------------------------------------------------------------------------------------- -->
+            <!------------------------------- Modal changement Jouer start ------------------------------->
+            <!-- -------------------------------------------------------------------------------------- -->
+            <div class="modal fade" id="changePlayer<?= $character->getId() ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Assigner un Joueur</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" class="form-control mb-3" name="player" required>
+                            <button formaction="?page=details&character=<?= $id_character ?>&type=changePlayer" type="submit" class="btn btn-primary">Modifier</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- -------------------------------------------------------------------------------------- -->
+            <!------------------------------- Modal changement Jouer end --------------------------------->
+            <!-- -------------------------------------------------------------------------------------- -->
         </div>
     </div>
 </div>
