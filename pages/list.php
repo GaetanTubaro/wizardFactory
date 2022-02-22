@@ -3,6 +3,13 @@
 <?php
 $id_user = $_SESSION['id'];
 
+if (isset($_GET['action']) && $_GET['action'] == 'add' && isset($_POST['name'])) {
+    $addGame = $connection->prepare('INSERT INTO games (name, id_mj) VALUES ("' . $_POST['name'] . '", ' . $id_user . ');');
+    $addGame->execute();
+    header('Location: ?page=list');
+}
+
+
 $findGames = $connection->prepare('SELECT * FROM games WHERE id_mj = :id');
 $findGames->bindParam(':id', $id_user, PDO::PARAM_INT);
 $findGames->execute();
@@ -40,7 +47,7 @@ $findPlayers->bindParam(':id', $game_id);
                         $findPlayers->execute();
                         $players = $findPlayers->fetchAll(PDO::FETCH_CLASS, Users::class) ?>
                         <tr>
-                            <td><?= $game->getName() ?></td>
+                            <td><a href="?page=table&table=<?= $game->getId() ?>"><?= $game->getName() ?></a></td>
                             <td>
                                 <ul class="mb-0 ps-0"><?php foreach ($players as $player) { ?>
                                         <li><?= $player->getPseudo() ?></li><?php } ?>
@@ -57,7 +64,9 @@ $findPlayers->bindParam(':id', $game_id);
                     } ?>
                     <tr>
                         <td colspan=3 class="text-center">
-                            Nouvelle table
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addGame">
+                                Nouvelle table
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -93,3 +102,27 @@ $findPlayers->bindParam(':id', $game_id);
                 </tbody>
             </table>
         </div>
+    </div>
+</div>
+
+
+<!---------------------------------------------------------------------->
+<!------------------------ Modal création table ------------------------>
+<!---------------------------------------------------------------------->
+<div class="modal fade" id="addGame" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Créer une table</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" method="POST">
+                    <label class="form-label">Nom de la table</label>
+                    <input type="text" class="form-control" name="name" required>
+                <button formaction="?page=list&action=add" type="submit" class="btn btn-primary">Ajouter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
