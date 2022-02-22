@@ -16,6 +16,7 @@ class Character
     protected int $wisdom = 10;
     protected int $luck = 10;
     protected ?int $id_user;
+    protected ?int $id_game;
     protected string $img = "src/blank-avatar.png";
 
     public function __construct(array $arr = [])
@@ -418,6 +419,26 @@ class Character
     public function setId_user($id_user)
     {
         $this->id_user = $id_user;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_game
+     */
+    public function getId_game()
+    {
+        return $this->id_game;
+    }
+
+    /**
+     * Set the value of id_game
+     *
+     * @return  self
+     */
+    public function setId_game($id_game)
+    {
+        $this->id_game = $id_game;
 
         return $this;
     }
