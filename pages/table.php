@@ -19,6 +19,7 @@ $pocessChar->setFetchMode(PDO::FETCH_CLASS, Users::class);
 $pocessChar->bindParam(":id", $charac_id);
 
 
+
 ?>
 
 <h1 class="mx-3 pt-3">Personnages de la partie : <?= $game->getName() ?>.</h1>
@@ -40,7 +41,7 @@ $pocessChar->bindParam(":id", $charac_id);
                     </h2>
                 </a>
             </div>
-            <h5 class="mx-auto pb-2">Jouer par : <?= $pocess->getPseudo() ?> </h5>
+            <h5 class="mx-auto pb-2">Jouer par : <?= $pocess->getPseudo() ?></h5>
             <div class="card-footer d-flex justify-content-center">
                 <a href="?page=details&character=<?= $character->getId() ?>&type=deleteChar" class="w-100">
                     <button class="btn m-0 p-0 w-100">
@@ -56,7 +57,7 @@ $pocessChar->bindParam(":id", $charac_id);
     <?php
     }
     ?>
-    <a href="?page=creationCharForm">
+    <a href="?page=creationCharForm&id_game=<?= $id_game ?>">
         <div class="card card-add mx-2 h-100" style="width:15rem; min-height:15rem">
             <svg xmlns="http://www.w3.org/2000/svg" width="50%" height="auto" fill="currentColor" class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
                 <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />

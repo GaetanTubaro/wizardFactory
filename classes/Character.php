@@ -103,6 +103,17 @@ class Character
             $this->setImg($value);
         }
     }
+    public function addGameCharac(PDO $connection, $idCharac, $idGame): bool
+    {
+        $this->setId_game($idGame);
+        $request = 'INSERT INTO `game_character` (id_charac, id_game) VALUES (' . $idCharac . ', ' . $this->getId_game() . ')';
+        $addGameCharac = $connection->exec($request);
+        if ($addGameCharac == false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     /**
      * Get the value of name
      */
