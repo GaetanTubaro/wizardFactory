@@ -3,9 +3,15 @@
 <?php
 $id_user = $_SESSION['id'];
 
-if (isset($_GET['action']) && $_GET['action'] == 'add' && isset($_POST['name'])) {
-    $addGame = $connection->prepare('INSERT INTO games (name, id_mj) VALUES ("' . $_POST['name'] . '", ' . $id_user . ');');
-    $addGame->execute();
+if (isset($_GET['action'])) {
+    if ($_GET['action'] == 'add' && isset($_POST['name'])) {
+        $addGame = $connection->prepare('INSERT INTO games (name, id_mj) VALUES ("' . $_POST['name'] . '", ' . $id_user . ');');
+        $addGame->execute();
+    }
+    if ($_GET['action'] == 'delete' && isset($_GET['game'])) {
+        $deleteGame = $connection->prepare('DELETE FROM games WHERE id = ' . $_GET['game']);
+        $deleteGame->execute();
+    }
     header('Location: ?page=list');
 }
 
@@ -54,10 +60,10 @@ $findPlayers->bindParam(':id', $game_id);
                                 </ul>
                             </td>
                             <td>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                            <a href="?page=list&action=delete&game= <?= $game->getId() ?>"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
                                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                </svg>
+                                </svg></a>
                             </td>
                         </tr>
                     <?php
@@ -91,7 +97,7 @@ $findPlayers->bindParam(':id', $game_id);
                             <td><?= $game['game_name'] ?></td>
                             <td><a href="?page=details&character=<?= $game['character_id'] ?>"><?= $game['character_name'] ?></a></td>
                             <td>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
                                     <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
                                 </svg>
@@ -120,7 +126,7 @@ $findPlayers->bindParam(':id', $game_id);
                 <form action="#" method="POST">
                     <label class="form-label">Nom de la table</label>
                     <input type="text" class="form-control" name="name" required>
-                <button formaction="?page=list&action=add" type="submit" class="btn btn-primary">Ajouter</button>
+                <button formaction="?page=list&action=add" type="submit" class="btn btn-primary mt-3">Ajouter</button>
                 </form>
             </div>
         </div>
