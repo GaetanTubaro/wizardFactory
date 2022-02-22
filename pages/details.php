@@ -18,14 +18,11 @@ $findCharacter->execute();
 $character = $findCharacter->fetch();
 $is_mj = $_SESSION["id"] == $character->id_mj;
 
-<<<<<<< HEAD
-=======
 $playerChar = $connection->prepare('SELECT * FROM `users` JOIN `game_character` ON  users.id = game_character.id_user WHERE id_charac = ' . $character->getId() . ' AND id_game = ' .  $character->getId_game());
 $playerChar->setFetchMode(PDO::FETCH_CLASS, Users::class);
 $playerChar->execute();
 $player = $playerChar->fetch();
 
->>>>>>> cb85673 (correction requet sql)
 if ($character == false || ($_SESSION["id"] != $character->getId_user() && !$is_mj)) {
     header('Location: ?page=list');
 }
