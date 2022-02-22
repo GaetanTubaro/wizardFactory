@@ -1,16 +1,32 @@
 <link href="css/table.css" rel="stylesheet">
 
 <?php
-$id_user = $_SESSION["id"];
-$searchCharacters = $connection->prepare('SELECT * FROM `character_sheets` WHERE id_user = ? ORDER BY name');
-$searchCharacters->bindParam(1, $id_user, PDO::PARAM_STR);
-$searchCharacters->execute();
-$characters = $searchCharacters->fetchAll(PDO::FETCH_CLASS, Character::class);
+
+$id_game = $_GET["table"];
+$searchGame = $connection->prepare('SELECT * FROM `games` WHERE id = ?');
+$searchGame->bindParam(1, $id_game, PDO::PARAM_STR);
+$searchGame->setFetchMode(PDO::FETCH_CLASS, Game::class);
+$searchGame->execute();
+$game = $searchGame->fetch();
+
+$id_game = $game->getId();
+$gameChar = $connection->prepare('SELECT * FROM `character_sheets` JOIN `game_character` ON  character_sheets.id = game_character.id_charac WHERE id_game =' . $game->getId());
+$gameChar->execute();
+$characters = $gameChar->fetchAll(PDO::FETCH_CLASS, Character::class);
+
+$pocessChar = $connection->prepare('SELECT * FROM `users` JOIN `game_character` ON  users.id = game_character.id_user WHERE id_charac = :id AND id_game =' . $game->getId());
+$pocessChar->setFetchMode(PDO::FETCH_CLASS, Users::class);
+$pocessChar->bindParam(":id", $charac_id);
+
+
 ?>
 
+<h1 class="mx-3 pt-3">Personnages de la partie : <?= $game->getName() ?>.</h1>
 <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
-    <?php foreach ($characters as $character) { ?>
-
+    <?php foreach ($characters as $character) {;
+        $charac_id = $character->getId();
+        $pocessChar->execute();
+        $pocess = $pocessChar->fetch(); ?>
         <div class="card mx-2" style="width: 15rem;">
 
             <div class="d-flex flex-column align-items-center" style="height:15rem; width:100%;box-sizing:border-box">
@@ -24,6 +40,7 @@ $characters = $searchCharacters->fetchAll(PDO::FETCH_CLASS, Character::class);
                     </h2>
                 </a>
             </div>
+            <h5 class="mx-auto pb-2">Jouer par : <?= $pocess->getPseudo() ?> </h5>
             <div class="card-footer d-flex justify-content-center">
                 <a href="?page=details&character=<?= $character->getId() ?>&type=deleteChar" class="w-100">
                     <button class="btn m-0 p-0 w-100">
@@ -35,6 +52,7 @@ $characters = $searchCharacters->fetchAll(PDO::FETCH_CLASS, Character::class);
                 </a>
             </div>
         </div>
+
     <?php
     }
     ?>
