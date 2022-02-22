@@ -41,7 +41,11 @@ $pocessChar->bindParam(":id", $charac_id);
                     </h2>
                 </a>
             </div>
-            <h5 class="mx-auto pb-2">Jouer par : <?= $pocess->getPseudo() ?></h5>
+            <?php if ($pocess) { ?>
+                <h5 class="mx-auto pb-2">Joué par : <?= $pocess->getPseudo() ?></h5>
+            <?php } else { ?>
+                <h5 class="mx-auto pb-2">Non affilié</h5>
+            <?php } ?>
             <div class="card-footer d-flex justify-content-center">
                 <a href="?page=details&character=<?= $character->getId() ?>&type=deleteChar" class="w-100">
                     <button class="btn m-0 p-0 w-100">

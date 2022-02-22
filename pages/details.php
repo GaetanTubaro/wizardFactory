@@ -244,9 +244,13 @@ if (isset($_GET['type'])) {
                     <h2 class="stat">Chance</h2>
                     <p class="ms-3"><?= $character->getLuck() ?>
                     </p>
-                    <h2 class="stat">Joueur</h2>
-                    <p class="ms-3"><?= $player->getPseudo() ?>
-                    </p>
+                    <h2 class="stat">Joueur/Joueuse</h2>
+                    <?php if ($player) { ?>
+                        <p class="ms-3"><?= $player->getPseudo() ?>
+                        <?php } else { ?>
+                        <p class="ms-3"> Aucun(e).
+                        <?php } ?>
+                        </p>
 
                 </div>
             </div>
