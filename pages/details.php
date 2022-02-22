@@ -8,7 +8,9 @@ if (isset($_GET["character"])) {
     header('Location: ?page=list');
 }
 
-$findCharacter = $connection->prepare('SELECT * FROM `character_sheets` WHERE id = ?');
+$findCharacter = $connection->prepare('SELECT * FROM `character_sheets`
+JOIN game_character ON character_sheets.id = game_character.id_charac
+WHERE character_sheets.id = ?');
 $findCharacter->bindParam(1, $id_character, PDO::PARAM_STR);
 $findCharacter->setFetchMode(PDO::FETCH_CLASS, Character::class);
 $findCharacter->execute();
