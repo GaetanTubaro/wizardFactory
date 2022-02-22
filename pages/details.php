@@ -8,7 +8,7 @@ if (isset($_GET["character"])) {
     header('Location: ?page=list');
 }
 
-$findCharacter = $connection->prepare('SELECT * FROM `character_sheets`
+$findCharacter = $connection->prepare('SELECT character_sheets.*, game_character.id_user, games.id_mj FROM `character_sheets`
 JOIN game_character ON character_sheets.id = game_character.id_charac
 JOIN games ON game_character.id_game = games.id
 WHERE character_sheets.id = ?');
@@ -16,8 +16,7 @@ $findCharacter->bindParam(1, $id_character, PDO::PARAM_STR);
 $findCharacter->setFetchMode(PDO::FETCH_CLASS, Character::class);
 $findCharacter->execute();
 $character = $findCharacter->fetch();
-$is_mj = $_SESSION["id"] != $character->id_mj;
-
+$is_mj = $_SESSION["id"] == $character->id_mj;
 
 if ($character == false || ($_SESSION["id"] != $character->getId_user() && !$is_mj)) {
     header('Location: ?page=list');
