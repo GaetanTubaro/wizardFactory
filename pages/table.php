@@ -17,9 +17,6 @@ $characters = $gameChar->fetchAll(PDO::FETCH_CLASS, Character::class);
 $pocessChar = $connection->prepare('SELECT * FROM `users` JOIN `game_character` ON  users.id = game_character.id_user WHERE id_charac = :id AND id_game =' . $game->getId());
 $pocessChar->setFetchMode(PDO::FETCH_CLASS, Users::class);
 $pocessChar->bindParam(":id", $charac_id);
-
-
-
 ?>
 
 <h1 class="mx-3 pt-3">Personnages de la partie : <?= $game->getName() ?>.</h1>

@@ -55,8 +55,8 @@ if (isset($_GET['type'])) {
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div><?php
                             }
-                }
-            }
+                        }
+                    }
                     break;
                 case 'changeSkill':
                     if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat'])) {
@@ -145,16 +145,19 @@ if (isset($_GET['type'])) {
                     }
                     break;
                 case 'deleteChar':
-                    $deleteChar = $connection->prepare('DELETE FROM character_sheets WHERE id=' . $_GET['character']);
-                    $deleteChar->execute();
+                    $charDelete = new Character(['id' => $_GET["character"]]);
+                    $charDelete->deleteChar($connection);
                     header('Location: ?page=list');
                     break;
                 case 'changePlayer':
-                    $seekPlayer = $connection->prepare('SELECT pseudo, id FROM users');
-                    $seekPlayer->execute();
-                    $players = $seekPlayer->fetchAll(PDO::FETCH_CLASS, Users::class);
+                    if (isset($_POST['chgPlayer'])) {
+                        $newPlayer = new Users;
+                        $newPlayer->setPseudo($_POST['chgPlayer']);
+                        $newPlayer->linkUserToChar($connection, $id_character);
+                    }
+                    break;
             }
-}
+        }
                                 ?>
 <!-- ------------------------------------------------------------------------------------------------ -->
 <!-- -----------------------------------HTML PART START---------------------------------------------- -->
@@ -171,12 +174,6 @@ if (isset($_GET['type'])) {
                 <h1 class="col-6"><?= $character->getName() ?>
                 </h1>
                 <span class="col-6">
-                    <button class="btn m-1 p-1" data-bs-toggle="modal" data-bs-target="#changePlayer<?= $character->getId() ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-person" viewBox="0 0 16 16">
-                            <path d="M12 1a1 1 0 0 1 1 1v10.755S12 11 8 11s-5 1.755-5 1.755V2a1 1 0 0 1 1-1h8zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4z" />
-                            <path d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-                        </svg>
-                    </button>
                     <button class="btn m-1 p-1" data-bs-toggle="modal" data-bs-target="#charChangeForm<?= $character->getId() ?>">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
@@ -224,12 +221,17 @@ if (isset($_GET['type'])) {
                     </p>
                     <h2 class="stat">Joueur/Joueuse</h2>
                     <?php if ($player) { ?>
-                        <p class="ms-3"><?= $player->getPseudo() ?>
+                        <p class="mt-1 mb-0 ms-3"><?= $player->getPseudo() ?>
                         <?php } else { ?>
-                        <p class="ms-3"> Aucun(e).
+                        <p class="mt-1 mb-0 ms-3"> Aucun(e).
                         <?php } ?>
+                        <button class="btn p-0 mb-2 ms-3" data-bs-toggle="modal" data-bs-target="#changePlayer<?= $character->getId() ?>">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                            </svg>
+                        </button>
                         </p>
-
                 </div>
             </div>
         </div>
@@ -400,8 +402,8 @@ if (isset($_GET['type'])) {
                                         <select class="form-select" name="skill_stat">
                                             <?php foreach (Skill::POSSIBLE_STATS as $statistique) { ?>
                                                 <option value="<?= $statistique ?>" <?php if ($skill->getStats() == $statistique) {
-                                    echo "selected";
-                                } ?>><?= $statistique ?>
+                                                                                        echo "selected";
+                                                                                    } ?>><?= $statistique ?>
                                                 </option>
                                             <?php } ?>
                                         </select>
@@ -576,8 +578,10 @@ if (isset($_GET['type'])) {
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <input type="text" class="form-control mb-3" name="player" required>
-                            <button formaction="?page=details&character=<?= $id_character ?>&type=changePlayer" type="submit" class="btn btn-primary">Modifier</button>
+                            <form method="POST">
+                                <input type="text" class="form-control mb-3" name="chgPlayer" required>
+                                <button formaction="?page=details&character=<?= $id_character ?>&type=changePlayer" type="submit" class="btn btn-primary">Modifier</button>
+                            </form>
                         </div>
                     </div>
                 </div>
