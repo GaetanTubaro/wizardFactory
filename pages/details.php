@@ -152,8 +152,7 @@ if (isset($_GET['type'])) {
                         $changeChar->checkImg($_POST['img']);
                         $errorChar = $changeChar->validateInt();
                         if (empty($errorChar)) {
-                            $requestChange = $connection->prepare("UPDATE `character_sheets` SET name = '" . $changeChar->getName() . "', currentHp = " . $changeChar->getCurrentHp() . ", currentMp = " . $changeChar->getCurrentMp() . ", hpMax = " . $changeChar->getHpMax() . ", initiative = " . $changeChar->getInit() . ", strength = " . $changeChar->getStrength() . ", dexterity = " . $changeChar->getDexterity() . ", mpMax = " . $changeChar->getMpMax() . ", constitution = " . $changeChar->getConstitution() . ", intelligence = " . $changeChar->getIntelligence() . ", wisdom = " . $changeChar->getWisdom() . ", luck = " . $changeChar->getLuck() . ", img = '" . $changeChar->getImg() . "' WHERE id =" . $id_character);
-                            $requestChange->execute();
+                            $changeChar->updateChar($connection, $id_character);
                             header('Location: ?page=details&character=' . $id_character);
                         } else {
                             foreach ($errorChar as $error) { ?>
@@ -244,9 +243,13 @@ if (isset($_GET['type'])) {
                     <h2 class="stat">Chance</h2>
                     <p class="ms-3"><?= $character->getLuck() ?>
                     </p>
-                    <h2 class="stat">Joueur</h2>
-                    <p class="ms-3"><?= $player->getPseudo() ?>
-                    </p>
+                    <h2 class="stat">Joueur/Joueuse</h2>
+                    <?php if ($player) { ?>
+                        <p class="ms-3"><?= $player->getPseudo() ?>
+                        <?php } else { ?>
+                        <p class="ms-3"> Aucun(e).
+                        <?php } ?>
+                        </p>
 
                 </div>
             </div>

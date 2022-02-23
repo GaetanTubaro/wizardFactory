@@ -103,6 +103,37 @@ class Character
             $this->setImg($value);
         }
     }
+    public function linkCharGame(PDO $connection, $idCharac, $idGame): bool
+    {
+        $this->setId_game($idGame);
+        $request = 'INSERT INTO `game_character` (id_charac, id_game) VALUES (' . $idCharac . ', ' . $this->getId_game() . ')';
+        $addGameCharac = $connection->exec($request);
+        if ($addGameCharac == false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public function insertChar($connection): bool
+    {
+        $request = "INSERT INTO `character_sheets` (`name`,`hpMax`,`currentHp`,`mpMax`,`currentMp`,`initiative`,`strength`,`dexterity`,`constitution`,`intelligence`,`wisdom`,`luck`,`img`) VALUES ('" . $this->getName() . "'," . $this->getHpMax() . "," . $this->getCurrentHp() . "," . $this->getMpMax() . "," . $this->getCurrentMp() . "," . $this->getInit() . "," . $this->getStrength() . "," . $this->getDexterity() . "," . $this->getConstitution() . "," . $this->getIntelligence() . "," . $this->getWisdom() . "," . $this->getLuck() . ",'" . $this->getImg() . "')";
+        $insertChar = $connection->exec($request);
+        if ($insertChar == false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public function updateChar($connection, $id_character)
+    {
+        $request = "UPDATE `character_sheets` SET name = '" . $this->getName() . "', currentHp = " . $this->getCurrentHp() . ", currentMp = " . $this->getCurrentMp() . ", hpMax = " . $this->getHpMax() . ", initiative = " . $this->getInit() . ", strength = " . $this->getStrength() . ", dexterity = " . $this->getDexterity() . ", mpMax = " . $this->getMpMax() . ", constitution = " . $this->getConstitution() . ", intelligence = " . $this->getIntelligence() . ", wisdom = " . $this->getWisdom() . ", luck = " . $this->getLuck() . ", img = '" . $this->getImg() . "' WHERE id =" . $id_character;
+        $updateChar = $connection->exec($request);
+        if ($updateChar == false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     /**
      * Get the value of name
      */
