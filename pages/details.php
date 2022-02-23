@@ -41,7 +41,7 @@ if (isset($_GET['type'])) {
     switch ($_GET['type']) {
         case 'addSkill':
             if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat'])) {
-                $infoSkill = array_merge($_POST, ['id_character' => $id_character]);
+                $infoSkill = array_merge($_POST, ['id_character' => $id_character, 'id_game' => $player->id_game]);
                 $skillAdded = new Skill($infoSkill);
                 $errors = $skillAdded->checkData();
                 if (empty($errors)) {
@@ -60,7 +60,7 @@ if (isset($_GET['type'])) {
                     break;
                 case 'changeSkill':
                     if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat'])) {
-                        $infoSkill = array_merge($_POST, ['id_character' => $id_character, 'id_skill' => $_GET['idSkill']]);
+                        $infoSkill = array_merge($_POST, ['id_character' => $id_character, 'id_skill' => $_GET['idSkill'], 'id_game' => $player->id_game]);
                         $skillChange = new Skill($infoSkill);
                         $errors = $skillChange->checkData();
                         if (empty($errors)) {
@@ -84,7 +84,7 @@ if (isset($_GET['type'])) {
                     break;
                 case 'addEquipment':
                     if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
-                        $infosEquipment = array_merge($_POST, ['id_character' => $id_character]);
+                        $infosEquipment = array_merge($_POST, ['id_character' => $id_character, 'id_game' => $player->id_game]);
                         $equipmentAdded = new Equipment($infosEquipment);
                         $errors = $equipmentAdded->checkData();
                         if (empty($errors)) {
@@ -103,7 +103,7 @@ if (isset($_GET['type'])) {
                     break;
                 case 'changeEquipment':
                     if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
-                        $infosEquipment = array_merge($_POST, ['id_equipment' => $_GET['idEquipment']]);
+                        $infosEquipment = array_merge($_POST, ['id_equipment' => $_GET['idEquipment'], 'id_game' => $player->id_game]);
                         $equipmentChange = new Equipment($infosEquipment);
                         $errors = $equipmentChange->checkData();
                         if (empty($errors)) {

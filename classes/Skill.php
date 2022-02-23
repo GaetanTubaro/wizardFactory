@@ -8,14 +8,16 @@ class Skill
     protected string $name;
     protected string $stats;
     protected int $level;
+    protected int $id_game;
     protected ?int $id_charac = null;
 
     public function __construct(array $infos = [])
     {
-        if (isset($infos['skill_name']) && isset($infos['skill_level']) && isset($infos['skill_stat'])) {
+        if (isset($infos['skill_name']) && isset($infos['skill_level']) && isset($infos['skill_stat']) && isset($infos['id_game'])) {
             $this->setName($infos['skill_name'])
             ->setLevel($infos['skill_level'])
-            ->setStats($infos['skill_stat']);
+            ->setStats($infos['skill_stat'])
+            ->setId_game($infos['id_game']);
         }
         if (isset($infos['id_character'])) {
             $this->setOwner($infos['id_character']);
@@ -35,13 +37,8 @@ class Skill
         $sql = 'INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $this->getName() . '","' . $this->getStats() . '",' . $this->getLevel() . ',' . $owner . ')';
         $addSkill = $connection->exec($sql);
         $this->setId($connection->lastInsertId());
-        if (null != $this->getOwner()) {
-            $sql = $connection->prepare('SELECT id_game FROM game_character WHERE id_charac = ' . $this->getOwner());
-            $sql->execute();
-            $id_game = $sql->fetch(PDO::FETCH_ASSOC);
-            $sql = 'INSERT INTO game_skill (id_skill, id_game) VALUES (' . $this->getId() . ', ' . $id_game['id_game'] . ')';
-            $connection->exec($sql);
-        }
+        $sql = 'INSERT INTO game_skill (id_skill, id_game) VALUES (' . $this->getId() . ', ' . $this->getId_game() . ')';
+        $connection->exec($sql);
         if ($addSkill == false || $addSkill == 0) {
             return false;
         } else {
@@ -181,6 +178,26 @@ class Skill
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_game
+     */
+    public function getId_game()
+    {
+        return $this->id_game;
+    }
+
+    /**
+     * Set the value of id_game
+     *
+     * @return  self
+     */
+    public function setId_game($id_game)
+    {
+        $this->id_game = $id_game;
 
         return $this;
     }

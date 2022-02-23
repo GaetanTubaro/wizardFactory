@@ -6,14 +6,16 @@ class Equipment
     protected string $name;
     protected int $damages;
     protected int $range_area;
-    protected int $id_charac;
+    protected int $id_game;
+    protected ?int $id_charac = null;
 
     public function __construct(array $infos = [])
     {
-        if (isset($infos['equipment_name']) && isset($infos['equipment_damages']) && isset($infos['equipment_range'])) {
+        if (isset($infos['equipment_name']) && isset($infos['equipment_damages']) && isset($infos['equipment_range']) && isset($infos['id_game'])) {
             $this->setName($_POST['equipment_name'])
             ->setDamages($_POST['equipment_damages'])
-            ->setRange($_POST['equipment_range']);
+            ->setRange($_POST['equipment_range'])
+            ->setId_game($infos['id_game']);
         }
         if (isset($infos['id_character'])) {
             $this->setOwner($infos['id_character']);
@@ -25,8 +27,16 @@ class Equipment
 
     public function addEquipment(PDO $connection) : bool
     {
-        $sql = 'INSERT INTO equipments (name, damages, range_area, id_charac) VALUES ("' . $this->getName() . '","' . $this->getDamages() . '",' . $this->getRange() . ',' . $this->getOwner() . ')';
+        if ($this->getOwner() == null) {
+            $owner = "null";
+        } else {
+            $owner = $this->getOwner();
+        }
+        $sql = 'INSERT INTO equipments (name, damages, range_area, id_charac) VALUES ("' . $this->getName() . '","' . $this->getDamages() . '",' . $this->getRange() . ',' . $owner . ')';
         $addEquipment = $connection->exec($sql);
+        $this->setId($connection->lastInsertId());
+        $sql = 'INSERT INTO game_equipment (id_equipment, id_game) VALUES (' . $this->getId() . ', ' . $this->getId_game() . ')';
+        $connection->exec($sql);
         if ($addEquipment == false || $addEquipment == 0) {
             return false;
         } else {
@@ -47,6 +57,8 @@ class Equipment
 
     public function deleteEquipment(PDO $connection) : bool
     {
+        $sql = 'DELETE FROM game_equipment WHERE id_equipment=' . $this->getId();
+        $deleteSkill = $connection->exec($sql);
         $sql = 'DELETE FROM equipments WHERE id=' . $this->getId();
         $deleteEquipment = $connection->exec($sql);
         if ($deleteEquipment == false || $deleteEquipment == 0) {
@@ -164,6 +176,26 @@ class Equipment
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_game
+     */
+    public function getId_game()
+    {
+        return $this->id_game;
+    }
+
+    /**
+     * Set the value of id_game
+     *
+     * @return  self
+     */
+    public function setId_game($id_game)
+    {
+        $this->id_game = $id_game;
 
         return $this;
     }
