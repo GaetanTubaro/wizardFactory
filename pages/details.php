@@ -28,12 +28,12 @@ if (isset($_GET['type'])) {
                 } else {
                     foreach ($errors as $error) {
                         ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                valide.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    <?php
+<div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+    <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+        valide.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php
                     }
                 }
             }
@@ -53,11 +53,11 @@ if (isset($_GET['type'])) {
                     header('Location: ?page=details&character=' . $id_character);
                 } else {
                     foreach ($errors as $error) { ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                valide.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div><?php
+<div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+    <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+        valide.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div><?php
                             }
                 }
             }
@@ -78,11 +78,11 @@ if (isset($_GET['type'])) {
                             header('Location: ?page=details&character=' . $id_character);
                         } else {
                             foreach ($errors as $error) { ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                valide.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div><?php
+<div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+    <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+        valide.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div><?php
                             }
                         }
                     }
@@ -102,11 +102,11 @@ if (isset($_GET['type'])) {
                             header('Location: ?page=details&character=' . $id_character);
                         } else {
                             foreach ($errors as $error) { ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                valide.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div><?php
+<div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+    <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+        valide.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div><?php
                             }
                         }
                     }
@@ -127,11 +127,11 @@ if (isset($_GET['type'])) {
                             header('Location: ?page=details&character=' . $id_character);
                         } else {
                             foreach ($errorChar as $error) { ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Oups ! <?= $error ?>. Veuillez entrer une donnée
-                                valide.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div><?php
+<div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+    <p class="mb-0">Oups ! <?= $error ?>. Veuillez entrer une donnée
+        valide.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div><?php
                             }
                         }
                     }
@@ -143,7 +143,7 @@ if (isset($_GET['type'])) {
                     break;
                 case 'changePlayer':
                     if (isset($_POST['chgPlayer'])) {
-                        $newPlayer = new Users;
+                        $newPlayer = new Users();
                         $newPlayer->setPseudo($_POST['chgPlayer']);
                         $newPlayer->linkUserToChar($connection, $id_character);
                     }
