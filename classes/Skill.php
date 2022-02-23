@@ -10,6 +10,54 @@ class Skill
     protected int $level;
     protected int $id_charac;
 
+    public function __construct(array $infos = [])
+    {
+        if (isset($infos['skill_name']) && isset($infos['skill_level']) && isset($infos['skill_stat'])) {
+            $this->setName($infos['skill_name'])
+            ->setLevel($infos['skill_level'])
+            ->setStats($infos['skill_stat']);
+        }
+        if (isset($infos['id_character'])) {
+            $this->setOwner($infos['id_character']);
+        }
+        if (isset($infos['id_skill'])) {
+            $this->setId($infos['id_skill']);
+        }
+    }
+
+    public function addSkill(PDO $connection) : bool
+    {
+        $sql = 'INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $this->getName() . '","' . $this->getStats() . '",' . $this->getLevel() . ',' . $this->getOwner() . ')';
+        $addSkill = $connection->exec($sql);
+        if ($addSkill == false || $addSkill == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function changeSkill(PDO $connection) : bool
+    {
+        $sql = 'UPDATE skills SET name = "' . $this->getName() . '", level = ' . $this->getLevel() . ', stats = "' . $this->getStats() . '" WHERE id =' . $this->getId();
+        $changeSkill = $connection->exec($sql);
+        if ($changeSkill == false || $changeSkill == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function deleteSkill(PDO $connection) : bool
+    {
+        $sql = 'DELETE FROM skills WHERE id=' . $this->getId();
+        $deleteSkill = $connection->exec($sql);
+        if ($deleteSkill == false || $deleteSkill == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function checkData() : array
     {
         $errors = [];
