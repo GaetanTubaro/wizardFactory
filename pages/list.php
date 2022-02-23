@@ -1,7 +1,11 @@
 <link href="css/list.css" rel="stylesheet">
 
 <?php
-$id_user = $_SESSION['id'];
+if (isset($_SESSION['id'])) {
+    $id_user = $_SESSION['id'];
+} else {
+    header('Location: ?page=login');
+}
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'add' && isset($_POST['name'])) {
