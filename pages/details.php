@@ -41,16 +41,11 @@ if (isset($_GET['type'])) {
     switch ($_GET['type']) {
         case 'addSkill':
             if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat'])) {
-                $skillAdded = new Skill();
-                $skillAdded
-                    ->setName($_POST['skill_name'])
-                    ->setLevel($_POST['skill_level'])
-                    ->setStats($_POST['skill_stat'])
-                    ->setOwner($id_character);
+                $infoSkill = array_merge($_POST, ['id_character' => $id_character]);
+                $skillAdded = new Skill($infoSkill);
                 $errors = $skillAdded->checkData();
                 if (empty($errors)) {
-                    $addSkill = $connection->prepare('INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $skillAdded->getName() . '","' . $skillAdded->getStats() . '",' . $skillAdded->getLevel() . ',' . $skillAdded->getOwner() . ')');
-                    $addSkill->execute();
+                    $skillAdded->addSkill($connection);
                     header('Location: ?page=details&character=' . $id_character);
                 } else {
                     foreach ($errors as $error) { ?>
@@ -60,22 +55,16 @@ if (isset($_GET['type'])) {
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div><?php
                             }
-                        }
-                    }
+                }
+            }
                     break;
                 case 'changeSkill':
                     if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat'])) {
-                        $skillChange = new Skill();
-                        $skillChange
-                            ->setId($_GET['idSkill'])
-                            ->setName($_POST['skill_name'])
-                            ->setLevel($_POST['skill_level'])
-                            ->setStats($_POST['skill_stat'])
-                            ->setOwner($id_character);
+                        $infoSkill = array_merge($_POST, ['id_character' => $id_character, 'id_skill' => $_GET['idSkill']]);
+                        $skillChange = new Skill($infoSkill);
                         $errors = $skillChange->checkData();
                         if (empty($errors)) {
-                            $changeSkill = $connection->prepare('UPDATE skills SET name = "' . $skillChange->getName() . '", level = ' . $skillChange->getLevel() . ', stats = "' . $skillChange->getStats() . '" WHERE id =' . $skillChange->getId());
-                            $changeSkill->execute();
+                            $skillChange->changeSkill($connection);
                             header('Location: ?page=details&character=' . $id_character);
                         } else {
                             foreach ($errors as $error) { ?>
@@ -89,8 +78,8 @@ if (isset($_GET['type'])) {
                     }
                     break;
                 case 'deleteSkill':
-                    $deleteSkill = $connection->prepare('DELETE FROM skills WHERE id=' . $_GET['idSkill']);
-                    $deleteSkill->execute();
+                    $deletedSkill = new Skill(['id_skill' => $_GET['idSkill']]);
+                    $deletedSkill->deleteSkill($connection);
                     header('Location: ?page=details&character=' . $id_character);
                     break;
                 case 'addEquipment':
@@ -176,7 +165,7 @@ if (isset($_GET['type'])) {
                     $seekPlayer->execute();
                     $players = $seekPlayer->fetchAll(PDO::FETCH_CLASS, Users::class);
             }
-        }
+}
                                 ?>
 <!-- ------------------------------------------------------------------------------------------------ -->
 <!-- -----------------------------------HTML PART START---------------------------------------------- -->
@@ -418,8 +407,8 @@ if (isset($_GET['type'])) {
                                         <select class="form-select" name="skill_stat">
                                             <?php foreach (Skill::POSSIBLE_STATS as $statistique) { ?>
                                                 <option value="<?= $statistique ?>" <?php if ($skill->getStats() == $statistique) {
-                                                                                        echo "selected";
-                                                                                    } ?>><?= $statistique ?>
+                                    echo "selected";
+                                } ?>><?= $statistique ?>
                                                 </option>
                                             <?php } ?>
                                         </select>
