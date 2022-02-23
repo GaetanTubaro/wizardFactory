@@ -145,8 +145,8 @@ if (isset($_GET['type'])) {
                     }
                     break;
                 case 'deleteChar':
-                    $deleteChar = $connection->prepare('DELETE FROM character_sheets WHERE id=' . $_GET['character']);
-                    $deleteChar->execute();
+                    $charDelete = new Character(['id' => $_GET["character"]]);
+                    $charDelete->deleteChar($connection);
                     header('Location: ?page=list');
                     break;
                 case 'changePlayer':

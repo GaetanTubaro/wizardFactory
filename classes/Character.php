@@ -22,27 +22,32 @@ class Character
     public function __construct(array $arr = [])
     {
         if (!empty($arr)) {
-            $this->setName($arr['name']);
-            $this->setHpMax(intval($arr['hpMax']));
-            $this->setMpMax(intval($arr['mpMax']));
-            if (isset($arr['currentHp'])) {
-                $this->setCurrentHp(intval($arr['currentHp']));
-            } else {
-                $this->setCurrentHp(intval($arr['hpMax']));
+            if (isset($arr['name']) && isset($arr['hpMax']) && isset($arr['mpMax']) && isset($arr['init']) && isset($arr['strength']) && isset($arr['dexterity']) && isset($arr['constitution']) && isset($arr['intelligence']) && isset($arr['wisdom']) && isset($arr['luck']) && isset($_SESSION['id'])) {
+                $this->setName($arr['name']);
+                $this->setHpMax(intval($arr['hpMax']));
+                $this->setMpMax(intval($arr['mpMax']));
+                if (isset($arr['currentHp'])) {
+                    $this->setCurrentHp(intval($arr['currentHp']));
+                } else {
+                    $this->setCurrentHp(intval($arr['hpMax']));
+                }
+                if (isset($arr['currentMp'])) {
+                    $this->setCurrentMp(intval($arr['currentMp']));
+                } else {
+                    $this->setCurrentMp(intval($arr['mpMax']));
+                }
+                $this->setInit(intval($arr['init']));
+                $this->setStrength(intval($arr['strength']));
+                $this->setDexterity(intval($arr['dexterity']));
+                $this->setConstitution(intval($arr['constitution']));
+                $this->setIntelligence(intval($arr['intelligence']));
+                $this->setWisdom(intval($arr['wisdom']));
+                $this->setLuck(intval($arr['luck']));
+                $this->setId_user($_SESSION['id']);
             }
-            if (isset($arr['currentMp'])) {
-                $this->setCurrentMp(intval($arr['currentMp']));
-            } else {
-                $this->setCurrentMp(intval($arr['mpMax']));
+            if (isset($arr['id'])) {
+                $this->setId($arr['id']);
             }
-            $this->setInit(intval($arr['init']));
-            $this->setStrength(intval($arr['strength']));
-            $this->setDexterity(intval($arr['dexterity']));
-            $this->setConstitution(intval($arr['constitution']));
-            $this->setIntelligence(intval($arr['intelligence']));
-            $this->setWisdom(intval($arr['wisdom']));
-            $this->setLuck(intval($arr['luck']));
-            $this->setId_user($_SESSION['id']);
         }
     }
     public function validateInt(): array
@@ -132,6 +137,22 @@ class Character
             return false;
         } else {
             return true;
+        }
+    }
+    public function deleteChar($connection): bool
+    {
+        $firstRequest = 'DELETE FROM game_character WHERE id_charac =' . $this->getId();
+        $deleteLinkChar = $connection->exec($firstRequest);
+        if ($deleteLinkChar == false || $deleteLinkChar == 0) {
+            return false;
+        } else {
+            $secondRequest = 'DELETE FROM character_sheets WHERE id=' . $this->getId();
+            $deleteChar = $connection->exec($secondRequest);
+            if ($deleteChar == false || $deleteChar == 0) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
     /**
