@@ -8,14 +8,16 @@ class Skill
     protected string $name;
     protected string $stats;
     protected int $level;
-    protected int $id_charac;
+    protected int $id_game;
+    protected ?int $id_charac = null;
 
     public function __construct(array $infos = [])
     {
-        if (isset($infos['skill_name']) && isset($infos['skill_level']) && isset($infos['skill_stat'])) {
+        if (isset($infos['skill_name']) && isset($infos['skill_level']) && isset($infos['skill_stat']) && isset($infos['id_game'])) {
             $this->setName($infos['skill_name'])
             ->setLevel($infos['skill_level'])
-            ->setStats($infos['skill_stat']);
+            ->setStats($infos['skill_stat'])
+            ->setId_game($infos['id_game']);
         }
         if (isset($infos['id_character'])) {
             $this->setOwner($infos['id_character']);
@@ -27,8 +29,16 @@ class Skill
 
     public function addSkill(PDO $connection) : bool
     {
-        $sql = 'INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $this->getName() . '","' . $this->getStats() . '",' . $this->getLevel() . ',' . $this->getOwner() . ')';
+        if ($this->getOwner() == null) {
+            $owner = "null";
+        } else {
+            $owner = $this->getOwner();
+        }
+        $sql = 'INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $this->getName() . '","' . $this->getStats() . '",' . $this->getLevel() . ',' . $owner . ')';
         $addSkill = $connection->exec($sql);
+        $this->setId($connection->lastInsertId());
+        $sql = 'INSERT INTO game_skill (id_skill, id_game) VALUES (' . $this->getId() . ', ' . $this->getId_game() . ')';
+        $connection->exec($sql);
         if ($addSkill == false || $addSkill == 0) {
             return false;
         } else {
@@ -49,6 +59,8 @@ class Skill
 
     public function deleteSkill(PDO $connection) : bool
     {
+        $sql = 'DELETE FROM game_skill WHERE id_skill=' . $this->getId();
+        $deleteSkill = $connection->exec($sql);
         $sql = 'DELETE FROM skills WHERE id=' . $this->getId();
         $deleteSkill = $connection->exec($sql);
         if ($deleteSkill == false || $deleteSkill == 0) {
@@ -166,6 +178,26 @@ class Skill
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_game
+     */
+    public function getId_game()
+    {
+        return $this->id_game;
+    }
+
+    /**
+     * Set the value of id_game
+     *
+     * @return  self
+     */
+    public function setId_game($id_game)
+    {
+        $this->id_game = $id_game;
 
         return $this;
     }
