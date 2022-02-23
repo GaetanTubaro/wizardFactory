@@ -103,12 +103,22 @@ class Character
             $this->setImg($value);
         }
     }
-    public function addGameCharac(PDO $connection, $idCharac, $idGame): bool
+    public function linkCharGame(PDO $connection, $idCharac, $idGame): bool
     {
         $this->setId_game($idGame);
         $request = 'INSERT INTO `game_character` (id_charac, id_game) VALUES (' . $idCharac . ', ' . $this->getId_game() . ')';
         $addGameCharac = $connection->exec($request);
         if ($addGameCharac == false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public function insertChar($connection)
+    {
+        $request = "INSERT INTO `character_sheets` (`name`,`hpMax`,`currentHp`,`mpMax`,`currentMp`,`initiative`,`strength`,`dexterity`,`constitution`,`intelligence`,`wisdom`,`luck`,`img`) VALUES ('" . $this->getName() . "'," . $this->getHpMax() . "," . $this->getCurrentHp() . "," . $this->getMpMax() . "," . $this->getCurrentMp() . "," . $this->getInit() . "," . $this->getStrength() . "," . $this->getDexterity() . "," . $this->getConstitution() . "," . $this->getIntelligence() . "," . $this->getWisdom() . "," . $this->getLuck() . ",'" . $this->getImg() . "')";
+        $insertChar = $connection->exec($request);
+        if ($insertChar == false) {
             return false;
         } else {
             return true;

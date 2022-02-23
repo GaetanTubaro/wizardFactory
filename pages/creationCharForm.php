@@ -7,10 +7,9 @@ if (isset($_POST['name']) && isset($_POST['hpMax']) && isset($_POST['mpMax']) &&
     $testChar = $newChar->validateInt();
     $testCount = $newChar->validateCount();
     if (empty($testChar) && empty($testCount)) {
-        $request = "INSERT INTO `character_sheets` (`name`,`hpMax`,`currentHp`,`mpMax`,`currentMp`,`initiative`,`strength`,`dexterity`,`constitution`,`intelligence`,`wisdom`,`luck`,`img`) VALUES ('" . $newChar->getName() . "'," . $newChar->getHpMax() . "," . $newChar->getCurrentHp() . "," . $newChar->getMpMax() . "," . $newChar->getCurrentMp() . "," . $newChar->getInit() . "," . $newChar->getStrength() . "," . $newChar->getDexterity() . "," . $newChar->getConstitution() . "," . $newChar->getIntelligence() . "," . $newChar->getWisdom() . "," . $newChar->getLuck() . ",'" . $newChar->getImg() . "')";
-        $count = $connection->exec($request);
+        $newChar->insertChar($connection);
         $idCharac = $connection->lastInsertId();
-        $newChar->addGameCharac($connection, $idCharac, $_GET['id_game']);
+        $newChar->linkCharGame($connection, $idCharac, $_GET['id_game']);
         header('location: ?page=list');
     } else {
         if (!empty($testCount)) {
