@@ -153,27 +153,7 @@ if (isset($_GET['type'])) {
                     if (isset($_POST['chgPlayer'])) {
                         $newPlayer = new Users;
                         $newPlayer->setPseudo($_POST['chgPlayer']);
-                        $findUser = $connection->prepare('SELECT id, pseudo FROM users WHERE pseudo="' . $newPlayer->getPseudo() . '"');
-                        $findUser->setFetchMode(PDO::FETCH_CLASS, Users::class);
-                        $findUser->execute();
-                        $user = $findUser->fetch();
-                        if (empty($user)) { ?>
-                    <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                        <p class="mb-0">Joueur inconnu ou pseudo incorrect.</p>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div><?php
-                        } else {
-                            $request = 'UPDATE game_character SET id_user =' . $user->getId() . ' WHERE id_charac =' . $id_character;
-                            $linkUserChar = $connection->exec($request);
-                            if ($linkUserChar == false || $linkUserChar == 0) { ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Une erreure est survenue. Veuillez recommencer.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div><?php
-                            } else {
-                                header('Location: ?page=details&character=' . $id_character);
-                            }
-                        }
+                        $newPlayer->linkUser($connection, $id_character);
                     }
                     break;
             }
