@@ -8,6 +8,54 @@ class Equipment
     protected int $range_area;
     protected int $id_charac;
 
+    public function __construct(array $infos = [])
+    {
+        if (isset($infos['equipment_name']) && isset($infos['equipment_damages']) && isset($infos['equipment_range'])) {
+            $this->setName($_POST['equipment_name'])
+            ->setDamages($_POST['equipment_damages'])
+            ->setRange($_POST['equipment_range']);
+        }
+        if (isset($infos['id_character'])) {
+            $this->setOwner($infos['id_character']);
+        }
+        if (isset($infos['id_equipment'])) {
+            $this->setId($infos['id_equipment']);
+        }
+    }
+
+    public function addEquipment(PDO $connection) : bool
+    {
+        $sql = 'INSERT INTO equipments (name, damages, range_area, id_charac) VALUES ("' . $this->getName() . '","' . $this->getDamages() . '",' . $this->getRange() . ',' . $this->getOwner() . ')';
+        $addEquipment = $connection->exec($sql);
+        if ($addEquipment == false || $addEquipment == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function changeEquipment(PDO $connection) : bool
+    {
+        $sql = 'UPDATE equipments SET name ="' . $this->getName() . '", damages =' . $this->getDamages() . ', range_area =' . $this->getRange() . ' WHERE id=' . $this->getId();
+        $changeEquipment = $connection->exec($sql);
+        if ($changeEquipment == false || $changeEquipment == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function deleteEquipment(PDO $connection) : bool
+    {
+        $sql = 'DELETE FROM equipments WHERE id=' . $this->getId();
+        $deleteEquipment = $connection->exec($sql);
+        if ($deleteEquipment == false || $deleteEquipment == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public function checkData(): array
     {
         $errors = [];

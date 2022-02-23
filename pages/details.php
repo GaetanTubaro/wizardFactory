@@ -84,16 +84,11 @@ if (isset($_GET['type'])) {
                     break;
                 case 'addEquipment':
                     if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
-                        $equipmentAdded = new Equipment();
-                        $equipmentAdded
-                            ->setName($_POST['equipment_name'])
-                            ->setDamages($_POST['equipment_damages'])
-                            ->setRange($_POST['equipment_range'])
-                            ->setOwner($id_character);
+                        $infosEquipment = array_merge($_POST, ['id_character' => $id_character]);
+                        $equipmentAdded = new Equipment($infosEquipment);
                         $errors = $equipmentAdded->checkData();
                         if (empty($errors)) {
-                            $addEquipment = $connection->prepare('INSERT INTO equipments (name, damages, range_area, id_charac) VALUES ("' . $equipmentAdded->getName() . '","' . $equipmentAdded->getDamages() . '",' . $equipmentAdded->getRange() . ',' . $equipmentAdded->getOwner() . ')');
-                            $addEquipment->execute();
+                            $equipmentAdded->addEquipment($connection);
                             header('Location: ?page=details&character=' . $id_character);
                         } else {
                             foreach ($errors as $error) { ?>
@@ -108,16 +103,11 @@ if (isset($_GET['type'])) {
                     break;
                 case 'changeEquipment':
                     if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
-                        $equipmentChange = new Equipment();
-                        $equipmentChange
-                            ->setName($_POST['equipment_name'])
-                            ->setDamages($_POST['equipment_damages'])
-                            ->setRange($_POST['equipment_range'])
-                            ->setOwner($id_character);
+                        $infosEquipment = array_merge($_POST, ['id_equipment' => $_GET['idEquipment']]);
+                        $equipmentChange = new Equipment($infosEquipment);
                         $errors = $equipmentChange->checkData();
                         if (empty($errors)) {
-                            $changeEquipment = $connection->prepare('UPDATE equipments SET name ="' . $equipmentChange->getName() . '", damages =' . $equipmentChange->getDamages() . ', range_area =' . $equipmentChange->getRange() . ' WHERE id=' . $_GET['idEquipment']);
-                            $changeEquipment->execute();
+                            $equipmentChange->changeEquipment($connection);
                             header('Location: ?page=details&character=' . $id_character);
                         } else {
                             foreach ($errors as $error) { ?>
@@ -131,8 +121,8 @@ if (isset($_GET['type'])) {
                     }
                     break;
                 case 'deleteEquipment':
-                    $deleteEquipment = $connection->prepare('DELETE FROM equipments WHERE id=' . $_GET['idEquipment']);
-                    $deleteEquipment->execute();
+                    $deletedEquipment = new Equipment(['id_equipment' => $_GET['idEquipment']]);
+                    $deletedEquipment->deleteEquipment($connection);
                     header('Location: ?page=details&character=' . $id_character);
                     break;
                 case 'charChange':
