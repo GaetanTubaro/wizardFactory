@@ -5,7 +5,7 @@ class Users
     protected string $pseudo;
     protected string $password;
 
-    public function linkUser($connection, $id_character)
+    public function linkUserToChar($connection, $id_character)
     {
         $findUser = $connection->prepare('SELECT id, pseudo FROM users WHERE pseudo="' . $this->getPseudo() . '"');
         $findUser->setFetchMode(PDO::FETCH_CLASS, Users::class);

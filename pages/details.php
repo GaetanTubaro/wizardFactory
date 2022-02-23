@@ -153,7 +153,7 @@ if (isset($_GET['type'])) {
                     if (isset($_POST['chgPlayer'])) {
                         $newPlayer = new Users;
                         $newPlayer->setPseudo($_POST['chgPlayer']);
-                        $newPlayer->linkUser($connection, $id_character);
+                        $newPlayer->linkUserToChar($connection, $id_character);
                     }
                     break;
             }
