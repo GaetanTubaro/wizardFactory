@@ -8,7 +8,7 @@ class Skill
     protected string $name;
     protected string $stats;
     protected int $level;
-    protected int $id_charac;
+    protected ?int $id_charac = null;
 
     public function __construct(array $infos = [])
     {
@@ -27,8 +27,21 @@ class Skill
 
     public function addSkill(PDO $connection) : bool
     {
-        $sql = 'INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $this->getName() . '","' . $this->getStats() . '",' . $this->getLevel() . ',' . $this->getOwner() . ')';
+        if ($this->getOwner() == null) {
+            $owner = "null";
+        } else {
+            $owner = $this->getOwner();
+        }
+        $sql = 'INSERT INTO skills (name, stats, level, id_charac) VALUES ("' . $this->getName() . '","' . $this->getStats() . '",' . $this->getLevel() . ',' . $owner . ')';
         $addSkill = $connection->exec($sql);
+        $this->setId($connection->lastInsertId());
+        if (null != $this->getOwner()) {
+            $sql = $connection->prepare('SELECT id_game FROM game_character WHERE id_charac = ' . $this->getOwner());
+            $sql->execute();
+            $id_game = $sql->fetch(PDO::FETCH_ASSOC);
+            $sql = 'INSERT INTO game_skill (id_skill, id_game) VALUES (' . $this->getId() . ', ' . $id_game['id_game'] . ')';
+            $connection->exec($sql);
+        }
         if ($addSkill == false || $addSkill == 0) {
             return false;
         } else {
@@ -49,6 +62,8 @@ class Skill
 
     public function deleteSkill(PDO $connection) : bool
     {
+        $sql = 'DELETE FROM game_skill WHERE id_skill=' . $this->getId();
+        $deleteSkill = $connection->exec($sql);
         $sql = 'DELETE FROM skills WHERE id=' . $this->getId();
         $deleteSkill = $connection->exec($sql);
         if ($deleteSkill == false || $deleteSkill == 0) {
