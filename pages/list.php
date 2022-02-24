@@ -31,9 +31,16 @@ if (isset($_GET['action'])) {
                 $findUser->setFetchMode(PDO::FETCH_CLASS, Users::class);
                 $findUser->execute();
                 $user = $findUser->fetch();
-                $changeRequestMj = 'UPDATE games SET id_mj =' . $user->getId() . ' WHERE id=' . $_GET['game'];
-                $changeMj = $connection->exec($changeRequestMj);
-                header('Location: ?page=list');
+                if ($user == false || $user == 0) { ?>
+                    <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+                        <p class="mb-0">Joueur inconnu ou pseudo incorrect.</p>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+<?php } else {
+                    $changeRequestMj = 'UPDATE games SET id_mj =' . $user->getId() . ' WHERE id=' . $_GET['game'];
+                    $changeMj = $connection->exec($changeRequestMj);
+                    header('Location: ?page=list');
+                }
             }
             break;
     }
