@@ -6,7 +6,29 @@ class Game
     protected string $name;
     protected int $id_mj;
 
-
+    public function deleteTable($connection)
+    {
+        $searchSkills = $connection->prepare('SELECT * FROM game_skill INNER JOIN skills ON skills.id = game_skill.id_skill WHERE id_game =' . $this->getId());
+        $searchSkills->execute();
+        $skills = $searchSkills->fetchAll(PDO::FETCH_CLASS, Skill::class);
+        foreach ($skills as $skill) {
+            $skill->deleteSkill($connection);
+        }
+        $searchEquipments = $connection->prepare('SELECT * FROM game_equipment INNER JOIN equipments ON equipments.id = game_equipment.id_equipment WHERE id_game =' . $this->getId());
+        $searchEquipments->execute();
+        $equipments = $searchEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
+        foreach ($equipments as $equipment) {
+            $equipment->deleteEquipment($connection);
+        }
+        $searchCharacters = $connection->prepare('SELECT * FROM game_character INNER JOIN character_sheets ON character_sheets.id = game_character.id_charac WHERE id_game =' . $this->getId());
+        $searchCharacters->execute();
+        $characters = $searchCharacters->fetchAll(PDO::FETCH_CLASS, Character::class);
+        foreach ($characters as $character) {
+            $character->deleteChar($connection);
+        }
+        $deleteGame = $connection->prepare('DELETE FROM games WHERE id = ' . $_GET['game']);
+        $deleteGame->execute();
+    }
 
     public function validateMj(): bool
     {
