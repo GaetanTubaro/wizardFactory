@@ -143,6 +143,10 @@ class Character
     {
         $firstRequest = 'DELETE FROM game_character WHERE id_charac =' . $this->getId();
         $deleteLinkChar = $connection->exec($firstRequest);
+        $thirdRequest = 'UPDATE equipments SET id_charac = null WHERE id_charac =' . $this->getId();
+        $fourthRequest = 'UPDATE skills SET id_charac = null WHERE id_charac =' . $this->getId();
+        $connection->exec($thirdRequest);
+        $connection->exec($fourthRequest);
         if ($deleteLinkChar == false || $deleteLinkChar == 0) {
             return false;
         } else {
