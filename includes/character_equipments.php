@@ -4,6 +4,10 @@ $findEquipments = $connection->prepare('SELECT * FROM `equipments` WHERE id_char
 $findEquipments->bindParam(1, $id_character, PDO::PARAM_STR);
 $findEquipments->execute();
 $equipments = $findEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
+
+$findGameEquipments = $connection->prepare('SELECT * FROM `equipments` LEFT JOIN game_equipment ON equipments.id = game_equipment.id_equipment WHERE id_game =' . $character->getId_game() . ' AND ISNULL(id_charac)');
+$findGameEquipments->execute();
+$gameEquipments = $findGameEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
 ?>
 
 <div class="col-4">
@@ -71,14 +75,24 @@ $equipments = $findEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                 </div>
                 <!-- Fin modal modif compétence -->
             <?php } ?>
-            <?php if ($is_mj) { ?>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#equipmentAddForm">Créer un nouvel
-                    équipement</button>
+            <?php if ($is_mj) { ?>        
+            <div class="row">
+                <div class="col-6 d-flex justify-content-center"><button class="btn btn-primary bg-info border-info d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#equipmentAddForm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2 bi bi-link" viewBox="0 0 16 16">
+                            <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
+                            <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z" />
+                        </svg>
+                        Lier un équipement</button></div>
+                <div class="col-6 d-flex justify-content-center"><button class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#equipmentNewForm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2 bi bi-plus" viewBox="0 0 16 16">
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                        </svg>
+                        Nouvel équipement</button></div></div>
             <?php } ?>
             <!---------------------------------------------------------->
             <!-------------- Modal de création équipements ------------->
             <!---------------------------------------------------------->
-            <div class="modal fade" id="equipmentAddForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal fade" id="equipmentNewForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -86,7 +100,7 @@ $equipments = $findEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form name="addEquipment" action="" method="POST">
+                            <form name="newEquipment" action="" method="POST">
                                 <div class="mb-3">
                                     <label class="form-label">Nom</label>
                                     <input type="text" class="form-control" name="equipment_name" required>
@@ -101,10 +115,37 @@ $equipments = $findEquipments->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                                     <span class="form-text mt-0 ms-3">Comprise entre 0 et 5</span>
                                     <input type="number" class="form-control" name="equipment_range" required>
                                 </div>
-                                <button formaction="?page=details&character=<?= $id_character ?>&type=addEquipment" type="submit" class="btn btn-primary">Ajouter</button>
+                                <button formaction="?page=details&character=<?= $id_character ?>&type=newEquipment" type="submit" class="btn btn-primary">Ajouter</button>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Fin Modal de création équipement -->
+
+            <!-------------- Modal ajouter équipement de la table -------------->
+        <div class="modal fade" id="equipmentAddForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Lier un équipement</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form name="newSkill" action="" method="POST">
+                            <label class="form-label">Choississez un équipement :</label>
+                            <select class="form-select" name="idEquipment">
+                                <?php
+                                foreach ($gameEquipments as $gameEquipment) {
+                                    ?>
+                                <option value="<?= $gameEquipment->getId() ?>"><?= $gameEquipment->getName() . " - " . $gameEquipment->getDamages() . " dégât(s) - Portée " . $gameEquipment->getRange() ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                            <button formaction="?page=details&character=<?= $id_character ?>&type=addEquipment" type="submit" class="btn btn-primary mt-3">Lier</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>

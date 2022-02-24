@@ -68,7 +68,7 @@ if (isset($_GET['type'])) {
                     $connection->exec($sql);
                     header('Location: ?page=details&character=' . $id_character);
                     break;
-                case 'addEquipment':
+                case 'newEquipment':
                     if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
                         $infosEquipment = array_merge($_POST, ['id_character' => $id_character, 'id_game' => $character->getId_game()]);
                         $equipmentAdded = new Equipment($infosEquipment);
@@ -87,6 +87,11 @@ if (isset($_GET['type'])) {
                         }
                     }
                     break;
+                    case 'addEquipment':
+                        if (isset($_POST['idEquipment'])) {
+                            $connection->exec('UPDATE equipments SET id_charac = ' . $id_character . ' WHERE id = ' . $_POST['idEquipment']);
+                        }
+                        break;
                 case 'changeEquipment':
                     if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
                         $infosEquipment = array_merge($_POST, ['id_equipment' => $_GET['idEquipment'], 'id_game' => $character->getId_game()]);
@@ -108,7 +113,8 @@ if (isset($_GET['type'])) {
                     break;
                 case 'deleteEquipment':
                     $deletedEquipment = new Equipment(['id_equipment' => $_GET['idEquipment']]);
-                    $deletedEquipment->deleteEquipment($connection);
+                    $sql = 'UPDATE equipments SET id_charac = NULL WHERE id=' . $deletedEquipment->getId();
+                    $connection->exec($sql);
                     header('Location: ?page=details&character=' . $id_character);
                     break;
                 case 'charChange':
