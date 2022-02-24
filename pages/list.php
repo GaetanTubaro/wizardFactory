@@ -1,6 +1,7 @@
 <link href="css/list.css" rel="stylesheet">
 
 <?php
+
 if (isset($_SESSION['id'])) {
     $id_user = $_SESSION['id'];
 } else {
@@ -8,16 +9,34 @@ if (isset($_SESSION['id'])) {
 }
 
 if (isset($_GET['action'])) {
-    if ($_GET['action'] == 'add' && isset($_POST['name'])) {
-        $addGame = $connection->prepare('INSERT INTO games (name, id_mj) VALUES ("' . $_POST['name'] . '", ' . $id_user . ');');
-        $addGame->execute();
+    switch ($_GET['action']) {
+        case 'add':
+            if (isset($_POST['name'])) {
+                $addGame = $connection->prepare('INSERT INTO games (name, id_mj) VALUES ("' . $_POST['name'] . '", ' . $id_user . ');');
+                $addGame->execute();
+                header('Location: ?page=list');
+            }
+            break;
+        case 'delete':
+            if (isset($_GET['game'])) {
+                $deletedGame = new Game();
+                $deletedGame->setId($_GET['game']);
+                $deletedGame->deleteTable($connection);
+                header('Location: ?page=list');
+            }
+            break;
+        case 'changeMj':
+            if (isset($_POST['idMj'])) {
+                $findUser = $connection->prepare('SELECT id, pseudo FROM users WHERE pseudo LIKE "' . $_POST['idMj'] . '"');
+                $findUser->setFetchMode(PDO::FETCH_CLASS, Users::class);
+                $findUser->execute();
+                $user = $findUser->fetch();
+                $changeRequestMj = 'UPDATE games SET id_mj =' . $user->getId() . ' WHERE id=' . $_GET['game'];
+                $changeMj = $connection->exec($changeRequestMj);
+                header('Location: ?page=list');
+            }
+            break;
     }
-    if ($_GET['action'] == 'delete' && isset($_GET['game'])) {
-        $deletedGame = new Game();
-        $deletedGame->setId($_GET['game']);
-        $deletedGame->deleteTable($connection);
-    }
-    header('Location: ?page=list');
 }
 
 
@@ -46,7 +65,7 @@ $findPlayers->bindParam(':id', $game_id);
                     <tr>
                         <th scope="col">Nom de la table</th>
                         <th scope="col">Participants</th>
-                        <th scope="col">Supprimer
+                        <th scope="col">Opérations
                         </th>
                     </tr>
                 </thead>
@@ -70,11 +89,16 @@ $findPlayers->bindParam(':id', $game_id);
                                         <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
                                     </svg></button>
                             </td>
+                            <td>
+                                <button class="btn" data-bs-toggle="modal" data-bs-target="#changeTableMj<?= $game_id ?>"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                                    </svg></button>
+                            </td>
                         </tr>
-
-                        <!----------------------------------------------------------------------->
-                        <!----------------------- Modal suppresion ------------------------------>
-                        <!----------------------------------------------------------------------->
+                        <!--------------------------------------------------------------------------------------------------------------------------->
+                        <!------------------------------------------------- Modal suppresion -------------------------------------------------------->
+                        <!--------------------------------------------------------------------------------------------------------------------------->
                         <div class="modal" id="deleteTable<?= $game_id ?>" tabindex="-1">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -92,6 +116,28 @@ $findPlayers->bindParam(':id', $game_id);
                                 </div>
                             </div>
                         </div>
+                        <!-- ----------------------------------------------------------------------------------------------------------- -->
+                        <!----------------------------------------- Modal Change Mj Table Start ------------------------------------------->
+                        <!-- ----------------------------------------------------------------------------------------------------------- -->
+                        <div class="modal fade" id="changeTableMj<?= $game_id ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">Changer le Mj de cette partie</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST">
+                                            <input type="text" class="form-control mb-3" name="idMj" required>
+                                            <button formaction="?page=list&action=changeMj&game=<?= $game->getId() ?>" type="submit" class="btn btn-primary">Modifier</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ----------------------------------------------------------------------------------------------------------- -->
+                        <!----------------------------------------- Modal Change MJ Table End --------------------------------------------->
+                        <!-- ----------------------------------------------------------------------------------------------------------- -->
                     <?php
                     } ?>
                     <tr>
@@ -111,8 +157,6 @@ $findPlayers->bindParam(':id', $game_id);
                     <tr>
                         <th scope="col">Nom de la table</th>
                         <th scope="col">Personnage joué</th>
-                        <th scope="col">Supprimer
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -122,12 +166,6 @@ $findPlayers->bindParam(':id', $game_id);
                         <tr>
                             <td><?= $game['game_name'] ?></td>
                             <td><a href="?page=details&character=<?= $game['character_id'] ?>"><?= $game['character_name'] ?></a></td>
-                            <td>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                </svg>
-                            </td>
                         </tr>
                     <?php
                     } ?>
@@ -138,9 +176,9 @@ $findPlayers->bindParam(':id', $game_id);
 </div>
 
 
-<!---------------------------------------------------------------------->
-<!------------------------ Modal création table ------------------------>
-<!---------------------------------------------------------------------->
+<!----------------------------------------------------------------------------------------------------------------->
+<!------------------------ Modal création table Start ------------------------------------------------------------->
+<!----------------------------------------------------------------------------------------------------------------->
 <div class="modal fade" id="addGame" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -158,3 +196,6 @@ $findPlayers->bindParam(':id', $game_id);
         </div>
     </div>
 </div>
+<!----------------------------------------------------------------------------------------------------------------->
+<!------------------------ Modal création table End --------------------------------------------------------------->
+<!----------------------------------------------------------------------------------------------------------------->
