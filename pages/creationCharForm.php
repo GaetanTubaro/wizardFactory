@@ -10,7 +10,7 @@ if (isset($_POST['name']) && isset($_POST['hpMax']) && isset($_POST['mpMax']) &&
         $newChar->insertChar($connection);
         $idCharac = $connection->lastInsertId();
         $newChar->linkCharGame($connection, $idCharac, $_GET['id_game']);
-        header('location: ?page=list');
+        header('location: ?page=details&character=' . $idCharac);
     } else {
         if (!empty($testCount)) {
             foreach ($testCount as $error) { ?>
