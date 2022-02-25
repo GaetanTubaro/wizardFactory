@@ -36,13 +36,51 @@ if (isset($_GET['type'])) {
             $deletedEquipment->deleteEquipment($connection);
             header('Location: ?page=table&table=' . $id_game);
             break;
-    }
+        case 'newEquipment':
+            if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
+                $infosEquipment = array_merge($_POST, ['id_game' => $id_game]);
+                $equipmentAdded = new Equipment($infosEquipment);
+                $errors = $equipmentAdded->checkData();
+                if (empty($errors)) {
+                    $equipmentAdded->addEquipment($connection);
+                    header('Location: ?page=table&table=' . $id_game);
+                } else {
+                    foreach ($errors as $error) { ?>
+                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+                                valide.</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div><?php
+                            }
+                }
+            }
+                    break;
+                case 'changeEquipment':
+                    if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
+                        $infosEquipment = array_merge($_POST, ['id_equipment' => $_GET['idEquipment'], 'id_game' => $id_game]);
+                        $equipmentChange = new Equipment($infosEquipment);
+                        $errors = $equipmentChange->checkData();
+                        if (empty($errors)) {
+                            $equipmentChange->changeEquipment($connection);
+                            header('Location: ?page=table&table=' . $id_game);
+                        } else {
+                            foreach ($errors as $error) { ?>
+                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+                                valide.</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div><?php
+                            }
+                        }
+                    }
+                    break;
+            }
 }
 
-$equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL');
-$equipTable->execute();
-$unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
-?>
+        $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL');
+        $equipTable->execute();
+        $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
+                                ?>
 
 <!--------------------------------- TITRE -------------------------------------->
 <h1 class="mx-3 pt-3"><?= $game->getName() ?>
@@ -73,10 +111,10 @@ $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
         <div class="tab-pane fade show active" id="characters" role="tabpanel" aria-labelledby="characters-tab">
             <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
                 <?php foreach ($characters as $character) {
-    ;
-    $charac_id = $character->getId();
-    $pocessChar->execute();
-    $pocess = $pocessChar->fetch(); ?>
+                                    ;
+                                    $charac_id = $character->getId();
+                                    $pocessChar->execute();
+                                    $pocess = $pocessChar->fetch(); ?>
                     <div class="card mx-2" style="width: 15rem;">
 
                         <div class="d-flex flex-column align-items-center" style="height:15rem; width:100%;box-sizing:border-box">
@@ -110,7 +148,7 @@ $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                     </div>
 
                 <?php
-}
+                                }
                 ?>
                 <a href="?page=creationCharForm&id_game=<?= $id_game ?>">
                     <div class="card card-add mx-2 h-100" style="width:15rem; min-height:15rem">
@@ -135,7 +173,7 @@ $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                 if ($unequiped) {
                     foreach ($unequiped as $unequip) {
                         ?>
-                        <div class="card mb-3" style="width: 20%;">
+                        <div class="card mx-2" style="width: 20%;">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-center">
                                     <h5 class="m-0 d-inline"><?= $unequip->getName() ?>
@@ -162,10 +200,49 @@ $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                                 </p>
                             </div>
                         </div>
+                        <!---------------------------------------------------------->
+                        <!----------------- Modal modif equipement ----------------->
+                        <!---------------------------------------------------------->
+                        <div class="modal fade" id="equipmentChangeForm<?= $unequip->getId() ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">Modifier un équipement</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form name="changeEquipment" action="" method="POST">
+                                            <div class="mb-3">
+                                                <label class="form-label">Nom</label>
+                                                <input type="text" class="form-control" name="equipment_name" value="<?= $unequip->getName() ?>" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Dégâts</label>
+                                                <span class="form-text mt-0 ms-3">Supérieur à 0</span>
+                                                <input type="number" class="form-control" name="equipment_damages" value="<?= $unequip->getDamages() ?>" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Portée</label>
+                                                <span class="form-text mt-0 ms-3">Comprise entre 0 et 5</span>
+                                                <input type="number" class="form-control" name="equipment_range" value="<?= $unequip->getRange() ?>" required>
+                                            </div>
+                                            <button formaction="?page=table&table=<?= $id_game ?>&type=changeEquipment&idEquipment=<?= $unequip->getId() ?>" type="submit" class="btn btn-primary">Modifier</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin modal modif compétence -->
                 <?php
                     }
                 }
                 ?>
+                <button class="card card-add mx-2 p-4" style="width: 10%; height: auto" data-bs-toggle="modal" data-bs-target="#equipmentAddForm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="auto" fill="currentColor" class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
+                        <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+                        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
@@ -174,36 +251,7 @@ $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#equipmentAddForm"> Créer un nouvel
-    équipement
-</button> -->
-
+<!-------------------------------- Modal Ajout Equipement -------------------------------------->
 <div class="modal fade" id="equipmentAddForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -212,7 +260,7 @@ $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form name="addEquipment" action="" method="POST">
+                <form name="newEquipment" action="" method="POST">
                     <div class="mb-3">
                         <label class="form-label">Nom</label>
                         <input type="text" class="form-control" name="equipment_name" required>
@@ -227,7 +275,7 @@ $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
                         <span class="form-text mt-0 ms-3">Comprise entre 0 et 5</span>
                         <input type="number" class="form-control" name="equipment_range" required>
                     </div>
-                    <button formaction="?page=table&table=<?= $id_game ?>&type=addEquipment" type="submit" class="btn btn-primary">Ajouter</button>
+                    <button formaction="?page=table&table=<?= $id_game ?>&type=newEquipment" type="submit" class="btn btn-primary">Ajouter</button>
                 </form>
             </div>
         </div>
