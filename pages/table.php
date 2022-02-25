@@ -29,28 +29,23 @@ if (isset($_GET['type'])) {
         }
     }
 }
-$equipTable = $connection->prepare('SELECT * FROM `equipment` WHERE id_charac IS NULL');
-$equipTable->setFetchMode(PDO::FETCH_CLASS, Equipment::class);
-$unequiped = $equipTable->fetchAll();
 
+$equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL');
+$equipTable->execute();
+$unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
+?>
+<h1 class="mx-3 pt-3">Equipement disponibles:</h1>
+<div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
+    <?php
+if ($unequiped) {
     foreach ($unequiped as $unequip) {
         ?>
-
-<div class="card mx-2" style="width: 15rem;">
-
     <div class="d-flex flex-column align-items-center" style="height:15rem; width:100%;box-sizing:border-box">
-        <a href="#" class="card-img-top"
-            style="max-height:15rem; max-width:100%;width:auto;height:auto;box-sizing:border-box">
-    </div>
-
-    </a>
-    <div class="card-body d-flex justify-content-center align-items-center">
-        <h2 class="card-title text-center"><?= $unequiped->getName() ?>
-        </h2>
-        </a>
+        <p><?=$unequip->getName()?>
+        </p>
     </div>
     <div class="card-footer d-flex justify-content-center">
-        <a href="?page=details&character=<?= $character->getId() ?>&type=deleteChar"
+        <a href="?page=details&equipment=<?= $unequip->getId() ?>&type=deleteChar"
             class="w-100">
             <button class="btn m-0 p-0 w-100">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash"
@@ -64,10 +59,9 @@ $unequiped = $equipTable->fetchAll();
         </a>
     </div>
 </div>
-
 <?php
     }
-
+}
 ?>
 
 <h1 class="mx-3 pt-3">Personnages de la partie : <?= $game->getName() ?>
@@ -95,9 +89,10 @@ $unequiped = $equipTable->fetchAll();
                     src="<?= $character->getImg() ?>"
                     class="card-img-top"
                     style="max-height:15rem; max-width:100%;width:auto;height:auto;box-sizing:border-box">
+            </a>
         </div>
 
-        </a>
+
         <div class="card-body d-flex justify-content-center align-items-center">
             <a
                 href="?page=details&character=<?= $character->getId() ?>">
