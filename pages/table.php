@@ -17,9 +17,28 @@ $characters = $gameChar->fetchAll(PDO::FETCH_CLASS, Character::class);
 $pocessChar = $connection->prepare('SELECT * FROM `users` JOIN `game_character` ON  users.id = game_character.id_user WHERE id_charac = :id AND id_game =' . $game->getId());
 $pocessChar->setFetchMode(PDO::FETCH_CLASS, Users::class);
 $pocessChar->bindParam(":id", $charac_id);
+
+if (isset($_GET['type'])) {
+    if ($_GET['type'] == 'changeName') {
+        $changeName = 'UPDATE games SET name ="' . $_POST['chgname'] . '" WHERE id=' . $id_game;
+        $updateName = $connection->exec($changeName);
+        if ($updateName == false || $updateName == 0) {
+            return false;
+        } else {
+            header('location: ?page=table&table=' . $id_game);
+        }
+    }
+}
 ?>
 
-<h1 class="mx-3 pt-3">Personnages de la partie : <?= $game->getName() ?>.</h1>
+<h1 class="mx-3 pt-3">Personnages de la partie : <?= $game->getName() ?>
+    <button class="btn m-1 p-1" data-bs-toggle="modal" data-bs-target="#changeTableName">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+        </svg>
+    </button>
+</h1>
 <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
     <?php foreach ($characters as $character) {;
         $charac_id = $character->getId();
@@ -67,3 +86,25 @@ $pocessChar->bindParam(":id", $charac_id);
         </div>
     </a>
 </div>
+<!-- ----------------------------------------------------------------------------------------------------------- -->
+<!----------------------------------------- Modal Change Name Table Start ----------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------- -->
+<div class="modal fade" id="changeTableName" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Changer le nom de cette partie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    <input type="text" class="form-control mb-3" name="chgname" required>
+                    <button formaction="?page=table&table=<?= $id_game ?>&type=changeName" type="submit" class="btn btn-primary">Modifier</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ----------------------------------------------------------------------------------------------------------- -->
+<!----------------------------------------- Modal Change Name Table End ------------------------------------------->
+<!-- ----------------------------------------------------------------------------------------------------------- -->
