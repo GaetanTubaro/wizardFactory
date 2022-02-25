@@ -115,7 +115,7 @@ if (isset($_GET['type'])) {
                     }
                     break;
                 case 'deleteSkill':
-                    if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($POST['skill_stat']) && isAString($_POST['skill_stat']) && isset($_POST['id_game']) && is_numeric($_POST['skill_name'])) {
+                    if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat']) && isAString($_POST['skill_stat']) && isset($id_game)) {
                         $deletedSkill = new Skill(['id_skill' => $_GET['idSkill']]);
                         $deletedSkill->deleteSkill($connection);
                         header('Location: ?page=table&table=' . $id_game);
