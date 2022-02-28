@@ -94,8 +94,8 @@ if (isset($_GET['type'])) {
                         }
                     break;
                 case 'changeSkill':
-                    if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($POST['skill_stat']) && isAString($_POST['skill_stat']) && isset($_POST['id_game']) && is_numeric($_POST['skill_name'])) {
-                        $infosSkill = array_merge($_POST, ['id_skill' => $_GET['idskill'], 'id_game' => $id_game]);
+                    if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat']) && isAString($_POST['skill_stat'])) {
+                        $infosSkill = array_merge($_POST, ['id_skill' => $_GET['idSkill'], 'id_game' => $id_game]);
                         $skillChange = new Skill($infosSkill);
                         $errors = $skillChange->checkData();
                         if (empty($errors)) {
@@ -115,12 +115,15 @@ if (isset($_GET['type'])) {
                     }
                     break;
                 case 'deleteSkill':
-                    if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat']) && isAString($_POST['skill_stat']) && isset($id_game)) {
-                        $deletedSkill = new Skill(['id_skill' => $_GET['idSkill']]);
-                        $deletedSkill->deleteSkill($connection);
-                        header('Location: ?page=table&table=' . $id_game);
+
+                        $skillToDelete = new Skill(['id_skill' => $_GET['idSkill']]);
+                        $sql = 'DELETE FROM game_skill WHERE id_skill=' . $skillToDelete->getId();
+                        $connection->exec($sql);
+                        $sql = 'DELETE FROM skills WHERE id=' . $skillToDelete->getId();
+                        $connection->exec($sql);
+                        header('Location: ?page=table&table='.$id_game);
                         break;
-                    }
+
             }
 }
         $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL');
