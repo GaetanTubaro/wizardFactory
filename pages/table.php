@@ -201,7 +201,7 @@ if (isset($_GET['type'])) {
                 <?php
                 }
                 ?>
-                <a href="?page=creationCharForm&id_game=<?= $id_game ?>">
+                <a title="Créer un personnage" href="?page=creationCharForm&id_game=<?= $id_game ?>">
                     <div class="card card-add mx-2 h-100" style="width:15rem; min-height:15rem">
                         <svg xmlns="http://www.w3.org/2000/svg" width="50%" height="auto" fill="currentColor" class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
                             <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
@@ -289,7 +289,7 @@ if (isset($_GET['type'])) {
                     }
                 }
                 ?>
-                <button class="card card-add mx-2 p-4" style="width: 10%; height: auto" data-bs-toggle="modal" data-bs-target="#skillAddForm">
+                <button title="Créer une compétence" class="card card-add mx-2 p-4" style="width: 10%; height: auto" data-bs-toggle="modal" data-bs-target="#skillAddForm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="auto" fill="currentColor" class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
                         <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
                         <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
@@ -410,7 +410,7 @@ if (isset($_GET['type'])) {
                     }
                 }
                 ?>
-                <button class="card card-add mx-2 p-4" style="width: 10%; height: auto" data-bs-toggle="modal" data-bs-target="#equipmentAddForm">
+                <button title="Créer un équipement" class="card card-add mx-2 p-4" style="width: 10%; height: auto" data-bs-toggle="modal" data-bs-target="#equipmentAddForm">
                     <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="auto" fill="currentColor" class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
                         <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
                         <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
