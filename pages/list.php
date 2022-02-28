@@ -19,9 +19,12 @@ if (isset($_GET['action'])) {
             break;
         case 'delete':
             if (isset($_GET['game'])) {
-                $deletedGame = new Game();
-                $deletedGame->setId($_GET['game']);
-                $deletedGame->deleteTable($connection);
+                $findGameToDelete = $connection->query('SELECT * FROM games WHERE id = ' . $_GET['game']);
+                $findGameToDelete->setFetchMode(PDO::FETCH_CLASS, Game::class);
+                $deletedGame = $findGameToDelete->fetch();
+                if ($deletedGame->validateMj()) {
+                    $deletedGame->deleteTable($connection);
+                }
                 header('Location: ?page=list');
             }
             break;
