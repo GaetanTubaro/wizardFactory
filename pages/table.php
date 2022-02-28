@@ -21,7 +21,8 @@ $pocessChar->bindParam(":id", $charac_id);
 
 
 if (isset($_GET['type'])) {
-    switch ($_GET['type']) {
+    if ($game->validateMj()) {
+        switch ($_GET['type']) {
         case 'changeName':
             $changeName = 'UPDATE games SET name ="' . $_POST['chgname'] . '" WHERE id=' . $id_game;
             $updateName = $connection->exec($changeName);
@@ -52,8 +53,8 @@ if (isset($_GET['type'])) {
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div><?php
                             }
-                        }
-                    }
+                }
+            }
                     break;
                 case 'changeEquipment':
                     if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
@@ -124,7 +125,11 @@ if (isset($_GET['type'])) {
                     header('Location: ?page=table&table=' . $id_game);
                     break;
             }
-        }
+    } else {
+        header('Location: ?page=table&table=' . $id_game);
+    }
+}
+
         $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL');
         $equipTable->execute();
         $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
@@ -162,10 +167,11 @@ if (isset($_GET['type'])) {
         <!--------------------------------- PERSONNAGES -------------------------------------->
         <div class="tab-pane fade show active" id="characters" role="tabpanel" aria-labelledby="characters-tab">
             <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
-                <?php foreach ($characters as $character) {;
-                    $charac_id = $character->getId();
-                    $pocessChar->execute();
-                    $pocess = $pocessChar->fetch(); ?>
+                <?php foreach ($characters as $character) {
+    ;
+    $charac_id = $character->getId();
+    $pocessChar->execute();
+    $pocess = $pocessChar->fetch(); ?>
                     <div class="card mx-2" style="width: 15rem;">
 
                         <div class="d-flex flex-column align-items-center" style="height:15rem; width:100%;box-sizing:border-box">
@@ -199,7 +205,7 @@ if (isset($_GET['type'])) {
                     </div>
 
                 <?php
-                }
+}
                 ?>
                 <a href="?page=creationCharForm&id_game=<?= $id_game ?>">
                     <div class="card card-add mx-2 h-100" style="width:15rem; min-height:15rem">
@@ -218,7 +224,7 @@ if (isset($_GET['type'])) {
                 <?php
                 if ($unskilled) {
                     foreach ($unskilled as $unskill) {
-                ?>
+                        ?>
                         <div class="card mx-2" style="width: 20%;">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-center">
@@ -272,8 +278,8 @@ if (isset($_GET['type'])) {
                                                 <select class="form-select" name="skill_stat">
                                                     <?php foreach (Skill::POSSIBLE_STATS as $statistique) { ?>
                                                         <option value="<?= $statistique ?>" <?php if ($unskill->getStats() == $statistique) {
-                                                                                                echo "selected";
-                                                                                            } ?>><?= $statistique ?>
+                            echo "selected";
+                        } ?>><?= $statistique ?>
                                                         </option>
                                                     <?php } ?>
                                                 </select>
@@ -344,7 +350,7 @@ if (isset($_GET['type'])) {
                 <?php
                 if ($unequiped) {
                     foreach ($unequiped as $unequip) {
-                ?>
+                        ?>
                         <div class="card mx-2" style="width: 20%;">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-center">
