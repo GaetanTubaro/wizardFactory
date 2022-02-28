@@ -16,7 +16,8 @@ $findCharacter->execute();
 $character = $findCharacter->fetch();
 
 if (isset($_GET['type'])) {
-    switch ($_GET['type']) {
+    if ($character->id_mj == $_SESSION['id']) {
+        switch ($_GET['type']) {
         case 'newSkill':
             if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat'])) {
                 $infoSkill = array_merge($_POST, ['id_character' => $id_character, 'id_game' => $character->getId_game()]);
@@ -149,6 +150,9 @@ if (isset($_GET['type'])) {
                     }
                     break;
             }
+    } else {
+        header('Location: ?page=details&character=' . $id_character);
+    }
 } ?>
 
 <div class="container-fluid p-5">

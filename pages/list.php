@@ -19,26 +19,38 @@ if (isset($_GET['action'])) {
             break;
         case 'delete':
             if (isset($_GET['game'])) {
-                $deletedGame = new Game();
-                $deletedGame->setId($_GET['game']);
-                $deletedGame->deleteTable($connection);
+                $findGameToDelete = $connection->query('SELECT * FROM games WHERE id = ' . $_GET['game']);
+                $findGameToDelete->setFetchMode(PDO::FETCH_CLASS, Game::class);
+                $deletedGame = $findGameToDelete->fetch();
+                if ($deletedGame->validateMj()) {
+                    $deletedGame->deleteTable($connection);
+                }
                 header('Location: ?page=list');
             }
             break;
         case 'changeMj':
             if (isset($_POST['idMj'])) {
-                $findUser = $connection->prepare('SELECT id, pseudo FROM users WHERE pseudo LIKE "' . $_POST['idMj'] . '"');
-                $findUser->setFetchMode(PDO::FETCH_CLASS, Users::class);
-                $findUser->execute();
-                $user = $findUser->fetch();
-                if ($user == false || $user == 0) { ?>
+                $findGameToChange = $connection->query('SELECT * FROM games WHERE id = ' . $_GET['game']);
+                $findGameToChange->setFetchMode(PDO::FETCH_CLASS, Game::class);
+                $changedGame = $findGameToChange->fetch();
+                if ($changedGame->validateMj()) {
+                    $findUser = $connection->prepare('SELECT id, pseudo FROM users WHERE pseudo LIKE "' . $_POST['idMj'] . '"');
+                    $findUser->setFetchMode(PDO::FETCH_CLASS, Users::class);
+                    $findUser->execute();
+                    $user = $findUser->fetch();
+                    if ($user == false || $user == 0) {
+                        ?>
                     <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
                         <p class="mb-0">Joueur inconnu ou pseudo incorrect.</p>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
-<?php } else {
-                    $changeRequestMj = 'UPDATE games SET id_mj =' . $user->getId() . ' WHERE id=' . $_GET['game'];
-                    $changeMj = $connection->exec($changeRequestMj);
+<?php
+                    } else {
+                        $changeRequestMj = 'UPDATE games SET id_mj =' . $user->getId() . ' WHERE id=' . $_GET['game'];
+                        $changeMj = $connection->exec($changeRequestMj);
+                        header('Location: ?page=list');
+                    }
+                } else {
                     header('Location: ?page=list');
                 }
             }
