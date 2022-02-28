@@ -23,112 +23,112 @@ $pocessChar->bindParam(":id", $charac_id);
 if (isset($_GET['type'])) {
     if ($game->validateMj()) {
         switch ($_GET['type']) {
-        case 'changeName':
-            $changeName = 'UPDATE games SET name ="' . $_POST['chgname'] . '" WHERE id=' . $id_game;
-            $updateName = $connection->exec($changeName);
-            if ($updateName == false || $updateName == 0) {
-                return false;
-            } else {
-                header('location: ?page=table&table=' . $id_game);
-            }
-            break;
-        case 'deleteEquipment':
-            $deletedEquipment = new Equipment(['id_equipment' => $_GET['idEquipment']]);
-            $deletedEquipment->deleteEquipment($connection);
-            header('Location: ?page=table&table=' . $id_game);
-            break;
-        case 'newEquipment':
-            if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
-                $infosEquipment = array_merge($_POST, ['id_game' => $id_game]);
-                $equipmentAdded = new Equipment($infosEquipment);
-                $errors = $equipmentAdded->checkData();
-                if (empty($errors)) {
-                    $equipmentAdded->addEquipment($connection);
-                    header('Location: ?page=table&table=' . $id_game);
+            case 'changeName':
+                $changeName = 'UPDATE games SET name ="' . $_POST['chgname'] . '" WHERE id=' . $id_game;
+                $updateName = $connection->exec($changeName);
+                if ($updateName == false || $updateName == 0) {
+                    return false;
                 } else {
-                    foreach ($errors as $error) { ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                valide.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div><?php
-                            }
+                    header('location: ?page=table&table=' . $id_game);
                 }
-            }
-                    break;
-                case 'changeEquipment':
-                    if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
-                        $infosEquipment = array_merge($_POST, ['id_equipment' => $_GET['idEquipment'], 'id_game' => $id_game]);
-                        $equipmentChange = new Equipment($infosEquipment);
-                        $errors = $equipmentChange->checkData();
-                        if (empty($errors)) {
-                            $equipmentChange->changeEquipment($connection);
-                            header('Location: ?page=table&table=' . $id_game);
-                        } else {
-                            foreach ($errors as $error) { ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                valide.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div><?php
+                break;
+            case 'deleteEquipment':
+                $deletedEquipment = new Equipment(['id_equipment' => $_GET['idEquipment']]);
+                $deletedEquipment->deleteEquipment($connection);
+                header('Location: ?page=table&table=' . $id_game);
+                break;
+            case 'newEquipment':
+                if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
+                    $infosEquipment = array_merge($_POST, ['id_game' => $id_game]);
+                    $equipmentAdded = new Equipment($infosEquipment);
+                    $errors = $equipmentAdded->checkData();
+                    if (empty($errors)) {
+                        $equipmentAdded->addEquipment($connection);
+                        header('Location: ?page=table&table=' . $id_game);
+                    } else {
+                        foreach ($errors as $error) { ?>
+                            <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+                                <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+                                    valide.</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div><?php
+                                }
                             }
                         }
-                    }
-                    break;
-                case 'newSkill':
-                    if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat']) && isAString($_POST['skill_stat']) && isset($id_game)) {
-                        $infosSkill = array_merge($_POST, ['id_game' => $id_game]);
-                        $skillAdded = new Skill($infosSkill);
-                        $errors = $skillAdded->checkData();
-                        if (empty($errors)) {
-                            $skillAdded->addSkill($connection);
-                            header('Location: ?page=table&table=' . $id_game);
-                        } else {
-                            foreach ($errors as $error) { ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                valide.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div><?php
+                        break;
+                    case 'changeEquipment':
+                        if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
+                            $infosEquipment = array_merge($_POST, ['id_equipment' => $_GET['idEquipment'], 'id_game' => $id_game]);
+                            $equipmentChange = new Equipment($infosEquipment);
+                            $errors = $equipmentChange->checkData();
+                            if (empty($errors)) {
+                                $equipmentChange->changeEquipment($connection);
+                                header('Location: ?page=table&table=' . $id_game);
+                            } else {
+                                foreach ($errors as $error) { ?>
+                            <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+                                <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+                                    valide.</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div><?php
+                                }
                             }
                         }
-                    }
-                    break;
-                case 'changeSkill':
-                    if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat']) && isAString($_POST['skill_stat'])) {
-                        $infosSkill = array_merge($_POST, ['id_skill' => $_GET['idSkill'], 'id_game' => $id_game]);
-                        $skillChange = new Skill($infosSkill);
-                        $errors = $skillChange->checkData();
-                        if (empty($errors)) {
-                            $skillChange->changeSkill($connection);
-                            header('Location: ?page=table&table=' . $id_game);
-                        } else {
-                            foreach ($errors as $error) { ?>
-                        <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                            <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                valide.</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+                        break;
+                    case 'newSkill':
+                        if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat']) && isAString($_POST['skill_stat']) && isset($id_game)) {
+                            $infosSkill = array_merge($_POST, ['id_game' => $id_game]);
+                            $skillAdded = new Skill($infosSkill);
+                            $errors = $skillAdded->checkData();
+                            if (empty($errors)) {
+                                $skillAdded->addSkill($connection);
+                                header('Location: ?page=table&table=' . $id_game);
+                            } else {
+                                foreach ($errors as $error) { ?>
+                            <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+                                <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+                                    valide.</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div><?php
+                                }
+                            }
+                        }
+                        break;
+                    case 'changeSkill':
+                        if (isset($_POST['skill_name']) && isAString($_POST['skill_name']) && isset($_POST['skill_level']) && is_numeric($_POST['skill_level']) && isset($_POST['skill_stat']) && isAString($_POST['skill_stat'])) {
+                            $infosSkill = array_merge($_POST, ['id_skill' => $_GET['idSkill'], 'id_game' => $id_game]);
+                            $skillChange = new Skill($infosSkill);
+                            $errors = $skillChange->checkData();
+                            if (empty($errors)) {
+                                $skillChange->changeSkill($connection);
+                                header('Location: ?page=table&table=' . $id_game);
+                            } else {
+                                foreach ($errors as $error) { ?>
+                            <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+                                <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+                                    valide.</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
 
 <?php
+                                }
                             }
                         }
-                    }
-                    break;
-                case 'deleteSkill':
+                        break;
+                    case 'deleteSkill':
 
-                    $skillToDelete = new Skill(['id_skill' => $_GET['idSkill']]);
-                    $sql = 'DELETE FROM game_skill WHERE id_skill=' . $skillToDelete->getId();
-                    $connection->exec($sql);
-                    $sql = 'DELETE FROM skills WHERE id=' . $skillToDelete->getId();
-                    $connection->exec($sql);
-                    header('Location: ?page=table&table=' . $id_game);
-                    break;
+                        $skillToDelete = new Skill(['id_skill' => $_GET['idSkill']]);
+                        $sql = 'DELETE FROM game_skill WHERE id_skill=' . $skillToDelete->getId();
+                        $connection->exec($sql);
+                        $sql = 'DELETE FROM skills WHERE id=' . $skillToDelete->getId();
+                        $connection->exec($sql);
+                        header('Location: ?page=table&table=' . $id_game);
+                        break;
+                }
+            } else {
+                header('Location: ?page=table&table=' . $id_game);
             }
-    } else {
-        header('Location: ?page=table&table=' . $id_game);
-    }
-}
+        }
 
         $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL');
         $equipTable->execute();
@@ -161,17 +161,20 @@ if (isset($_GET['type'])) {
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="equipments-tab" data-bs-toggle="tab" data-bs-target="#equipments" type="button" role="tab" aria-controls="equipments" aria-selected="false">Equipements</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="logHistory-tab" data-bs-toggle="tab" data-bs-target="#logHistory" type="button" role="tab" aria-controls="logHistory" aria-selected="false">Historique des lancers</button>
+        </li>
+
     </ul>
 
     <div class="tab-content" id="myTabContent">
         <!--------------------------------- PERSONNAGES -------------------------------------->
         <div class="tab-pane fade show active" id="characters" role="tabpanel" aria-labelledby="characters-tab">
             <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
-                <?php foreach ($characters as $character) {
-    ;
-    $charac_id = $character->getId();
-    $pocessChar->execute();
-    $pocess = $pocessChar->fetch(); ?>
+                <?php foreach ($characters as $character) {;
+                    $charac_id = $character->getId();
+                    $pocessChar->execute();
+                    $pocess = $pocessChar->fetch(); ?>
                     <div class="card mx-2" style="width: 15rem;">
 
                         <div class="d-flex flex-column align-items-center" style="height:15rem; width:100%;box-sizing:border-box">
@@ -205,7 +208,7 @@ if (isset($_GET['type'])) {
                     </div>
 
                 <?php
-}
+                }
                 ?>
                 <a title="Créer un personnage" href="?page=creationCharForm&id_game=<?= $id_game ?>">
                     <div class="card card-add mx-2 h-100" style="width:15rem; min-height:15rem">
@@ -224,7 +227,7 @@ if (isset($_GET['type'])) {
                 <?php
                 if ($unskilled) {
                     foreach ($unskilled as $unskill) {
-                        ?>
+                ?>
                         <div class="card mx-2" style="width: 20%;">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-center">
@@ -278,8 +281,8 @@ if (isset($_GET['type'])) {
                                                 <select class="form-select" name="skill_stat">
                                                     <?php foreach (Skill::POSSIBLE_STATS as $statistique) { ?>
                                                         <option value="<?= $statistique ?>" <?php if ($unskill->getStats() == $statistique) {
-                            echo "selected";
-                        } ?>><?= $statistique ?>
+                                                                                                echo "selected";
+                                                                                            } ?>><?= $statistique ?>
                                                         </option>
                                                     <?php } ?>
                                                 </select>
@@ -350,7 +353,7 @@ if (isset($_GET['type'])) {
                 <?php
                 if ($unequiped) {
                     foreach ($unequiped as $unequip) {
-                        ?>
+                ?>
                         <div class="card mx-2" style="width: 20%;">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-center">
