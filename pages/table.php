@@ -35,7 +35,7 @@ if (isset($_GET['type'])) {
             case 'deleteEquipment':
                 $deletedEquipment = new Equipment(['id_equipment' => $_GET['idEquipment']]);
                 $deletedEquipment->deleteEquipment($connection);
-                header('Location: ?page=table&table=' . $id_game);
+                header('Location: ?page=table&table=' . $id_game . '&tab=equip');
                 break;
             case 'newEquipment':
                 if (isset($_POST['equipment_name']) && isAString($_POST['equipment_name']) && isset($_POST['equipment_range']) && is_numeric($_POST['equipment_range']) && isset($_POST['equipment_damages'])  && is_numeric($_POST['equipment_damages'])) {
@@ -44,7 +44,7 @@ if (isset($_GET['type'])) {
                     $errors = $equipmentAdded->checkData();
                     if (empty($errors)) {
                         $equipmentAdded->addEquipment($connection);
-                        header('Location: ?page=table&table=' . $id_game);
+                        header('Location: ?page=table&table=' . $id_game . '&tab=equip');
                     } else {
                         foreach ($errors as $error) { ?>
                             <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
@@ -63,7 +63,7 @@ if (isset($_GET['type'])) {
                             $errors = $equipmentChange->checkData();
                             if (empty($errors)) {
                                 $equipmentChange->changeEquipment($connection);
-                                header('Location: ?page=table&table=' . $id_game);
+                                header('Location: ?page=table&table=' . $id_game . '&tab=equip');
                             } else {
                                 foreach ($errors as $error) { ?>
                             <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
@@ -164,7 +164,9 @@ if (isset($_GET['type'])) {
                                                     } ?>" data-bs-toggle="tab" data-bs-target="#skills" type="button" role="tab" aria-controls="skills" aria-selected="false">Compétences</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="equipments-tab" data-bs-toggle="tab" data-bs-target="#equipments" type="button" role="tab" aria-controls="equipments" aria-selected="false">Equipements</button>
+            <button class="nav-link<?php if (isset($_GET['tab']) && $_GET['tab'] == 'equip') {
+                                        echo '   active';
+                                    } ?>" id="equipments-tab" data-bs-toggle="tab" data-bs-target="#equipments" type="button" role="tab" aria-controls="equipments" aria-selected="false">Equipements</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="logHistory-tab" data-bs-toggle="tab" data-bs-target="#logHistory" type="button" role="tab" aria-controls="logHistory" aria-selected="false">Historique des lancers</button>
@@ -386,10 +388,48 @@ if (isset($_GET['type'])) {
         </div>
 
         <!--------------------------------- EQUIPEMENTS -------------------------------------->
-        <div class="tab-pane fade" id="equipments" role="tabpanel" aria-labelledby="equipments-tab">
+        <div class="tab-pane fade<?php if (isset($_GET['tab']) && $_GET['tab'] == 'equip') {
+                                        echo ' show active';
+                                    } ?>" id="equipments" role="tabpanel" aria-labelledby="equipments-tab">
+            <!--------------------------------- Form filtre equipment ---------------------------------->
+            <form class="p-2 mt-3 mx-2" method="POST">
+                <div class="d-flex justify-content-start mb-2">
+                    <label class="m-2">Dégats</label>
+                    <input type="number" class="width12 form-control me-1" placeholder="Dégat minimum" name="dMin" <?php if (isset($_POST['dMin'])) { ?> <?= 'value="' ?><?= $_POST['dMin'] ?><?= '"' ?> <?php } ?>>
+                    <input type="number" class="width12 form-control me-1" placeholder="Dégat maximum" name="dMax" <?php if (isset($_POST['dMax'])) { ?> <?= 'value="' ?><?= $_POST['dMax'] ?><?= '"' ?> <?php } ?>>
+                </div>
+                <div class="d-flex justify-content-start">
+                    <label class="m-2">Portée</label>
+                    <input type="number" class="width12 form-control me-1" placeholder="Portée minimum" name="pMin" <?php if (isset($_POST['pMin'])) { ?> <?= 'value="' ?><?= $_POST['pMin'] ?><?= '"' ?> <?php } ?>>
+                    <input type="number" class="width12 form-control me-1" placeholder="Portée maximum" name="pMax" <?php if (isset($_POST['pMax'])) { ?> <?= 'value="' ?><?= $_POST['pMax'] ?><?= '"' ?> <?php } ?>>
+                    <button class="btn btn-light mx-1" formaction="?page=table&table=<?= $id_game ?>&tab=equip" type="submit">Chercher</button>
+                </div>
+            </form>
+            <!--------------------------------- fin du Form ---------------------------------->
             <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
                 <?php
+                $equipfilter = new Filters;
                 if ($unequiped) {
+                    if (!empty($_POST['dMax'])) {
+                        $unequiped = array_filter($unequiped, function (Equipment $unequip) use ($equipfilter) {
+                            return $unequip->getDamages() <= $equipfilter->getDMax();
+                        });
+                    }
+                    if (!empty($_POST['dMin'])) {
+                        $unequiped = array_filter($unequiped, function (Equipment $unequip) use ($equipfilter) {
+                            return $unequip->getDamages() >= $equipfilter->getDMin();
+                        });
+                    }
+                    if (!empty($_POST['pMax'])) {
+                        $unequiped = array_filter($unequiped, function (Equipment $unequip) use ($equipfilter) {
+                            return $unequip->getRange() <= $equipfilter->getPMax();
+                        });
+                    }
+                    if (!empty($_POST['pMin'])) {
+                        $unequiped = array_filter($unequiped, function (Equipment $unequip) use ($equipfilter) {
+                            return $unequip->getRange() >= $equipfilter->getPMin();
+                        });
+                    }
                     foreach ($unequiped as $unequip) {
                 ?>
                         <div class="card mx-2" style="width: 20%;">
