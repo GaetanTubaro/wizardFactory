@@ -4,8 +4,10 @@ class Dice
 {
     protected int $sides;
     protected int $id_game;
-    protected int $id_charac;
+    protected ?int $id_charac;
     protected array $results;
+    protected int $result;
+    protected string $date_roll;
     const AVAILABLE_SIDES = [2, 4, 6, 8, 10, 12, 20, 100];
 
     public function getAvailableSides()
@@ -60,6 +62,86 @@ class Dice
     public function setResults($results)
     {
         $this->results = $results;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_charac
+     */
+    public function getId_charac()
+    {
+        return $this->id_charac;
+    }
+
+    /**
+     * Set the value of id_charac
+     *
+     * @return  self
+     */
+    public function setId_charac($id_charac)
+    {
+        $this->id_charac = $id_charac;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id_game
+     */
+    public function getId_game()
+    {
+        return $this->id_game;
+    }
+
+    /**
+     * Set the value of id_game
+     *
+     * @return  self
+     */
+    public function setId_game($id_game)
+    {
+        $this->id_game = $id_game;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of result
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * Set the value of result
+     *
+     * @return  self
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of date_roll
+     */
+    public function getDate_roll()
+    {
+        return $this->date_roll;
+    }
+
+    /**
+     * Set the value of date_roll
+     *
+     * @return  self
+     */
+    public function setDate_roll($date_roll)
+    {
+        $this->date_roll = $date_roll;
 
         return $this;
     }
