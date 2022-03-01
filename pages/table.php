@@ -82,7 +82,7 @@ if (isset($_GET['type'])) {
                             $errors = $skillAdded->checkData();
                             if (empty($errors)) {
                                 $skillAdded->addSkill($connection);
-                                header('Location: ?page=table&table=' . $id_game);
+                                header('Location: ?page=table&table=' . $id_game . '&tab=skills');
                             } else {
                                 foreach ($errors as $error) { ?>
                             <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
@@ -101,7 +101,7 @@ if (isset($_GET['type'])) {
                             $errors = $skillChange->checkData();
                             if (empty($errors)) {
                                 $skillChange->changeSkill($connection);
-                                header('Location: ?page=table&table=' . $id_game);
+                                header('Location: ?page=table&table=' . $id_game . '&tab=skills');
                             } else {
                                 foreach ($errors as $error) { ?>
                             <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
@@ -122,7 +122,7 @@ if (isset($_GET['type'])) {
                         $connection->exec($sql);
                         $sql = 'DELETE FROM skills WHERE id=' . $skillToDelete->getId();
                         $connection->exec($sql);
-                        header('Location: ?page=table&table=' . $id_game);
+                        header('Location: ?page=table&table=' . $id_game . '&tab=skills');
                         break;
                 }
             } else {
@@ -150,13 +150,18 @@ if (isset($_GET['type'])) {
 </h1>
 
 <!--------------------------------- BOUTONS -------------------------------------->
+
 <div class="container-fluid">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="characters-tab" data-bs-toggle="tab" data-bs-target="#characters" type="button" role="tab" aria-controls="characters" aria-selected="true">Personnages</button>
+            <button class="nav-link<?php if (!isset($_GET['tab'])) {
+                                        echo ' active';
+                                    } ?>" id="characters-tab" data-bs-toggle="tab" data-bs-target="#characters" type="button" role="tab" aria-controls="characters" aria-selected="true">Personnages</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="skills-tab" data-bs-toggle="tab" data-bs-target="#skills" type="button" role="tab" aria-controls="skills" aria-selected="false">Compétences</button>
+            <button id="skills-tab" class="nav-link<?php if (isset($_GET['tab']) && $_GET['tab'] == 'skills') {
+                                                        echo ' active';
+                                                    } ?>" data-bs-toggle="tab" data-bs-target="#skills" type="button" role="tab" aria-controls="skills" aria-selected="false">Compétences</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="equipments-tab" data-bs-toggle="tab" data-bs-target="#equipments" type="button" role="tab" aria-controls="equipments" aria-selected="false">Equipements</button>
@@ -169,7 +174,9 @@ if (isset($_GET['type'])) {
 
     <div class="tab-content" id="myTabContent">
         <!--------------------------------- PERSONNAGES -------------------------------------->
-        <div class="tab-pane fade show active" id="characters" role="tabpanel" aria-labelledby="characters-tab">
+        <div class="tab-pane fade<?php if (!isset($_GET['tab'])) {
+                                        echo ' show active';
+                                    } ?>" id="characters" role="tabpanel" aria-labelledby="characters-tab">
             <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
                 <?php foreach ($characters as $character) {;
                     $charac_id = $character->getId();
@@ -222,10 +229,41 @@ if (isset($_GET['type'])) {
         </div>
 
         <!--------------------------------- COMPETENCES -------------------------------------->
-        <div class="tab-pane fade" id="skills" role="tabpanel" aria-labelledby="skills-tab">
+        <div class="tab-pane fade<?php if (isset($_GET['tab']) && $_GET['tab'] == 'skills') {
+                                        echo ' show active';
+                                    } ?>" id="skills" role="tabpanel" aria-labelledby="skills-tab">
+            <!-------------------- Form pour les filtres des compétences --------------------->
+            <form class="d-flex justify-content-start p-2 mt-3 mx-2" method="POST">
+                <select class="form-select w-25 me-1" aria-label="Default select example" name="level">
+                    <option value="" selected>Selectionner un niveau</option>
+                    <?php for ($level = 0; $level <= 5; $level++) { ?>
+                        <option value="<?= $level ?>"><?= $level ?></option>
+                    <?php } ?>
+                </select>
+                <select class="form-select w-25 me-1" aria-label="Default select example" name="stats">
+                    <option value="" selected>Selectionner une caractéristique</option>
+                    <?php foreach (SKILL::POSSIBLE_STATS as $i => $stat) { ?>
+                        <option value="<?= $stat ?>"><?= $stat ?></option>
+                    <?php } ?>
+                </select>
+                <button class="btn btn-light mx-1" formaction="?page=table&table=<?= $id_game ?>&tab=skills" type="submit">Chercher</button>
+            </form>
+            <!--------------------------------- fin du Form ---------------------------------->
             <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
+                <!--------------------------------- filtre ---------------------------------->
                 <?php
+                $filter = new Filters;
                 if ($unskilled) {
+                    if (!empty($_POST['level'])) {
+                        $unskilled = array_filter($unskilled, function (Skill $unskill) use ($filter) {
+                            return $unskill->getLevel() == $filter->getLevel();
+                        });
+                    }
+                    if (!empty($_POST['stats'])) {
+                        $unskilled = array_filter($unskilled, function (Skill $unskill) use ($filter) {
+                            return $unskill->getStats() == $filter->getStats();
+                        });
+                    }
                     foreach ($unskilled as $unskill) {
                 ?>
                         <div class="card mx-2" style="width: 20%;">
@@ -482,4 +520,4 @@ if (isset($_GET['type'])) {
 </div>
 <!-- ----------------------------------------------------------------------------------------------------------- -->
 <!----------------------------------------- Modal Change Name Table End ------------------------------------------->
-<!-- ----------------------------------------------------------------------------------------------------------- --> 
+<!-- ----------------------------------------------------------------------------------------------------------- -->
