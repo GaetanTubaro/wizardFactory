@@ -12,11 +12,15 @@ class Dice
 
     public function __construct(array $infos=[])
     {
-        if (isset($infos['dice_side']) && isset($infos['id_game']) && isset($infos['result']) && isset($infos['date_roll'])) {
+        if (isset($infos['dice_side']) && isset($infos['id_game']) && isset($infos['results']) && isset($infos['result']) && isset($infos['date_roll'])) {
             $this->setSides($infos['dice_side'])
             ->setId_game($infos['id_game'])
-            ->setResults($infos['result'])
+            ->setResults($infos['results'])
+            ->setResult($infos['result'])
             ->setDate_roll($infos['date_roll']);
+        }
+        if (isset($infos['id_charac'])) {
+            $this->setId_charac($infos['id_charac']);
         }
     }
 
