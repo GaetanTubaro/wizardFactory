@@ -8,7 +8,17 @@ class Dice
     protected array $results;
     protected int $result;
     protected string $date_roll;
-    const AVAILABLE_SIDES = [2, 4, 6, 8, 10, 12, 20, 100];
+    public const AVAILABLE_SIDES = [2, 4, 6, 8, 10, 12, 20, 100];
+
+    public function __construct(array $infos=[])
+    {
+        if (isset($infos['dice_side']) && isset($infos['id_game']) && isset($infos['result']) && isset($infos['date_roll'])) {
+            $this->setSides($infos['dice_side'])
+            ->setId_game($infos['id_game'])
+            ->setResults($infos['result'])
+            ->setDate_roll($infos['date_roll']);
+        }
+    }
 
     public function getAvailableSides()
     {
