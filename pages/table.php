@@ -151,7 +151,7 @@ if (isset($_GET['type'])) {
                     break;
             }
         } else {
-            $skillTable = $connection->prepare('SELECT * FROM `skills` JOIN `game_skill` ON skills.id = game_skill.id_skill WHERE id_charac IS NULL');
+            $skillTable = $connection->prepare('SELECT * FROM `skills` JOIN `game_skill` ON skills.id = game_skill.id_skill WHERE id_charac IS NULL ORDER BY id DESC');
         }
         $skillTable->execute();
         $unskilled = $skillTable->fetchAll(PDO::FETCH_CLASS, Skill::class);
@@ -257,21 +257,33 @@ if (isset($_GET['type'])) {
                 <select class="form-select w-25 me-1 width18" aria-label="Default select example" name="level">
                     <option value="" selected>Selectionner un niveau</option>
                     <?php for ($level = 0; $level <= 5; $level++) { ?>
-                        <option value="<?= $level ?>"><?= $level ?></option>
+                        <option value="<?= $level ?>" <?php if (isset($_POST['level']) && is_numeric($_POST['level']) && $_POST['level'] == $level) {
+                                                            echo 'selected';
+                                                        } ?>><?= $level ?></option>
                     <?php } ?>
                 </select>
                 <select class="form-select w-25 me-1 width18" aria-label="Default select example" name="stats">
                     <option value="" selected>Selectionner une caractéristique</option>
                     <?php foreach (SKILL::POSSIBLE_STATS as $i => $stat) { ?>
-                        <option value="<?= $stat ?>"><?= $stat ?></option>
+                        <option value="<?= $stat ?>" <?php if (isset($_POST['stats']) && $_POST['stats'] == $stat) {
+                                                            echo 'selected';
+                                                        } ?>><?= $stat ?></option>
                     <?php } ?>
                 </select>
                 <select class="form-select width12   me-1" aria-label="Default select example" name="sort">
                     <option value="" selected>Trier par ...</option>
-                    <option value="nameAsc">Nom croissant</option>
-                    <option value="nameDesc">Nom décroissant</option>
-                    <option value="levelAsc">Niveau croissant</option>
-                    <option value="levelDesc">Niveau décroissant</option>
+                    <option value="nameAsc" <?php if (isset($_POST['sort']) && $_POST['sort'] == 'nameAsc') {
+                                                echo 'selected';
+                                            } ?>>Nom croissant</option>
+                    <option value="nameDesc" <?php if (isset($_POST['sort']) && $_POST['sort'] == 'nameDesc') {
+                                                    echo 'selected';
+                                                } ?>>Nom décroissant</option>
+                    <option value="levelAsc" <?php if (isset($_POST['sort']) && $_POST['sort'] == 'levelAsc') {
+                                                    echo 'selected';
+                                                } ?>>Niveau croissant</option>
+                    <option value="levelDesc" <?php if (isset($_POST['sort']) && $_POST['sort'] == 'levelDesc') {
+                                                    echo 'selected';
+                                                } ?>>Niveau décroissant</option>
                 </select>
                 <button class="btn btn-light mx-1" formaction="?page=table&table=<?= $id_game ?>&tab=skills" type="submit">Chercher</button>
             </form>
@@ -281,12 +293,12 @@ if (isset($_GET['type'])) {
                 <?php
                 $filter = new Filters;
                 if ($unskilled) {
-                    if (!empty($_POST['level'])) {
+                    if (isset($_POST['level']) && $_POST['level'] != "") {
                         $unskilled = array_filter($unskilled, function (Skill $unskill) use ($filter) {
                             return $unskill->getLevel() == $filter->getLevel();
                         });
                     }
-                    if (!empty($_POST['stats'])) {
+                    if (isset($_POST['stats']) && $_POST['stats'] != "") {
                         $unskilled = array_filter($unskilled, function (Skill $unskill) use ($filter) {
                             return $unskill->getStats() == $filter->getStats();
                         });
