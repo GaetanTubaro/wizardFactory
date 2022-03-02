@@ -134,7 +134,25 @@ if (isset($_GET['type'])) {
         $equipTable->execute();
         $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
 
-        $skillTable = $connection->prepare('SELECT * FROM `skills` JOIN `game_skill` ON skills.id = game_skill.id_skill WHERE id_charac IS NULL');
+
+        if (!empty($_POST['sort'])) {
+            switch ($_POST['sort']) {
+                case 'nameAsc':
+                    $skillTable = $connection->prepare('SELECT * FROM `skills` JOIN `game_skill` ON skills.id = game_skill.id_skill WHERE id_charac IS NULL ORDER BY name');
+                    break;
+                case 'nameDesc':
+                    $skillTable = $connection->prepare('SELECT * FROM `skills` JOIN `game_skill` ON skills.id = game_skill.id_skill WHERE id_charac IS NULL ORDER BY name DESC');
+                    break;
+                case 'levelAsc':
+                    $skillTable = $connection->prepare('SELECT * FROM `skills` JOIN `game_skill` ON skills.id = game_skill.id_skill WHERE id_charac IS NULL ORDER BY level');
+                    break;
+                case 'levelDesc':
+                    $skillTable = $connection->prepare('SELECT * FROM `skills` JOIN `game_skill` ON skills.id = game_skill.id_skill WHERE id_charac IS NULL ORDER BY level DESC');
+                    break;
+            }
+        } else {
+            $skillTable = $connection->prepare('SELECT * FROM `skills` JOIN `game_skill` ON skills.id = game_skill.id_skill WHERE id_charac IS NULL');
+        }
         $skillTable->execute();
         $unskilled = $skillTable->fetchAll(PDO::FETCH_CLASS, Skill::class);
 ?>
@@ -236,17 +254,24 @@ if (isset($_GET['type'])) {
                                     } ?>" id="skills" role="tabpanel" aria-labelledby="skills-tab">
             <!-------------------- Form pour les filtres des compétences --------------------->
             <form class="d-flex justify-content-start p-2 mt-3 mx-2" method="POST">
-                <select class="form-select w-25 me-1" aria-label="Default select example" name="level">
+                <select class="form-select w-25 me-1 width18" aria-label="Default select example" name="level">
                     <option value="" selected>Selectionner un niveau</option>
                     <?php for ($level = 0; $level <= 5; $level++) { ?>
                         <option value="<?= $level ?>"><?= $level ?></option>
                     <?php } ?>
                 </select>
-                <select class="form-select w-25 me-1" aria-label="Default select example" name="stats">
+                <select class="form-select w-25 me-1 width18" aria-label="Default select example" name="stats">
                     <option value="" selected>Selectionner une caractéristique</option>
                     <?php foreach (SKILL::POSSIBLE_STATS as $i => $stat) { ?>
                         <option value="<?= $stat ?>"><?= $stat ?></option>
                     <?php } ?>
+                </select>
+                <select class="form-select width12   me-1" aria-label="Default select example" name="sort">
+                    <option value="" selected>Trier par ...</option>
+                    <option value="nameAsc">Nom croissant</option>
+                    <option value="nameDesc">Nom décroissant</option>
+                    <option value="levelAsc">Niveau croissant</option>
+                    <option value="levelDesc">Niveau décroissant</option>
                 </select>
                 <button class="btn btn-light mx-1" formaction="?page=table&table=<?= $id_game ?>&tab=skills" type="submit">Chercher</button>
             </form>
