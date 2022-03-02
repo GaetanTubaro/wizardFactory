@@ -170,7 +170,7 @@ if (isset($_GET['type'])) {
 } ?>" id="equipments-tab" data-bs-toggle="tab" data-bs-target="#equipments" type="button" role="tab" aria-controls="equipments" aria-selected="false">Equipements</button>
         </li>
         <li class="nav-item" role="presentation">
-            <a href="?page=history&idGame=<?= $game->getId() ?>"><button class="nav-link" id="logHistory-tab" data-bs-toggle="tab" data-bs-target="#logHistory" type="button" role="tab" aria-controls="logHistory" aria-selected="false">Historique des lancers</button></a>
+            <a href="?page=history&idGame=<?= $game->getId() ?>" class="nav-link" id="logHistory-tab" type="button" role="tab" aria-selected="false">Historique des lancers</class=></a>
         </li>
 
     </ul>

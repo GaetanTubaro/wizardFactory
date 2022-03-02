@@ -2,19 +2,21 @@
 $rolls = [];
 
 if (isset($_GET['idGame'])) {
-    $game = $connection->query('SELECT * FROM games WHERE id =' . $_GET['idGame'])
-        ->fetchAll(PDO::FETCH_CLASS, Game::class);
-    $game_id = $game[0]->getId();
-    $game_name = $game[0]->getName();
-    if ($game[0]->validateMj()) {
+    $findGame = $connection->query('SELECT * FROM games WHERE id =' . $_GET['idGame']);
+    $findGame->setFetchMode(PDO::FETCH_CLASS, Game::class);
+    $game = $findGame->fetch();
+    $game_id = $game->getId();
+    $game_name = $game->getName();
+    if ($game->validateMj()) {
         $rolls = $connection->query('SELECT * FROM dice_rolls LEFT JOIN character_sheets ON character_sheets.id = dice_rolls.id_charac WHERE id_game =' . $_GET['idGame'])->fetchAll(PDO::FETCH_CLASS, Dice::class);
     }
 } elseif (isset($_GET['idCharac'])) {
-    $character = $connection->query('SELECT character_sheets.*, game_character.id_game, games.name as game_name FROM character_sheets LEFT JOIN game_character ON character_sheets.id = game_character.id_game LEFT JOIN games ON games.id = game_character.id_game WHERE character_sheets.id =' . $_GET['idCharac'])
-    ->fetchAll(PDO::FETCH_CLASS, Character::class);
-    $game_id = $character[0]->getId_game();
-    $game_name = $character[0]->game_name;
-    if ($character[0]->getId() == $_SESSION['id']) {
+    $findCharacter = $connection->query('SELECT character_sheets.*, game_character.id_game, games.name as game_name FROM character_sheets LEFT JOIN game_character ON character_sheets.id = game_character.id_game LEFT JOIN games ON games.id = game_character.id_game WHERE character_sheets.id =' . $_GET['idCharac']);
+    $findCharacter->setFetchMode(PDO::FETCH_CLASS, Character::class);
+    $character = $findCharacter->fetch();
+    $game_id = $character->getId_game();
+    $game_name = $character->game_name;
+    if ($character->getId() == $_SESSION['id']) {
         $rolls = $connection->query('SELECT * FROM dice_rolls JOIN character_sheets ON character_sheets.id = dice_rolls.id_charac WHERE id_charac =' . $_GET['idCharac'])->fetchAll(PDO::FETCH_CLASS, Dice::class);
     }
 }?>
