@@ -55,7 +55,7 @@ if (isset($_GET['action'])) {
                 }
             }
             break;
-            case 'diceLaunch':
+            case 'diceLaunchList':
                 if (isset($_POST['dice_side']) && isset($_POST['nb_dice'])) {
                     $nbDice = $_POST['nb_dice'];
                     $launchDice = array_merge($_POST, ['id_game'=> $_GET['game'], "date_roll" => (new DateTime())->getTimestamp()]);
@@ -67,6 +67,21 @@ if (isset($_GET['action'])) {
                         $insertion->execute();
                     }
                     header('Location: ?page=history&idGame=' . $diceResult->getId_game());
+                    break;
+                }
+                // no break
+                case 'diceLaunchCharac':
+                if (isset($_POST['dice_side']) && isset($_POST['nb_dice'])) {
+                    $nbDice = $_POST['nb_dice'];
+                    $launchDice = array_merge($_POST, ['id_charac'=> $_GET['id_charac'], 'id_game'=> $_GET['game'], "date_roll" => (new DateTime())->getTimestamp()]);
+                    $diceResult = new Dice($launchDice);
+                    $results = $diceResult->rolls($nbDice);
+                    $insertion = $connection->prepare('INSERT INTO dice_rolls(id_charac,id_game,sides,result) VALUES ('.$diceResult->getId_charac().','.$diceResult->getId_game().','.$diceResult->getSides().',?)');
+                    $insertion->bindParam(1, $result);
+                    foreach ($results as $result) {
+                        $insertion->execute();
+                    }
+                    break;
                 }
     }
 }
@@ -238,14 +253,15 @@ $findPlayers->bindParam(':id', $game_id);
                                 href="?page=details&character=<?= $game['character_id'] ?>"><?= $game['character_name'] ?></a>
                         </td>
                         <td><button title="Jouer" class="btn" data-bs-toggle="modal"
-                                data-bs-target="#playtable<?= $game_id ?>"><svg
+                                data-bs-target="#play<?= $game_id ?>-<?= $game['character_id'] ?>"><svg
                                     xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                     class="bi bi-dice-6" viewBox="0 0 16 16">
                                     <path
                                         d="M13 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h10zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3H3z" />
                                     <path
                                         d="M5.5 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm8 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-8 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                                </svg></button>
+                                </svg>
+                            </button>
                             <a href="?page=history&idCharac=<?= $game['character_id'] ?>"
                                 class="btn" title="Historique"><svg xmlns="http://www.w3.org/2000/svg" width="20"
                                     height="20" fill="currentColor" class="bi bi-file-text" viewBox="0 0 16 16">
@@ -253,7 +269,49 @@ $findPlayers->bindParam(':id', $game_id);
                                         d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z" />
                                     <path
                                         d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z" />
-                                </svg></a>
+                                </svg>
+                            </a>
+                            <div class="modal"
+                                id="play<?= $game_id ?>-<?= $game['character_id'] ?>"
+                                tabindex="-1">
+                                <div class="modal-dialog">
+                                    <form class="modal-content" name="diceLaunchCharac" method="POST">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Lancer de dés</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <h5 class="modal-title">Nombre de dés?</h5>
+                                                <input type="number" class="form-control" name="nb_dice" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <h5 class="modal-title">Nombre de faces?</h5>
+                                                <select class="form-select" name="dice_side">
+                                                    <?php
+                                        foreach (Dice::AVAILABLE_SIDES as $side) {
+                                            ?>
+                                                    <option
+                                                        value="<?= $side ?>">
+                                                        <?= $side ?>
+                                                    </option>
+                                                    <?php
+                                        }
+                                        ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button
+                                                formaction="?page=list&game=<?= $game_id ?>&id_charac=<?= $game['character_id'] ?>&action=diceLaunchCharac"
+                                                formmethod="POST" type="submit" class="btn btn-primary">ET CA
+                                                LANCE!!!!!
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     <?php
@@ -295,7 +353,7 @@ $findPlayers->bindParam(':id', $game_id);
 
 <div class="modal" id="play<?= $game_id ?>" tabindex="-1">
     <div class="modal-dialog">
-        <form class="modal-content" name="diceLaunch" method="POST">
+        <form class="modal-content" name="diceLaunchList" method="POST">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Lancer de dés</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -322,7 +380,7 @@ $findPlayers->bindParam(':id', $game_id);
             </div>
             <div class="modal-footer">
                 <button
-                    formaction="?page=list&game=<?= $game_id ?>&action=diceLaunch"
+                    formaction="?page=list&game=<?= $game_id ?>&action=diceLaunchList"
                     formmethod="POST" type="submit" class="btn btn-primary">ET CA LANCE!!!!!</button>
             </div>
         </form>

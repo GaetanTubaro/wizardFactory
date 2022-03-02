@@ -47,11 +47,11 @@ if (isset($_GET['type'])) {
                         header('Location: ?page=table&table=' . $id_game . '&tab=equip');
                     } else {
                         foreach ($errors as $error) { ?>
-                            <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                                <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                    valide.</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div><?php
+<div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+    <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+        valide.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div><?php
                                 }
                     }
                 }
@@ -66,11 +66,11 @@ if (isset($_GET['type'])) {
                                 header('Location: ?page=table&table=' . $id_game . '&tab=equip');
                             } else {
                                 foreach ($errors as $error) { ?>
-                            <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                                <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                    valide.</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div><?php
+<div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+    <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+        valide.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div><?php
                                 }
                             }
                         }
@@ -85,11 +85,11 @@ if (isset($_GET['type'])) {
                                 header('Location: ?page=table&table=' . $id_game . '&tab=skills');
                             } else {
                                 foreach ($errors as $error) { ?>
-                            <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                                <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                    valide.</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div><?php
+<div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+    <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+        valide.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div><?php
                                 }
                             }
                         }
@@ -104,11 +104,11 @@ if (isset($_GET['type'])) {
                                 header('Location: ?page=table&table=' . $id_game . '&tab=skills');
                             } else {
                                 foreach ($errors as $error) { ?>
-                            <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
-                                <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
-                                    valide.</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
+<div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
+    <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
+        valide.</p>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 
 <?php
                                 }
@@ -124,6 +124,19 @@ if (isset($_GET['type'])) {
                         $connection->exec($sql);
                         header('Location: ?page=table&table=' . $id_game . '&tab=skills');
                         break;
+
+                        case 'diceLaunch':
+                if (isset($_POST['dice_side']) && isset($_POST['nb_dice'])) {
+                    $nbDice = $_POST['nb_dice'];
+                    $launchDice = array_merge($_POST, ['id_game'=> $id_game, "date_roll" => (new DateTime())->getTimestamp()]);
+                    $diceResult = new Dice($launchDice);
+                    $results = $diceResult->rolls($nbDice);
+                    $insertion = $connection->prepare('INSERT INTO dice_rolls(id_game,sides,result) VALUES ('.$id_game.','.$diceResult->getSides().',?)');
+                    $insertion->bindParam(1, $result);
+                    foreach ($results as $result) {
+                        $insertion->execute();
+                    }
+                }
                 }
             } else {
                 header('Location: ?page=table&table=' . $id_game);
@@ -181,102 +194,126 @@ if (isset($_GET['type'])) {
 ?>
 <div class="container-fluid px-5 mt-4">
 
-<!--------------------------------- TITRE -------------------------------------->
-<h1 class="mx-3 pt-3"><?= $game->getName() ?>
-    <button title="Changer le nom de table" class="btn m-1 p-1" data-bs-toggle="modal" data-bs-target="#changeTableName">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-        </svg>
-    </button>
-</h1>
+    <!--------------------------------- TITRE -------------------------------------->
+    <h1 class="mx-3 pt-3"><?= $game->getName() ?>
+        <button title="Changer le nom de table" class="btn m-1 p-1" data-bs-toggle="modal"
+            data-bs-target="#changeTableName">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path
+                    d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                <path fill-rule="evenodd"
+                    d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+            </svg>
+        </button>
+    </h1>
 
-<!--------------------------------- BOUTONS -------------------------------------->
+    <!--------------------------------- BOUTONS -------------------------------------->
 
-<div class="container-fluid">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link<?php if (!isset($_GET['tab'])) {
+    <div class="container-fluid">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link<?php if (!isset($_GET['tab'])) {
     echo ' active';
-} ?>" id="characters-tab" data-bs-toggle="tab" data-bs-target="#characters" type="button" role="tab" aria-controls="characters" aria-selected="true">Personnages</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button id="skills-tab" class="nav-link<?php if (isset($_GET['tab']) && $_GET['tab'] == 'skills') {
+} ?>" id="characters-tab" data-bs-toggle="tab" data-bs-target="#characters" type="button"
+                    role="tab" aria-controls="characters" aria-selected="true">Personnages</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button id="skills-tab" class="nav-link<?php if (isset($_GET['tab']) && $_GET['tab'] == 'skills') {
     echo ' active';
-} ?>" data-bs-toggle="tab" data-bs-target="#skills" type="button" role="tab" aria-controls="skills" aria-selected="false">Compétences</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link<?php if (isset($_GET['tab']) && $_GET['tab'] == 'equip') {
+} ?>" data-bs-toggle="tab" data-bs-target="#skills" type="button" role="tab" aria-controls="skills"
+                    aria-selected="false">Compétences</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link<?php if (isset($_GET['tab']) && $_GET['tab'] == 'equip') {
     echo '   active';
-} ?>" id="equipments-tab" data-bs-toggle="tab" data-bs-target="#equipments" type="button" role="tab" aria-controls="equipments" aria-selected="false">Equipements</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a href="?page=history&idGame=<?= $game->getId() ?>" class="nav-link" id="logHistory-tab" type="button" role="tab" aria-selected="false">Historique des lancers</class=></a>
-        </li>
+} ?>" id="equipments-tab" data-bs-toggle="tab" data-bs-target="#equipments" type="button"
+                    role="tab" aria-controls="equipments" aria-selected="false">Equipements</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a href="?page=history&idGame=<?= $game->getId() ?>"
+                    class="nav-link" id="logHistory-tab" type="button" role="tab" aria-selected="false">Historique des
+                    lancers</class=></a>
+            </li>
 
-    </ul>
+        </ul>
 
-    <div class="tab-content" id="myTabContent">
-        <!--------------------------------- PERSONNAGES -------------------------------------->
-        <div class="tab-pane fade<?php if (!isset($_GET['tab'])) {
+        <div class="tab-content" id="myTabContent">
+            <!--------------------------------- PERSONNAGES -------------------------------------->
+            <div class="tab-pane fade<?php if (!isset($_GET['tab'])) {
     echo ' show active';
 } ?>" id="characters" role="tabpanel" aria-labelledby="characters-tab">
-            <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
-                <?php foreach ($characters as $character) {
+                <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
+                    <?php foreach ($characters as $character) {
     ;
     $charac_id = $character->getId();
     $pocessChar->execute();
     $pocess = $pocessChar->fetch(); ?>
                     <div class="card mx-2" style="width: 15rem;">
 
-                        <div class="d-flex flex-column align-items-center" style="height:15rem; width:100%;box-sizing:border-box">
-                            <a href="?page=details&character=<?= $character->getId() ?>"><img src="<?= $character->getImg() ?>" class="card-img-top" style="max-height:15rem; max-width:100%;width:auto;height:auto;box-sizing:border-box">
+                        <div class="d-flex flex-column align-items-center"
+                            style="height:15rem; width:100%;box-sizing:border-box">
+                            <a
+                                href="?page=details&character=<?= $character->getId() ?>"><img
+                                    src="<?= $character->getImg() ?>"
+                                    class="card-img-top"
+                                    style="max-height:15rem; max-width:100%;width:auto;height:auto;box-sizing:border-box">
                             </a>
                         </div>
 
 
                         <div class="card-body d-flex justify-content-center align-items-center">
-                            <a href="?page=details&character=<?= $character->getId() ?>">
+                            <a
+                                href="?page=details&character=<?= $character->getId() ?>">
                                 <h2 class="card-title text-center"><?= $character->getName() ?>
                                 </h2>
                             </a>
                         </div>
                         <?php if ($pocess) { ?>
-                            <h5 class="mx-auto pb-2 text-center">Joué par : <?= $pocess->getPseudo() ?>
-                            </h5>
+                        <h5 class="mx-auto pb-2 text-center">Joué par : <?= $pocess->getPseudo() ?>
+                        </h5>
                         <?php } else { ?>
-                            <h5 class="mx-auto pb-2">Non affilié</h5>
+                        <h5 class="mx-auto pb-2">Non affilié</h5>
                         <?php } ?>
                         <div class="card-footer d-flex justify-content-center">
-                            <a href="?page=details&character=<?= $character->getId() ?>&type=deleteChar" class="w-100">
+                            <a href="?page=details&character=<?= $character->getId() ?>&type=deleteChar"
+                                class="w-100">
                                 <button class="btn m-0 p-0 w-100">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                        class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path
+                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                        <path fill-rule="evenodd"
+                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
                                     </svg>
                                 </button>
                             </a>
                         </div>
                     </div>
 
-                <?php
+                    <?php
 }
                 ?>
-                <a title="Créer un personnage" href="?page=creationCharForm&id_game=<?= $id_game ?>">
-                    <div class="card card-add mx-2 h-100" style="width:15rem; min-height:15rem">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="50%" height="auto" fill="currentColor" class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
-                            <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
-                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
-                        </svg>
-                    </div>
-                </a>
+                    <a title="Créer un personnage"
+                        href="?page=creationCharForm&id_game=<?= $id_game ?>">
+                        <div class="card card-add mx-2 h-100" style="width:15rem; min-height:15rem">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50%" height="auto" fill="currentColor"
+                                class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
+                                <path
+                                    d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+                                <path
+                                    d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+                            </svg>
+                        </div>
+                    </a>
+                </div>
             </div>
-        </div>
 
-        <!--------------------------------- COMPETENCES -------------------------------------->
-        <div class="tab-pane fade<?php if (isset($_GET['tab']) && $_GET['tab'] == 'skills') {
+            <!--------------------------------- COMPETENCES -------------------------------------->
+            <div class="tab-pane fade<?php if (isset($_GET['tab']) && $_GET['tab'] == 'skills') {
                     echo ' show active';
                 } ?>" id="skills" role="tabpanel" aria-labelledby="skills-tab">
+<<<<<<< HEAD
             <!-------------------- Form pour les filtres des compétences --------------------->
             <form class="d-flex justify-content-start p-2 mt-3 mx-2" method="POST">
                 <select class="form-select w-25 me-1 width18" aria-label="Default select example" name="level">
@@ -317,6 +354,33 @@ if (isset($_GET['type'])) {
                 <!--------------------------------- filtre ---------------------------------->
                 <?php
                 $filter = new Filters;
+=======
+                <!-------------------- Form pour les filtres des compétences --------------------->
+                <form class="d-flex justify-content-start p-2 mt-3 mx-2" method="POST">
+                    <select class="form-select w-25 me-1" aria-label="Default select example" name="level">
+                        <option value="" selected>Selectionner un niveau</option>
+                        <?php for ($level = 0; $level <= 5; $level++) { ?>
+                        <option value="<?= $level ?>"><?= $level ?>
+                        </option>
+                        <?php } ?>
+                    </select>
+                    <select class="form-select w-25 me-1" aria-label="Default select example" name="stats">
+                        <option value="" selected>Selectionner une caractéristique</option>
+                        <?php foreach (SKILL::POSSIBLE_STATS as $i => $stat) { ?>
+                        <option value="<?= $stat ?>"><?= $stat ?>
+                        </option>
+                        <?php } ?>
+                    </select>
+                    <button class="btn btn-light mx-1"
+                        formaction="?page=table&table=<?= $id_game ?>&tab=skills"
+                        type="submit">Chercher</button>
+                </form>
+                <!--------------------------------- fin du Form ---------------------------------->
+                <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
+                    <!--------------------------------- filtre ---------------------------------->
+                    <?php
+                $filter = new Filters();
+>>>>>>> 59c7819 (dice-launch-charac)
                 if ($unskilled) {
                     if (isset($_POST['level']) && $_POST['level'] != "") {
                         $unskilled = array_filter($unskilled, function (Skill $unskill) use ($filter) {
@@ -329,6 +393,7 @@ if (isset($_GET['type'])) {
                         });
                     }
                     foreach ($unskilled as $unskill) {
+<<<<<<< HEAD
                 ?>
                         <div class="card mx-2 mb-3" style="width: 20%;">
                             <div class="card-body">
@@ -340,119 +405,161 @@ if (isset($_GET['type'])) {
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+=======
+                        ?>
+                    <div class="card mx-2" style="width: 20%;">
+                        <div class="card-body">
+                            <div class="card-title d-flex align-items-center">
+                                <h5 class="m-0 d-inline"><?= $unskill->getName() ?>
+                                </h5>
+                                <span class="ms-auto">
+                                    <button class="btn m-1 p-1" data-bs-toggle="modal"
+                                        data-bs-target="#skillChangeForm<?= $unskill->getId() ?>">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path
+                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                            <path fill-rule="evenodd"
+                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                        </svg>
+                                    </button>
+                                    <a
+                                        href="?page=table&table=<?= $id_game ?>&type=deleteSkill&idSkill=<?= $unskill->getId() ?>"><button
+                                            class="btn m-1 p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+>>>>>>> 59c7819 (dice-launch-charac)
                                             </svg>
                                         </button>
-                                        <a href="?page=table&table=<?= $id_game ?>&type=deleteSkill&idSkill=<?= $unskill->getId() ?>"><button class="btn m-1 p-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                                </svg>
-                                            </button>
-                                        </a>
-                                    </span>
-                                </div>
-                                <p class="card-text mb-1"><span style='font-style:bold'>Niveau :</span> <?= $unskill->getLevel() ?>
-                                </p>
-                                <p class="card-text mb-1"><span style='font-style:bold'>Stats :</span> <?= $unskill->getStats() ?>
-                                </p>
+                                    </a>
+                                </span>
                             </div>
+                            <p class="card-text mb-1"><span style='font-style:bold'>Niveau :</span> <?= $unskill->getLevel() ?>
+                            </p>
+                            <p class="card-text mb-1"><span style='font-style:bold'>Stats :</span> <?= $unskill->getStats() ?>
+                            </p>
                         </div>
-                        <!---------------------------------------------------------->
-                        <!----------------- Modal modif skill ----------------->
-                        <!---------------------------------------------------------->
-                        <div class="modal fade" id="skillChangeForm<?= $unskill->getId() ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="staticBackdropLabel">Modifier une compétence</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form name="changeSkill" action="" method="POST">
-                                            <div class="mb-3">
-                                                <label class="form-label">Nom</label>
-                                                <input type="text" class="form-control" name="skill_name" value="<?= $unskill->getName() ?>" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Niveau</label>
-                                                <span class="form-text mt-0 ms-3">Supérieur à 0</span>
-                                                <input type="number" class="form-control" name="skill_level" value="<?= $unskill->getLevel() ?>" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Statistique liée</label>
-                                                <select class="form-select" name="skill_stat">
-                                                    <?php foreach (Skill::POSSIBLE_STATS as $statistique) { ?>
-                                                        <option value="<?= $statistique ?>" <?php if ($unskill->getStats() == $statistique) {
+                    </div>
+                    <!---------------------------------------------------------->
+                    <!----------------- Modal modif skill ----------------->
+                    <!---------------------------------------------------------->
+                    <div class="modal fade"
+                        id="skillChangeForm<?= $unskill->getId() ?>"
+                        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Modifier une compétence</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form name="changeSkill" action="" method="POST">
+                                        <div class="mb-3">
+                                            <label class="form-label">Nom</label>
+                                            <input type="text" class="form-control" name="skill_name"
+                                                value="<?= $unskill->getName() ?>"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Niveau</label>
+                                            <span class="form-text mt-0 ms-3">Supérieur à 0</span>
+                                            <input type="number" class="form-control" name="skill_level"
+                                                value="<?= $unskill->getLevel() ?>"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Statistique liée</label>
+                                            <select class="form-select" name="skill_stat">
+                                                <?php foreach (Skill::POSSIBLE_STATS as $statistique) { ?>
+                                                <option
+                                                    value="<?= $statistique ?>"
+                                                    <?php if ($unskill->getStats() == $statistique) {
                             echo "selected";
                         } ?>><?= $statistique ?>
-                                                        </option>
-                                                    <?php } ?>
-                                                </select>
-                                            </div>
-                                            <button formaction="?page=table&table=<?= $id_game ?>&type=changeSkill&idSkill=<?= $unskill->getId() ?>" type="submit" class="btn btn-primary">Modifier</button>
-                                        </form>
-                                    </div>
+                                                </option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <button
+                                            formaction="?page=table&table=<?= $id_game ?>&type=changeSkill&idSkill=<?= $unskill->getId() ?>"
+                                            type="submit" class="btn btn-primary">Modifier</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        <!-- Fin modal modif compétence -->
-                <?php
+                    </div>
+                    <!-- Fin modal modif compétence -->
+                    <?php
                     }
                 }
                 ?>
-                <button title="Créer une compétence" class="card card-add mx-2 p-4" style="width: 10%; height: auto" data-bs-toggle="modal" data-bs-target="#skillAddForm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="auto" fill="currentColor" class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
-                        <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
-                        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
-                    </svg>
-                </button>
+                    <button title="Créer une compétence" class="card card-add mx-2 p-4" style="width: 10%; height: auto"
+                        data-bs-toggle="modal" data-bs-target="#skillAddForm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="auto" fill="currentColor"
+                            class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
+                            <path
+                                d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
-        </div>
 
 
 
 
-        <!-------------------------------- Modal Ajout Compétence -------------------------------------->
-        <div class="modal fade" id="skillAddForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Ajouter une compétence</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form name="newSkill" action="" method="POST">
-                            <div class="mb-3">
-                                <label class="form-label">Nom</label>
-                                <input type="text" class="form-control" name="skill_name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Niveau</label>
-                                <span class="form-text mt-0 ms-3">Compris entre 1 et 5</span>
-                                <input type="number" class="form-control" name="skill_level" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Statistique liée</label>
-                                <select class="form-select" name="skill_stat">
-                                    <option value="Force" selected>Force</option>
-                                    <option value="Dextérité">Dextérité</option>
-                                    <option value="Constitution">Constitution</option>
-                                    <option value="Intelligence">Intelligence</option>
-                                    <option value="Sagesse">Sagesse</option>
-                                    <option value="Chance">Chance</option>
-                                </select>
-                            </div>
-                            <button formaction="?page=table&table=<?= $id_game ?>&type=newSkill" type="submit" class="btn btn-primary">Ajouter</button>
-                        </form>
+            <!-------------------------------- Modal Ajout Compétence -------------------------------------->
+            <div class="modal fade" id="skillAddForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Ajouter une compétence</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form name="newSkill" action="" method="POST">
+                                <div class="mb-3">
+                                    <label class="form-label">Nom</label>
+                                    <input type="text" class="form-control" name="skill_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Niveau</label>
+                                    <span class="form-text mt-0 ms-3">Compris entre 1 et 5</span>
+                                    <input type="number" class="form-control" name="skill_level" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Statistique liée</label>
+                                    <select class="form-select" name="skill_stat">
+                                        <option value="Force" selected>Force</option>
+                                        <option value="Dextérité">Dextérité</option>
+                                        <option value="Constitution">Constitution</option>
+                                        <option value="Intelligence">Intelligence</option>
+                                        <option value="Sagesse">Sagesse</option>
+                                        <option value="Chance">Chance</option>
+                                    </select>
+                                </div>
+                                <button
+                                    formaction="?page=table&table=<?= $id_game ?>&type=newSkill"
+                                    type="submit" class="btn btn-primary">Ajouter</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!--------------------------------- EQUIPEMENTS -------------------------------------->
-        <div class="tab-pane fade<?php if (isset($_GET['tab']) && $_GET['tab'] == 'equip') {
+            <!--------------------------------- EQUIPEMENTS -------------------------------------->
+            <div class="tab-pane fade<?php if (isset($_GET['tab']) && $_GET['tab'] == 'equip') {
                     echo ' show active';
                 } ?>" id="equipments" role="tabpanel" aria-labelledby="equipments-tab">
+<<<<<<< HEAD
             <!--------------------------------- Form filtre equipment ---------------------------------->
             <form class="p-2 mt-3 mx-2" method="POST">
                 <div class="d-flex justify-content-start mb-2">
@@ -490,6 +597,36 @@ if (isset($_GET['type'])) {
             <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
                 <?php
                 $equipfilter = new Filters;
+=======
+                <!--------------------------------- Form filtre equipment ---------------------------------->
+                <form class="p-2 mt-3 mx-2" method="POST">
+                    <div class="d-flex justify-content-start mb-2">
+                        <label class="m-2">Dégats</label>
+                        <input type="number" class="width12 form-control me-1" placeholder="Dégat minimum" name="dMin"
+                            <?php if (isset($_POST['dMin'])) { ?>
+                        <?= 'value="' ?><?= $_POST['dMin'] ?><?= '"' ?> <?php } ?>>
+                        <input type="number" class="width12 form-control me-1" placeholder="Dégat maximum" name="dMax"
+                            <?php if (isset($_POST['dMax'])) { ?>
+                        <?= 'value="' ?><?= $_POST['dMax'] ?><?= '"' ?> <?php } ?>>
+                    </div>
+                    <div class="d-flex justify-content-start">
+                        <label class="m-2">Portée</label>
+                        <input type="number" class="width12 form-control me-1" placeholder="Portée minimum" name="pMin"
+                            <?php if (isset($_POST['pMin'])) { ?>
+                        <?= 'value="' ?><?= $_POST['pMin'] ?><?= '"' ?> <?php } ?>>
+                        <input type="number" class="width12 form-control me-1" placeholder="Portée maximum" name="pMax"
+                            <?php if (isset($_POST['pMax'])) { ?>
+                        <?= 'value="' ?><?= $_POST['pMax'] ?><?= '"' ?> <?php } ?>>
+                        <button class="btn btn-light mx-1"
+                            formaction="?page=table&table=<?= $id_game ?>&tab=equip"
+                            type="submit">Chercher</button>
+                    </div>
+                </form>
+                <!--------------------------------- fin du Form ---------------------------------->
+                <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
+                    <?php
+                $equipfilter = new Filters();
+>>>>>>> 59c7819 (dice-launch-charac)
                 if ($unequiped) {
                     if (!empty($_POST['dMax'])) {
                         $unequiped = array_filter($unequiped, function (Equipment $unequip) use ($equipfilter) {
@@ -512,6 +649,7 @@ if (isset($_GET['type'])) {
                         });
                     }
                     foreach ($unequiped as $unequip) {
+<<<<<<< HEAD
                 ?>
                         <div class="card mx-2 mb-3" style="width: 20%;">
                             <div class="card-body">
@@ -523,74 +661,114 @@ if (isset($_GET['type'])) {
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+=======
+                        ?>
+                    <div class="card mx-2" style="width: 20%;">
+                        <div class="card-body">
+                            <div class="card-title d-flex align-items-center">
+                                <h5 class="m-0 d-inline"><?= $unequip->getName() ?>
+                                </h5>
+                                <span class="ms-auto">
+                                    <button class="btn m-1 p-1" data-bs-toggle="modal"
+                                        data-bs-target="#equipmentChangeForm<?= $unequip->getId() ?>">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                            <path
+                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                            <path fill-rule="evenodd"
+                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                                        </svg>
+                                    </button>
+                                    <a
+                                        href="?page=table&table=<?= $id_game ?>&type=deleteEquipment&idEquipment=<?= $unequip->getId() ?>"><button
+                                            class="btn m-1 p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+>>>>>>> 59c7819 (dice-launch-charac)
                                             </svg>
                                         </button>
-                                        <a href="?page=table&table=<?= $id_game ?>&type=deleteEquipment&idEquipment=<?= $unequip->getId() ?>"><button class="btn m-1 p-1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                                </svg>
-                                            </button>
-                                        </a>
-                                    </span>
-                                </div>
-                                <p class="card-text mb-1"><span style='font-style:bold'>Dégâts :</span> <?= $unequip->getDamages() ?>
-                                </p>
-                                <p class="card-text mb-1"><span style='font-style:bold'>Portée :</span> <?= $unequip->getRange() ?>
-                                </p>
+                                    </a>
+                                </span>
                             </div>
+                            <p class="card-text mb-1"><span style='font-style:bold'>Dégâts :</span> <?= $unequip->getDamages() ?>
+                            </p>
+                            <p class="card-text mb-1"><span style='font-style:bold'>Portée :</span> <?= $unequip->getRange() ?>
+                            </p>
                         </div>
+                    </div>
 
-                        <!---------------------------------------------------------->
-                        <!----------------- Modal modif equipement ----------------->
-                        <!---------------------------------------------------------->
-                        <div class="modal fade" id="equipmentChangeForm<?= $unequip->getId() ?>" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="staticBackdropLabel">Modifier un équipement</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form name="changeEquipment" action="" method="POST">
-                                            <div class="mb-3">
-                                                <label class="form-label">Nom</label>
-                                                <input type="text" class="form-control" name="equipment_name" value="<?= $unequip->getName() ?>" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Dégâts</label>
-                                                <span class="form-text mt-0 ms-3">Supérieur à 0</span>
-                                                <input type="number" class="form-control" name="equipment_damages" value="<?= $unequip->getDamages() ?>" required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label">Portée</label>
-                                                <span class="form-text mt-0 ms-3">Comprise entre 0 et 5</span>
-                                                <input type="number" class="form-control" name="equipment_range" value="<?= $unequip->getRange() ?>" required>
-                                            </div>
-                                            <button formaction="?page=table&table=<?= $id_game ?>&type=changeEquipment&idEquipment=<?= $unequip->getId() ?>" type="submit" class="btn btn-primary">Modifier</button>
-                                        </form>
-                                    </div>
+                    <!---------------------------------------------------------->
+                    <!----------------- Modal modif equipement ----------------->
+                    <!---------------------------------------------------------->
+                    <div class="modal fade"
+                        id="equipmentChangeForm<?= $unequip->getId() ?>"
+                        data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="staticBackdropLabel">Modifier un équipement</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form name="changeEquipment" action="" method="POST">
+                                        <div class="mb-3">
+                                            <label class="form-label">Nom</label>
+                                            <input type="text" class="form-control" name="equipment_name"
+                                                value="<?= $unequip->getName() ?>"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Dégâts</label>
+                                            <span class="form-text mt-0 ms-3">Supérieur à 0</span>
+                                            <input type="number" class="form-control" name="equipment_damages"
+                                                value="<?= $unequip->getDamages() ?>"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Portée</label>
+                                            <span class="form-text mt-0 ms-3">Comprise entre 0 et 5</span>
+                                            <input type="number" class="form-control" name="equipment_range"
+                                                value="<?= $unequip->getRange() ?>"
+                                                required>
+                                        </div>
+                                        <button
+                                            formaction="?page=table&table=<?= $id_game ?>&type=changeEquipment&idEquipment=<?= $unequip->getId() ?>"
+                                            type="submit" class="btn btn-primary">Modifier</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        <!-- Fin modal modif equipement -->
-                <?php
+                    </div>
+                    <!-- Fin modal modif equipement -->
+                    <?php
                     }
                 }
                 ?>
-                <button title="Créer un équipement" class="card card-add mx-2 p-4" style="width: 10%; height: auto" data-bs-toggle="modal" data-bs-target="#equipmentAddForm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="auto" fill="currentColor" class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
-                        <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
-                        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
-                    </svg>
-                </button>
+                    <button title="Créer un équipement" class="card card-add mx-2 p-4" style="width: 10%; height: auto"
+                        data-bs-toggle="modal" data-bs-target="#equipmentAddForm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="auto" height="auto" fill="currentColor"
+                            class="bi bi-plus-lg m-auto" viewBox="0 0 16 16">
+                            <path
+                                d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+                            <path
+                                d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div></div>
+</div>
 
 <!-------------------------------- Modal Ajout Equipement -------------------------------------->
-<div class="modal fade" id="equipmentAddForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="equipmentAddForm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -613,7 +791,9 @@ if (isset($_GET['type'])) {
                         <span class="form-text mt-0 ms-3">Comprise entre 0 et 5</span>
                         <input type="number" class="form-control" name="equipment_range" required>
                     </div>
-                    <button formaction="?page=table&table=<?= $id_game ?>&type=newEquipment" type="submit" class="btn btn-primary">Ajouter</button>
+                    <button
+                        formaction="?page=table&table=<?= $id_game ?>&type=newEquipment"
+                        type="submit" class="btn btn-primary">Ajouter</button>
                 </form>
             </div>
         </div>
@@ -623,7 +803,8 @@ if (isset($_GET['type'])) {
 <!-- ----------------------------------------------------------------------------------------------------------- -->
 <!----------------------------------------- Modal Change Name Table Start ----------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------- -->
-<div class="modal fade" id="changeTableName" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="changeTableName" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -633,7 +814,9 @@ if (isset($_GET['type'])) {
             <div class="modal-body">
                 <form method="POST">
                     <input type="text" class="form-control mb-3" name="chgname" required>
-                    <button formaction="?page=table&table=<?= $id_game ?>&type=changeName" type="submit" class="btn btn-primary">Modifier</button>
+                    <button
+                        formaction="?page=table&table=<?= $id_game ?>&type=changeName"
+                        type="submit" class="btn btn-primary">Modifier</button>
                 </form>
             </div>
         </div>
@@ -642,3 +825,43 @@ if (isset($_GET['type'])) {
 <!-- ----------------------------------------------------------------------------------------------------------- -->
 <!----------------------------------------- Modal Change Name Table End ------------------------------------------->
 <!-- ----------------------------------------------------------------------------------------------------------- -->
+
+<!----------------------------------------------------------------------------------------------------------------->
+<!------------------------ Modal prépartion lancer de dés --------------------------------------------------------->
+<!----------------------------------------------------------------------------------------------------------------->
+
+<div class="modal" id="play<?= $id_game ?>" tabindex="-1">
+    <div class="modal-dialog">
+        <form class="modal-content" name="diceLaunch" method="POST">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Lancer de dés</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h5 class="modal-title">Nombre de dés?</h5>
+                    <input type="number" class="form-control" name="nb_dice" required>
+                </div>
+                <div class="mb-3">
+                    <h5 class="modal-title">Nombre de faces?</h5>
+                    <select class="form-select" name="dice_side">
+                        <?php
+                                        foreach (Dice::AVAILABLE_SIDES as $side) {
+                                            ?>
+                        <option value="<?= $side ?>">
+                            <?= $side ?>
+                        </option>
+                        <?php
+                                        }
+                                        ?>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    formaction="?page=list&game=<?= $id_game ?>&action=diceLaunch"
+                    formmethod="POST" type="submit" class="btn btn-primary">ET CA LANCE!!!!!</button>
+            </div>
+        </form>
+    </div>
+</div>
