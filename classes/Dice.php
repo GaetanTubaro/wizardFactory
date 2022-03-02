@@ -7,7 +7,7 @@ class Dice
     protected ?int $id_charac;
     protected array $results;
     protected int $result;
-    protected int $date_roll;
+    protected string $date_roll;
     public const AVAILABLE_SIDES = [2, 4, 6, 8, 10, 12, 20, 100];
 
     public function __construct(array $infos=[])

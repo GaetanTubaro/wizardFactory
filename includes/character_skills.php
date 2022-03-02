@@ -60,8 +60,8 @@ $gameSkills = $findGameSkills->fetchAll(PDO::FETCH_CLASS, Skill::class);
                                     <select class="form-select" name="skill_stat">
                                         <?php foreach (Skill::POSSIBLE_STATS as $statistique) { ?>
                                             <option value="<?= $statistique ?>" <?php if ($skill->getStats() == $statistique) {
-                                                                                    echo "selected";
-                                                                                } ?>><?= $statistique ?>
+    echo "selected";
+} ?>><?= $statistique ?>
                                             </option>
                                         <?php } ?>
                                     </select>
@@ -149,7 +149,7 @@ $gameSkills = $findGameSkills->fetchAll(PDO::FETCH_CLASS, Skill::class);
                             <select class="form-select" name="idSkill">
                                 <?php
                                 foreach ($gameSkills as $gameSkill) {
-                                ?>
+                                    ?>
                                     <option value="<?= $gameSkill->getId() ?>"><?= $gameSkill->getName() . " - " . $gameSkill->getStats() . " - Niveau " . $gameSkill->getLevel() ?></option>
                                 <?php
                                 }

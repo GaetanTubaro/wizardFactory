@@ -66,6 +66,7 @@ if (isset($_GET['action'])) {
                     foreach ($results as $result) {
                         $insertion->execute();
                     }
+                    header('Location: ?page=history&idGame=' . $diceResult->getId_game());
                 }
     }
 }
