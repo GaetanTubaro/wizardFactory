@@ -6,7 +6,7 @@
     header('Location: ?page=list');
 }
 
-$findCharacter = $connection->prepare('SELECT character_sheets.*, game_character.id_game, game_character.id_user, games.id_mj FROM `character_sheets`
+$findCharacter = $connection->prepare('SELECT character_sheets.*, game_character.id_game, game_character.id_user, games.id_mj, games.name AS game_name FROM `character_sheets`
 JOIN game_character ON character_sheets.id = game_character.id_charac
 JOIN games ON game_character.id_game = games.id
 WHERE character_sheets.id = ?');
@@ -28,7 +28,7 @@ if (isset($_GET['type'])) {
                         header('Location: ?page=details&character=' . $id_character);
                     } else {
                         foreach ($errors as $error) {
-?>
+                            ?>
                             <div class="alert alert-warning alert-dismissible fade show w-50 mx-auto my-3" role="alert">
                                 <p class="mb-0">Oups ! <?= $error ?> Veuillez entrer une donnée
                                     valide.</p>
@@ -60,8 +60,8 @@ if (isset($_GET['type'])) {
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div><?php
                                 }
-                            }
-                        }
+                    }
+                }
                         break;
                     case 'deleteSkill':
                         $deletedSkill = new Skill(['id_skill' => $_GET['idSkill']]);
@@ -149,13 +149,20 @@ if (isset($_GET['type'])) {
                         }
                         break;
                 }
-            } else {
-                header('Location: ?page=details&character=' . $id_character);
-            }
-        } ?>
+    } else {
+        header('Location: ?page=details&character=' . $id_character);
+    }
+} ?>
 
-<div class="container-fluid p-5">
+<div class="container-fluid px-5 mt-4">
     <div class="row d-flex justify-content-center align-items-start">
+        <nav class="mb-3" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="?page=list">Liste des tables</a></li>
+                <li class="breadcrumb-item"><a href="?page=table&table=<?= $character->getId_game() ?>"><?= $character->game_name ?></a></li>
+                <li class="breadcrumb-item active" aria-current="page"><?= $character->getName() ?></li>
+            </ol>
+        </nav>
 
         <?php
         include "includes/character_stats.php";

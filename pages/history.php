@@ -4,24 +4,37 @@ $rolls = [];
 if (isset($_GET['idGame'])) {
     $game = $connection->query('SELECT * FROM games WHERE id =' . $_GET['idGame'])
         ->fetchAll(PDO::FETCH_CLASS, Game::class);
+    $game_id = $game[0]->getId();
+    $game_name = $game[0]->getName();
     if ($game[0]->validateMj()) {
         $rolls = $connection->query('SELECT * FROM dice_rolls LEFT JOIN character_sheets ON character_sheets.id = dice_rolls.id_charac WHERE id_game =' . $_GET['idGame'])->fetchAll(PDO::FETCH_CLASS, Dice::class);
     }
 } elseif (isset($_GET['idCharac'])) {
-    $character = $connection->query('SELECT * FROM character_sheets WHERE id =' . $_GET['idCharac'])
-        ->fetchAll(PDO::FETCH_CLASS, Character::class);
+    $character = $connection->query('SELECT character_sheets.*, game_character.id_game, games.name as game_name FROM character_sheets LEFT JOIN game_character ON character_sheets.id = game_character.id_game LEFT JOIN games ON games.id = game_character.id_game WHERE character_sheets.id =' . $_GET['idCharac'])
+    ->fetchAll(PDO::FETCH_CLASS, Character::class);
+    $game_id = $character[0]->getId_game();
+    $game_name = $character[0]->game_name;
     if ($character[0]->getId() == $_SESSION['id']) {
         $rolls = $connection->query('SELECT * FROM dice_rolls JOIN character_sheets ON character_sheets.id = dice_rolls.id_charac WHERE id_charac =' . $_GET['idCharac'])->fetchAll(PDO::FETCH_CLASS, Dice::class);
     }
-}
+}?>
 
+<nav class="mt-4 ms-4" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="?page=list">Liste des tables</a></li>
+                <li class="breadcrumb-item"><a href="?page=table&table=<?= $game_id ?>"><?= $game_name ?></a></li>
+                <li class="breadcrumb-item active" aria-current="page">Historique des lancers</li>
+            </ol>
+        </nav>
+
+<?php
 if (empty($rolls)) { ?>
-    <div class="d-flex justify-content-center mt-5">
+    <div class="d-flex justify-content-center mt-4">
         <p>Aucun lancer de dé ici !</p>
     </div>
 <?php
 } else { ?>
-    <div class="container mt-5">
+    <div class="container mt-4">
         <table class="table">
         <thead>
             <tr>
