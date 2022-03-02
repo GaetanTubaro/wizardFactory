@@ -138,10 +138,10 @@ if (isset($_GET['type'])) {
                     }
                 }
                 }
-            } else {
-                header('Location: ?page=table&table=' . $id_game);
-            }
-        }
+    } else {
+        header('Location: ?page=table&table=' . $id_game);
+    }
+}
 
         if (!empty($_POST['sortEq'])) {
             switch ($_POST['sortEq']) {
@@ -313,39 +313,38 @@ if (isset($_GET['type'])) {
             <div class="tab-pane fade<?php if (isset($_GET['tab']) && $_GET['tab'] == 'skills') {
                     echo ' show active';
                 } ?>" id="skills" role="tabpanel" aria-labelledby="skills-tab">
-<<<<<<< HEAD
             <!-------------------- Form pour les filtres des compétences --------------------->
             <form class="d-flex justify-content-start p-2 mt-3 mx-2" method="POST">
                 <select class="form-select w-25 me-1 width18" aria-label="Default select example" name="level">
                     <option value="" selected>Selectionner un niveau</option>
                     <?php for ($level = 0; $level <= 5; $level++) { ?>
                         <option value="<?= $level ?>" <?php if (isset($_POST['level']) && is_numeric($_POST['level']) && $_POST['level'] == $level) {
-                                                            echo 'selected';
-                                                        } ?>><?= $level ?></option>
+                    echo 'selected';
+                } ?>><?= $level ?></option>
                     <?php } ?>
                 </select>
                 <select class="form-select w-25 me-1 width18" aria-label="Default select example" name="stats">
                     <option value="" selected>Selectionner une caractéristique</option>
                     <?php foreach (SKILL::POSSIBLE_STATS as $i => $stat) { ?>
                         <option value="<?= $stat ?>" <?php if (isset($_POST['stats']) && $_POST['stats'] == $stat) {
-                                                            echo 'selected';
-                                                        } ?>><?= $stat ?></option>
+                    echo 'selected';
+                } ?>><?= $stat ?></option>
                     <?php } ?>
                 </select>
                 <select class="form-select width12   me-1" aria-label="Default select example" name="sort">
                     <option value="" selected>Trier par ...</option>
                     <option value="nameAsc" <?php if (isset($_POST['sort']) && $_POST['sort'] == 'nameAsc') {
-                                                echo 'selected';
-                                            } ?>>Nom croissant</option>
+                    echo 'selected';
+                } ?>>Nom croissant</option>
                     <option value="nameDesc" <?php if (isset($_POST['sort']) && $_POST['sort'] == 'nameDesc') {
-                                                    echo 'selected';
-                                                } ?>>Nom décroissant</option>
+                    echo 'selected';
+                } ?>>Nom décroissant</option>
                     <option value="levelAsc" <?php if (isset($_POST['sort']) && $_POST['sort'] == 'levelAsc') {
-                                                    echo 'selected';
-                                                } ?>>Niveau croissant</option>
+                    echo 'selected';
+                } ?>>Niveau croissant</option>
                     <option value="levelDesc" <?php if (isset($_POST['sort']) && $_POST['sort'] == 'levelDesc') {
-                                                    echo 'selected';
-                                                } ?>>Niveau décroissant</option>
+                    echo 'selected';
+                } ?>>Niveau décroissant</option>
                 </select>
                 <button class="btn btn-light mx-1" formaction="?page=table&table=<?= $id_game ?>&tab=skills" type="submit">Chercher</button>
             </form>
@@ -354,33 +353,6 @@ if (isset($_GET['type'])) {
                 <!--------------------------------- filtre ---------------------------------->
                 <?php
                 $filter = new Filters;
-=======
-                <!-------------------- Form pour les filtres des compétences --------------------->
-                <form class="d-flex justify-content-start p-2 mt-3 mx-2" method="POST">
-                    <select class="form-select w-25 me-1" aria-label="Default select example" name="level">
-                        <option value="" selected>Selectionner un niveau</option>
-                        <?php for ($level = 0; $level <= 5; $level++) { ?>
-                        <option value="<?= $level ?>"><?= $level ?>
-                        </option>
-                        <?php } ?>
-                    </select>
-                    <select class="form-select w-25 me-1" aria-label="Default select example" name="stats">
-                        <option value="" selected>Selectionner une caractéristique</option>
-                        <?php foreach (SKILL::POSSIBLE_STATS as $i => $stat) { ?>
-                        <option value="<?= $stat ?>"><?= $stat ?>
-                        </option>
-                        <?php } ?>
-                    </select>
-                    <button class="btn btn-light mx-1"
-                        formaction="?page=table&table=<?= $id_game ?>&tab=skills"
-                        type="submit">Chercher</button>
-                </form>
-                <!--------------------------------- fin du Form ---------------------------------->
-                <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
-                    <!--------------------------------- filtre ---------------------------------->
-                    <?php
-                $filter = new Filters();
->>>>>>> 59c7819 (dice-launch-charac)
                 if ($unskilled) {
                     if (isset($_POST['level']) && $_POST['level'] != "") {
                         $unskilled = array_filter($unskilled, function (Skill $unskill) use ($filter) {
@@ -393,8 +365,7 @@ if (isset($_GET['type'])) {
                         });
                     }
                     foreach ($unskilled as $unskill) {
-<<<<<<< HEAD
-                ?>
+                        ?>
                         <div class="card mx-2 mb-3" style="width: 20%;">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-center">
@@ -405,34 +376,6 @@ if (isset($_GET['type'])) {
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-=======
-                        ?>
-                    <div class="card mx-2" style="width: 20%;">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-center">
-                                <h5 class="m-0 d-inline"><?= $unskill->getName() ?>
-                                </h5>
-                                <span class="ms-auto">
-                                    <button class="btn m-1 p-1" data-bs-toggle="modal"
-                                        data-bs-target="#skillChangeForm<?= $unskill->getId() ?>">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path
-                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                            <path fill-rule="evenodd"
-                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                        </svg>
-                                    </button>
-                                    <a
-                                        href="?page=table&table=<?= $id_game ?>&type=deleteSkill&idSkill=<?= $unskill->getId() ?>"><button
-                                            class="btn m-1 p-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                <path fill-rule="evenodd"
-                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
->>>>>>> 59c7819 (dice-launch-charac)
                                             </svg>
                                         </button>
                                     </a>
@@ -559,7 +502,6 @@ if (isset($_GET['type'])) {
             <div class="tab-pane fade<?php if (isset($_GET['tab']) && $_GET['tab'] == 'equip') {
                     echo ' show active';
                 } ?>" id="equipments" role="tabpanel" aria-labelledby="equipments-tab">
-<<<<<<< HEAD
             <!--------------------------------- Form filtre equipment ---------------------------------->
             <form class="p-2 mt-3 mx-2" method="POST">
                 <div class="d-flex justify-content-start mb-2">
@@ -572,23 +514,23 @@ if (isset($_GET['type'])) {
                     <select class="form-select width12   me-1" aria-label="Default select example" name="sortEq">
                         <option value="" selected>Trier par ...</option>
                         <option value="nameAsc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'nameAsc') {
-                                                    echo 'selected';
-                                                } ?>>Nom croissant</option>
+                    echo 'selected';
+                } ?>>Nom croissant</option>
                         <option value="nameDesc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'nameDesc') {
-                                                        echo 'selected';
-                                                    } ?>>Nom décroissant</option>
+                    echo 'selected';
+                } ?>>Nom décroissant</option>
                         <option value="rangeAsc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'rangeAsc') {
-                                                        echo 'selected';
-                                                    } ?>>Portée croissante</option>
+                    echo 'selected';
+                } ?>>Portée croissante</option>
                         <option value="rangeDesc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'rangeDesc') {
-                                                        echo 'selected';
-                                                    } ?>>Portée décroissante</option>
+                    echo 'selected';
+                } ?>>Portée décroissante</option>
                         <option value="damageAsc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'damageAsc') {
-                                                        echo 'selected';
-                                                    } ?>>Dégat croissant</option>
+                    echo 'selected';
+                } ?>>Dégat croissant</option>
                         <option value="damageDesc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'damageDesc') {
-                                                        echo 'selected';
-                                                    } ?>>Dégat décroissant</option>
+                    echo 'selected';
+                } ?>>Dégat décroissant</option>
                     </select>
                     <button class="btn btn-light mx-1" formaction="?page=table&table=<?= $id_game ?>&tab=equip" type="submit">Chercher</button>
                 </div>
@@ -597,36 +539,6 @@ if (isset($_GET['type'])) {
             <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
                 <?php
                 $equipfilter = new Filters;
-=======
-                <!--------------------------------- Form filtre equipment ---------------------------------->
-                <form class="p-2 mt-3 mx-2" method="POST">
-                    <div class="d-flex justify-content-start mb-2">
-                        <label class="m-2">Dégats</label>
-                        <input type="number" class="width12 form-control me-1" placeholder="Dégat minimum" name="dMin"
-                            <?php if (isset($_POST['dMin'])) { ?>
-                        <?= 'value="' ?><?= $_POST['dMin'] ?><?= '"' ?> <?php } ?>>
-                        <input type="number" class="width12 form-control me-1" placeholder="Dégat maximum" name="dMax"
-                            <?php if (isset($_POST['dMax'])) { ?>
-                        <?= 'value="' ?><?= $_POST['dMax'] ?><?= '"' ?> <?php } ?>>
-                    </div>
-                    <div class="d-flex justify-content-start">
-                        <label class="m-2">Portée</label>
-                        <input type="number" class="width12 form-control me-1" placeholder="Portée minimum" name="pMin"
-                            <?php if (isset($_POST['pMin'])) { ?>
-                        <?= 'value="' ?><?= $_POST['pMin'] ?><?= '"' ?> <?php } ?>>
-                        <input type="number" class="width12 form-control me-1" placeholder="Portée maximum" name="pMax"
-                            <?php if (isset($_POST['pMax'])) { ?>
-                        <?= 'value="' ?><?= $_POST['pMax'] ?><?= '"' ?> <?php } ?>>
-                        <button class="btn btn-light mx-1"
-                            formaction="?page=table&table=<?= $id_game ?>&tab=equip"
-                            type="submit">Chercher</button>
-                    </div>
-                </form>
-                <!--------------------------------- fin du Form ---------------------------------->
-                <div class="mt-4 mx-2 d-flex flex-wrap align-items-stretch">
-                    <?php
-                $equipfilter = new Filters();
->>>>>>> 59c7819 (dice-launch-charac)
                 if ($unequiped) {
                     if (!empty($_POST['dMax'])) {
                         $unequiped = array_filter($unequiped, function (Equipment $unequip) use ($equipfilter) {
@@ -649,8 +561,7 @@ if (isset($_GET['type'])) {
                         });
                     }
                     foreach ($unequiped as $unequip) {
-<<<<<<< HEAD
-                ?>
+                        ?>
                         <div class="card mx-2 mb-3" style="width: 20%;">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-center">
@@ -661,34 +572,6 @@ if (isset($_GET['type'])) {
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
                                                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-=======
-                        ?>
-                    <div class="card mx-2" style="width: 20%;">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-center">
-                                <h5 class="m-0 d-inline"><?= $unequip->getName() ?>
-                                </h5>
-                                <span class="ms-auto">
-                                    <button class="btn m-1 p-1" data-bs-toggle="modal"
-                                        data-bs-target="#equipmentChangeForm<?= $unequip->getId() ?>">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                            <path
-                                                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                            <path fill-rule="evenodd"
-                                                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-                                        </svg>
-                                    </button>
-                                    <a
-                                        href="?page=table&table=<?= $id_game ?>&type=deleteEquipment&idEquipment=<?= $unequip->getId() ?>"><button
-                                            class="btn m-1 p-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                                <path fill-rule="evenodd"
-                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
->>>>>>> 59c7819 (dice-launch-charac)
                                             </svg>
                                         </button>
                                     </a>
