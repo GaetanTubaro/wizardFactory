@@ -11,12 +11,12 @@ if (isset($_GET['idGame'])) {
         $rolls = $connection->query('SELECT * FROM dice_rolls LEFT JOIN character_sheets ON character_sheets.id = dice_rolls.id_charac WHERE id_game =' . $_GET['idGame'])->fetchAll(PDO::FETCH_CLASS, Dice::class);
     }
 } elseif (isset($_GET['idCharac'])) {
-    $findCharacter = $connection->query('SELECT character_sheets.*, game_character.id_game, games.name as game_name FROM character_sheets LEFT JOIN game_character ON character_sheets.id = game_character.id_game LEFT JOIN games ON games.id = game_character.id_game WHERE character_sheets.id =' . $_GET['idCharac']);
+    $findCharacter = $connection->query('SELECT character_sheets.*, game_character.id_game, game_character.id_user, games.name as game_name FROM character_sheets LEFT JOIN game_character ON character_sheets.id = game_character.id_charac LEFT JOIN games ON games.id = game_character.id_game WHERE character_sheets.id =' . $_GET['idCharac']);
     $findCharacter->setFetchMode(PDO::FETCH_CLASS, Character::class);
     $character = $findCharacter->fetch();
     $game_id = $character->getId_game();
     $game_name = $character->game_name;
-    if ($character->getId() == $_SESSION['id']) {
+    if ($character->getId_user() == $_SESSION['id']) {
         $rolls = $connection->query('SELECT * FROM dice_rolls JOIN character_sheets ON character_sheets.id = dice_rolls.id_charac WHERE id_charac =' . $_GET['idCharac'])->fetchAll(PDO::FETCH_CLASS, Dice::class);
     }
 }?>
