@@ -1,32 +1,32 @@
 <?php
 class Filters
 {
-    protected int $level;
-    protected string $stats;
-    protected int $dMax;
-    protected int $dMin;
-    protected int $pMax;
-    protected int $pMin;
+    protected ?int $level = null;
+    protected ?string $stats = null;
+    protected ?int $dMax = null;
+    protected ?int $dMin = null;
+    protected ?int $pMax = null;
+    protected ?int $pMin = null;
 
     public function __construct()
     {
-        if (!empty($_POST['level'])) {
-            $this->setLevel($_POST['level']);
+        if (isset($_POST['level'])) {
+            $this->setLevel(intval($_POST['level']));
         }
-        if (!empty($_POST['stats'])) {
+        if (isset($_POST['stats'])) {
             $this->setStats($_POST['stats']);
         }
-        if (!empty($_POST['dMax'])) {
-            $this->setDMax($_POST['dMax']);
+        if (isset($_POST['dMax'])) {
+            $this->setDMax(intval($_POST['dMax']));
         }
-        if (!empty($_POST['dMin'])) {
-            $this->setDMin($_POST['dMin']);
+        if (isset($_POST['dMin'])) {
+            $this->setDMin(intval($_POST['dMin']));
         }
-        if (!empty($_POST['pMax'])) {
-            $this->setPMax($_POST['pMax']);
+        if (isset($_POST['pMax'])) {
+            $this->setPMax(intval($_POST['pMax']));
         }
-        if (!empty($_POST['pMin'])) {
-            $this->setPMin($_POST['pMin']);
+        if (isset($_POST['pMin'])) {
+            $this->setPMin(intval($_POST['pMin']));
         }
     }
 
