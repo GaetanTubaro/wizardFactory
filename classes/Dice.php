@@ -7,21 +7,46 @@ class Dice
     protected ?int $id_charac;
     protected array $results;
     protected int $result;
-    protected string $date_roll;
-    const AVAILABLE_SIDES = [2, 4, 6, 8, 10, 12, 20, 100];
+    protected int $date_roll;
+    public const AVAILABLE_SIDES = [2, 4, 6, 8, 10, 12, 20, 100];
+
+    public function __construct(array $infos=[])
+    {
+        if (isset($infos['dice_side'])) {
+            $this->setSides($infos['dice_side']);
+        }
+        if (isset($infos['id_game'])) {
+            $this->setId_game($infos['id_game']);
+        }
+
+        if (isset($infos['results'])) {
+            $this->setResults($infos['results']);
+        }
+        if (isset($infos['result'])) {
+            $this->setResult($infos['result']);
+        }
+        if (isset($infos['date_roll'])) {
+            $this->setDate_roll($infos['date_roll']);
+        }
+        if (isset($infos['id_charac'])) {
+            $this->setId_charac($infos['id_charac']);
+        }
+    }
 
     public function getAvailableSides()
     {
         return self::AVAILABLE_SIDES;
     }
 
-    public function rolls($nbRoll)
+    public function rolls($nbRoll): array
     {
         $arrayRoll = [];
         for ($i = 0; $i < $nbRoll; $i++) {
-            array_push($arrayRoll, rand(1, $this->getSides()));
+            $arrayRoll[] = rand(1, $this->getSides());
         }
         $this->setResults($arrayRoll);
+
+        return $this->getResults();
     }
 
     /**
