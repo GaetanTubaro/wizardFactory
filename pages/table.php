@@ -268,7 +268,7 @@ if (isset($_GET['type'])) {
                     }
                     foreach ($unskilled as $unskill) {
                 ?>
-                        <div class="card mx-2" style="width: 20%;">
+                        <div class="card mx-2 mb-3" style="width: 20%;">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-center">
                                     <h5 class="m-0 d-inline"><?= $unskill->getName() ?>
