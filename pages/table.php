@@ -129,8 +129,30 @@ if (isset($_GET['type'])) {
                 header('Location: ?page=table&table=' . $id_game);
             }
         }
-
-        $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL');
+        if (!empty($_POST['sortEq'])) {
+            switch ($_POST['sortEq']) {
+                case 'nameAsc':
+                    $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL ORDER BY name');
+                    break;
+                case 'nameDesc':
+                    $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL ORDER BY name DESC');
+                    break;
+                case 'rangeAsc':
+                    $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL ORDER BY range_area');
+                    break;
+                case 'rangeDesc':
+                    $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL ORDER BY range_area DESC');
+                    break;
+                case 'damageAsc':
+                    $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL ORDER BY damages');
+                    break;
+                case 'damageDesc':
+                    $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL ORDER BY damages DESC');
+                    break;
+            }
+        } else {
+            $equipTable = $connection->prepare('SELECT * FROM `equipments` JOIN `game_equipment` ON equipments.id = game_equipment.id_equipment WHERE id_charac IS NULL ORDER BY id DESC');
+        }
         $equipTable->execute();
         $unequiped = $equipTable->fetchAll(PDO::FETCH_CLASS, Equipment::class);
 
@@ -434,11 +456,30 @@ if (isset($_GET['type'])) {
                     <label class="m-2">Dégats</label>
                     <input type="number" class="width12 form-control me-1" placeholder="Dégat minimum" name="dMin" <?php if (isset($_POST['dMin'])) { ?> <?= 'value="' ?><?= $_POST['dMin'] ?><?= '"' ?> <?php } ?>>
                     <input type="number" class="width12 form-control me-1" placeholder="Dégat maximum" name="dMax" <?php if (isset($_POST['dMax'])) { ?> <?= 'value="' ?><?= $_POST['dMax'] ?><?= '"' ?> <?php } ?>>
-                </div>
-                <div class="d-flex justify-content-start">
                     <label class="m-2">Portée</label>
                     <input type="number" class="width12 form-control me-1" placeholder="Portée minimum" name="pMin" <?php if (isset($_POST['pMin'])) { ?> <?= 'value="' ?><?= $_POST['pMin'] ?><?= '"' ?> <?php } ?>>
                     <input type="number" class="width12 form-control me-1" placeholder="Portée maximum" name="pMax" <?php if (isset($_POST['pMax'])) { ?> <?= 'value="' ?><?= $_POST['pMax'] ?><?= '"' ?> <?php } ?>>
+                    <select class="form-select width12   me-1" aria-label="Default select example" name="sortEq">
+                        <option value="" selected>Trier par ...</option>
+                        <option value="nameAsc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'nameAsc') {
+                                                    echo 'selected';
+                                                } ?>>Nom croissant</option>
+                        <option value="nameDesc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'nameDesc') {
+                                                        echo 'selected';
+                                                    } ?>>Nom décroissant</option>
+                        <option value="rangeAsc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'rangeAsc') {
+                                                        echo 'selected';
+                                                    } ?>>Portée croissante</option>
+                        <option value="rangeDesc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'rangeDesc') {
+                                                        echo 'selected';
+                                                    } ?>>Portée décroissante</option>
+                        <option value="damageAsc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'damageAsc') {
+                                                        echo 'selected';
+                                                    } ?>>Dégat croissant</option>
+                        <option value="damageDesc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'damageDesc') {
+                                                        echo 'selected';
+                                                    } ?>>Dégat décroissant</option>
+                    </select>
                     <button class="btn btn-light mx-1" formaction="?page=table&table=<?= $id_game ?>&tab=equip" type="submit">Chercher</button>
                 </div>
             </form>
@@ -469,7 +510,7 @@ if (isset($_GET['type'])) {
                     }
                     foreach ($unequiped as $unequip) {
                 ?>
-                        <div class="card mx-2" style="width: 20%;">
+                        <div class="card mx-2 mb-3" style="width: 20%;">
                             <div class="card-body">
                                 <div class="card-title d-flex align-items-center">
                                     <h5 class="m-0 d-inline"><?= $unequip->getName() ?>
