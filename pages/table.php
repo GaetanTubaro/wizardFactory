@@ -10,9 +10,6 @@ $searchGame->execute();
 $game = $searchGame->fetch();
 
 $id_game = $game->getId();
-$gameChar = $connection->prepare('SELECT * FROM `character_sheets` JOIN `game_character` ON  character_sheets.id = game_character.id_charac WHERE id_game =' . $game->getId());
-$gameChar->execute();
-$characters = $gameChar->fetchAll(PDO::FETCH_CLASS, Character::class);
 
 $pocessChar = $connection->prepare('SELECT * FROM `users` JOIN `game_character` ON  users.id = game_character.id_user WHERE id_charac = :id AND id_game =' . $game->getId());
 $pocessChar->setFetchMode(PDO::FETCH_CLASS, Users::class);
@@ -192,6 +189,7 @@ if (isset($_GET['type'])) {
         $skillTable->execute();
         $unskilled = $skillTable->fetchAll(PDO::FETCH_CLASS, Skill::class);
 
+        // -------------------------------- TRI DES PERSO ------------------------------- //
         if (!empty($_POST['sortChar'])) {
             switch ($_POST['sortChar']) {
                 case 'nameAsc':
@@ -206,9 +204,34 @@ if (isset($_GET['type'])) {
                 case 'userDesc':
                     $characTable = $connection->prepare('SELECT character_sheets.*, users.pseudo FROM character_sheets JOIN game_character ON character_sheets.id = game_character.id_charac LEFT JOIN users ON users.id = game_character.id_user WHERE id_game =' . $game->getId() . ' ORDER BY pseudo DESC');
                     break;
+                default:
+                    $characTable = $connection->prepare('SELECT character_sheets.*, users.pseudo FROM character_sheets JOIN game_character ON character_sheets.id = game_character.id_charac LEFT JOIN users ON users.id = game_character.id_user WHERE id_game =' . $game->getId() . ' ORDER BY id');
+                    break;
             }
-            $characTable->execute();
-            $characters = $characTable->fetchAll(PDO::FETCH_CLASS, Character::class);
+        } else {
+            $characTable = $connection->prepare('SELECT character_sheets.*, users.pseudo FROM character_sheets JOIN game_character ON character_sheets.id = game_character.id_charac LEFT JOIN users ON users.id = game_character.id_user WHERE id_game =' . $game->getId() . ' ORDER BY id');
+        }
+        $characTable->execute();
+        $characters = $characTable->fetchAll(PDO::FETCH_CLASS, Character::class);
+        if (!empty($_POST['character_name'])) {
+            $characters = array_filter($characters, function (Character $character) {
+                $occ = strpos(strtolower($character->getName()), strtolower($_POST['character_name']));
+                if ($occ === false) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        }
+        if (!empty($_POST['user_name'])) {
+            $characters = array_filter($characters, function (Character $character) {
+                $occ = strpos(strtolower($character->pseudo), strtolower($_POST['user_name']));
+                if ($occ === false) {
+                    return false;
+                } else {
+                    return true;
+                }
+            });
         }
 ?>
 <div class="container-fluid px-5 mt-4">
@@ -258,21 +281,21 @@ if (isset($_GET['type'])) {
                 <form class="p-2 mt-3 mx-2" method="POST">
                     <div class="d-flex justify-content-start mb-2">
                         <label class="m-2">Nom du personnage</label>
-                        <input type="text" class="width12 form-control me-1" name="character_name" <?php if (isset($_POST['dMin'])) { ?> <?= 'value="' ?><?= $_POST['dMin'] ?><?= '"' ?> <?php } ?>>
+                        <input type="text" class="width12 form-control me-1" name="character_name" <?php if (isset($_POST['character_name'])) { ?> <?= 'value="' ?><?= $_POST['character_name'] ?><?= '"' ?> <?php } ?>>
                         <label class="m-2">Nom du joueur</label>
-                        <input type="text" class="width12 form-control me-1" name="user_name" <?php if (isset($_POST['pMin'])) { ?> <?= 'value="' ?><?= $_POST['pMin'] ?><?= '"' ?> <?php } ?>>
+                        <input type="text" class="width12 form-control me-1" name="user_name" <?php if (isset($_POST['user_name'])) { ?> <?= 'value="' ?><?= $_POST['user_name'] ?><?= '"' ?> <?php } ?>>
                         <select class="form-select width12 ms-5" name="sortChar">
                             <option value="" selected>Trier par ...</option>
-                            <option value="nameAsc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'rangeAsc') {
+                            <option value="nameAsc" <?php if (isset($_POST['sortChar']) && $_POST['sortChar'] == 'nameAsc') {
     echo 'selected';
 } ?>>Personnage A-Z</option>
-                            <option value="nameDesc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'rangeDesc') {
+                            <option value="nameDesc" <?php if (isset($_POST['sortChar']) && $_POST['sortChar'] == 'nameDesc') {
     echo 'selected';
 } ?>>Personnage Z-A</option>
-                            <option value="userAsc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'damageAsc') {
+                            <option value="userAsc" <?php if (isset($_POST['sortChar']) && $_POST['sortChar'] == 'userAsc') {
     echo 'selected';
 } ?>>Joueur A-Z</option>
-                            <option value="userDesc" <?php if (isset($_POST['sortEq']) && $_POST['sortEq'] == 'damageDesc') {
+                            <option value="userDesc" <?php if (isset($_POST['sortChar']) && $_POST['sortChar'] == 'userDesc') {
     echo 'selected';
 } ?>>Joueur Z-A</option>
                         </select>

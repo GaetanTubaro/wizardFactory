@@ -7,6 +7,8 @@ class Filters
     protected ?int $dMin = null;
     protected ?int $pMax = null;
     protected ?int $pMin = null;
+    protected ?string $name = null;
+    protected ?string $user = null;
 
     public function __construct()
     {
@@ -27,6 +29,12 @@ class Filters
         }
         if (isset($_POST['pMin'])) {
             $this->setPMin(intval($_POST['pMin']));
+        }
+        if (isset($_POST['character_name'])) {
+            $this->setName(intval($_POST['character_name']));
+        }
+        if (isset($_POST['user_name'])) {
+            $this->setUser(intval($_POST['user_name']));
         }
     }
 
@@ -146,6 +154,46 @@ class Filters
     public function setPMin($pMin)
     {
         $this->pMin = $pMin;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of user
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @return  self
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the value of name
+     *
+     * @return  self
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
 
         return $this;
     }
