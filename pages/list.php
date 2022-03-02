@@ -62,6 +62,18 @@ if (isset($_GET['action'])) {
                 }
             }
             break;
+            case 'diceLaunch':
+                if (isset($_POST['dice_side']) && isset($_POST['nb_dice'])) {
+                    $nbDice = $_POST['nb_dice'];
+                    $launchDice = array_merge($_POST, ['id_game'=> $_GET['game'], "date_roll" => (new DateTime())->getTimestamp()]);
+                    $diceResult = new Dice($launchDice);
+                    $results = $diceResult->rolls($nbDice);
+                    $insertion = $connection->prepare('INSERT INTO dice_rolls(id_game,sides,result) VALUES ('.$diceResult->getId_game().','.$diceResult->getSides().',?)');
+                    $insertion->bindParam(1, $result);
+                    foreach ($results as $result) {
+                        $insertion->execute();
+                    }
+                }
     }
 }
 
@@ -306,37 +318,36 @@ $findPlayers->bindParam(':id', $game_id);
 
 <div class="modal" id="play<?= $game_id ?>" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <form class="modal-content" name="diceLaunch" method="POST">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Lancer de dés</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form name="diceLaunch" action="" method="POST">
-                    <div class="mb-3">
-                        <h5 class="modal-title">Nombre de dés?</h5>
-                        <input type="number" class="form-control" name="nb_dice" required>
-                    </div>
-                    <div class="mb-3">
-                        <h5 class="modal-title">Nombre de faces?</h5>
-                        <select class="form-select" name="face_dice">
-                            <?php
-                                            foreach (Dice::AVAILABLE_SIDES as $side) {
-                                                ?>
-                            <option value="<?= $side ?>"><?= $side ?>
-                            </option>
-                            <?php
-                                            }
+                <div class="mb-3">
+                    <h5 class="modal-title">Nombre de dés?</h5>
+                    <input type="number" class="form-control" name="nb_dice" required>
+                </div>
+                <div class="mb-3">
+                    <h5 class="modal-title">Nombre de faces?</h5>
+                    <select class="form-select" name="dice_side">
+                        <?php
+                                        foreach (Dice::AVAILABLE_SIDES as $side) {
                                             ?>
-                        </select>
-                    </div>
+                        <option value="<?= $side ?>">
+                            <?= $side ?>
+                        </option>
+                        <?php
+                                        }
+                                        ?>
+                    </select>
+                </div>
             </div>
-            </form>
             <div class="modal-footer">
                 <button
-                    formaction="?page=table&table=<?= $id_game ?>&type=diceLaunch"
-                    type="submit" class="btn btn-primary">ET CA LANCE!!!!!</button>
+                    formaction="?page=list&game=<?= $game_id ?>&action=diceLaunch"
+                    formmethod="POST" type="submit" class="btn btn-primary">ET CA LANCE!!!!!</button>
             </div>
-        </div>
+        </form>
     </div>
 </div>
