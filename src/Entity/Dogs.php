@@ -36,7 +36,7 @@ class Dogs
     #[ORM\Column(type: 'boolean')]
     private $isAdopted;
 
-    #[ORM\OneToMany(mappedBy: 'id_dog', targetEntity: Pictures::class)]
+    #[ORM\OneToMany(mappedBy: 'dog', targetEntity: Pictures::class)]
     private $pictures;
 
     #[ORM\ManyToMany(targetEntity: species::class)]
@@ -46,7 +46,7 @@ class Dogs
     #[ORM\JoinColumn(nullable: false)]
     private $advertisement;
 
-    #[ORM\OneToMany(mappedBy: 'id_dog', targetEntity: Requests::class)]
+    #[ORM\OneToMany(mappedBy: 'dog', targetEntity: Requests::class)]
     private $requests;
 
     public function __construct()
@@ -157,7 +157,7 @@ class Dogs
     {
         if (!$this->pictures->contains($picture)) {
             $this->pictures[] = $picture;
-            $picture->setIdDog($this);
+            $picture->setDog($this);
         }
 
         return $this;
@@ -167,8 +167,8 @@ class Dogs
     {
         if ($this->pictures->removeElement($picture)) {
             // set the owning side to null (unless already changed)
-            if ($picture->getIdDog() === $this) {
-                $picture->setIdDog(null);
+            if ($picture->getDog() === $this) {
+                $picture->setDog(null);
             }
         }
 

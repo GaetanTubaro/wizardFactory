@@ -18,7 +18,7 @@ class Pictures
 
     #[ORM\ManyToOne(targetEntity: dogs::class, inversedBy: 'pictures')]
     #[ORM\JoinColumn(nullable: false)]
-    private $id_dog;
+    private $dog;
 
     public function getId(): ?int
     {
@@ -37,14 +37,14 @@ class Pictures
         return $this;
     }
 
-    public function getIdDog(): ?dogs
+    public function getDog(): ?dogs
     {
-        return $this->id_dog;
+        return $this->dog;
     }
 
-    public function setIdDog(?dogs $id_dog): self
+    public function setDog(?dogs $dog): self
     {
-        $this->id_dog = $id_dog;
+        $this->dog = $dog;
 
         return $this;
     }
