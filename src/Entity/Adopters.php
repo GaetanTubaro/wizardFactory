@@ -34,7 +34,7 @@ class Adopters extends User
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $gotAnimals;
 
-    #[ORM\OneToMany(mappedBy: 'id_adopter', targetEntity: Requests::class)]
+    #[ORM\OneToMany(mappedBy: 'adopter', targetEntity: Requests::class)]
     private $requests;
 
     public function __construct()
@@ -150,7 +150,7 @@ class Adopters extends User
     {
         if (!$this->requests->contains($requests)) {
             $this->requests[] = $requests;
-            $requests->setIdAdopter($this);
+            $requests->setAdopter($this);
         }
 
         return $this;
@@ -160,8 +160,8 @@ class Adopters extends User
     {
         if ($this->requests->removeElement($requests)) {
             // set the owning side to null (unless already changed)
-            if ($requests->getIdAdopter() === $this) {
-                $requests->setIdAdopter(null);
+            if ($requests->getAdopter() === $this) {
+                $requests->setAdopter(null);
             }
         }
 

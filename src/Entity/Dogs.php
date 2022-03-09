@@ -223,7 +223,7 @@ class Dogs
     {
         if (!$this->requests->contains($request)) {
             $this->requests[] = $request;
-            $request->setIdDog($this);
+            $request->setDog($this);
         }
 
         return $this;
@@ -233,8 +233,8 @@ class Dogs
     {
         if ($this->requests->removeElement($request)) {
             // set the owning side to null (unless already changed)
-            if ($request->getIdDog() === $this) {
-                $request->setIdDog(null);
+            if ($request->getDog() === $this) {
+                $request->setDog(null);
             }
         }
 

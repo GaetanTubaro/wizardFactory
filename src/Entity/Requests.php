@@ -17,18 +17,18 @@ class Requests
 
     #[ORM\ManyToOne(targetEntity: adopters::class, inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
-    private $id_adopter;
+    private $adopter;
 
     #[ORM\ManyToOne(targetEntity: dogs::class, inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
-    private $id_dog;
+    private $dog;
 
     #[ORM\OneToMany(mappedBy: 'request', targetEntity: messages::class)]
-    private $id_message;
+    private $message;
 
     public function __construct()
     {
-        $this->id_message = new ArrayCollection();
+        $this->message = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -36,26 +36,26 @@ class Requests
         return $this->id;
     }
 
-    public function getIdAdopter(): ?adopters
+    public function getAdopter(): ?adopters
     {
-        return $this->id_adopter;
+        return $this->adopter;
     }
 
-    public function setIdAdopter(?adopters $id_adopter): self
+    public function setAdopter(?adopters $adopter): self
     {
-        $this->id_adopter = $id_adopter;
+        $this->adopter = $adopter;
 
         return $this;
     }
 
-    public function getIdDog(): ?dogs
+    public function getDog(): ?dogs
     {
-        return $this->id_dog;
+        return $this->dog;
     }
 
-    public function setIdDog(?dogs $id_dog): self
+    public function setDog(?dogs $dog): self
     {
-        $this->id_dog = $id_dog;
+        $this->dog = $dog;
 
         return $this;
     }
@@ -63,27 +63,27 @@ class Requests
     /**
      * @return Collection<int, messages>
      */
-    public function getIdMessage(): Collection
+    public function getMessage(): Collection
     {
-        return $this->id_message;
+        return $this->message;
     }
 
-    public function addIdMessage(messages $idMessage): self
+    public function addMessage(messages $Message): self
     {
-        if (!$this->id_message->contains($idMessage)) {
-            $this->id_message[] = $idMessage;
-            $idMessage->setRequest($this);
+        if (!$this->message->contains($Message)) {
+            $this->message[] = $Message;
+            $Message->setRequest($this);
         }
 
         return $this;
     }
 
-    public function removeIdMessage(messages $idMessage): self
+    public function removeMessage(messages $Message): self
     {
-        if ($this->id_message->removeElement($idMessage)) {
+        if ($this->message->removeElement($Message)) {
             // set the owning side to null (unless already changed)
-            if ($idMessage->getRequest() === $this) {
-                $idMessage->setRequest(null);
+            if ($Message->getRequest() === $this) {
+                $Message->setRequest(null);
             }
         }
 

@@ -25,7 +25,7 @@ class Messages
     #[ORM\Column(type: 'boolean')]
     private $isRead;
 
-    #[ORM\ManyToOne(targetEntity: Requests::class, inversedBy: 'id_message')]
+    #[ORM\ManyToOne(targetEntity: Requests::class, inversedBy: 'message')]
     #[ORM\JoinColumn(nullable: false)]
     private $request;
 
