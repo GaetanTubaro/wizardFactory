@@ -6,6 +6,7 @@ use App\Entity\Adopters;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use DateTime;
 
 class AdoptersFixtures extends Fixture
 {
@@ -89,6 +90,23 @@ class AdoptersFixtures extends Fixture
             "Shiryolo",
             "Ludicolo"
         ];
+        $adoptersCreationDate = [
+        new DateTime('2020-11-25'),
+        new DateTime('2020-10-20'),
+        new DateTime('2020-06-22'),
+        new DateTime('2020-03-02'),
+        new DateTime('2020-01-09'),
+        new DateTime('2020-09-30')
+        ];
+        $adoptersIsAdmin = [
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+        ];
+        $adoptersRoles = [];
         $adoptersRequest = [];
         for ($i = 0; $i<6;$i++) {
             $adopter = new Adopters();
@@ -96,7 +114,6 @@ class AdoptersFixtures extends Fixture
             $adopter->setPassword(
                 $this->hasher->hashPassword($adopter, "1234")
             );
-            $adopter->setUsername($adoptersUsername[$i]);
             $adopter->setMail($adoptersMail[$i]);
             $adopter->setPhone($adoptersPhone[$i]);
             $adopter->setCity($adoptersCity[$i]);
@@ -105,6 +122,10 @@ class AdoptersFixtures extends Fixture
             $adopter->setSurname($adpotersSurname[$i]);
             $adopter->setChild($adoptersChild[$i]);
             $adopter->setGotAnimals($adoptersGotAnimals[$i]);
+            $adopter->setUsername($adoptersUsername[$i]);
+            $adopter->setCreationDate($adoptersCreationDate[$i]);
+            $adopter->setIsAdmin($adoptersIsAdmin[$i]);
+            $adopter->setRoles($adoptersRoles);
 
             $manager->persist($adopter);
         }
