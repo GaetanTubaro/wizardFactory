@@ -39,7 +39,7 @@ class Dogs
     #[ORM\OneToMany(mappedBy: 'dog', targetEntity: Pictures::class)]
     private $pictures;
 
-    #[ORM\ManyToMany(targetEntity: species::class)]
+    #[ORM\ManyToMany(targetEntity: Species::class)]
     private $dog_species;
 
     #[ORM\ManyToOne(targetEntity: Advertisements::class, inversedBy: 'advertisement_dogs')]
@@ -176,14 +176,14 @@ class Dogs
     }
 
     /**
-     * @return Collection<int, species>
+     * @return Collection<int, Species>
      */
     public function getDogSpecies(): Collection
     {
         return $this->dog_species;
     }
 
-    public function addDogSpecies(species $dogSpecies): self
+    public function addDogSpecies(Species $dogSpecies): self
     {
         if (!$this->dog_species->contains($dogSpecies)) {
             $this->dog_species[] = $dogSpecies;
@@ -192,7 +192,7 @@ class Dogs
         return $this;
     }
 
-    public function removeDogSpecies(species $dogSpecies): self
+    public function removeDogSpecies(Species $dogSpecies): self
     {
         $this->dog_species->removeElement($dogSpecies);
 

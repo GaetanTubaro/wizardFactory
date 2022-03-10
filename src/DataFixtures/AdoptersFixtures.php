@@ -81,6 +81,14 @@ class AdoptersFixtures extends Fixture
             false,
             true
         ];
+        $adoptersUsername = [
+            "Obalmaské",
+            "Memekoukouy",
+            "Ekky",
+            "Kaider",
+            "Shiryolo",
+            "Ludicolo"
+        ];
         $adoptersRequest = [];
         for ($i = 0; $i<6;$i++) {
             $adopter = new Adopters();
@@ -88,7 +96,7 @@ class AdoptersFixtures extends Fixture
             $adopter->setPassword(
                 $this->hasher->hashPassword($adopter, "1234")
             );
-
+            $adopter->setUsername($adoptersUsername[$i]);
             $adopter->setMail($adoptersMail[$i]);
             $adopter->setPhone($adoptersPhone[$i]);
             $adopter->setCity($adoptersCity[$i]);
