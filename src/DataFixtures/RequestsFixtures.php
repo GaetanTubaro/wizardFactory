@@ -8,7 +8,6 @@ use App\Repository\DogsRepository;
 use App\Repository\MessagesRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\HttpFoundation\Request;
 
 class RequestsFixtures extends Fixture
 {
@@ -22,6 +21,7 @@ class RequestsFixtures extends Fixture
         $this->dogsRepository = $dogsRepository;
         $this->messagesRepository = $messagesRepository;
     }
+
     public function load(ObjectManager $manager)
     {
         $adopters = $this->adoptersRepository->findAll();
@@ -44,5 +44,12 @@ class RequestsFixtures extends Fixture
         }
 
         $manager->flush();
+    }
+
+    public function getDependencies()
+    {
+        return [
+            AdoptersFixtures::class, DogsFixtures::class, MessagesFixtures::class
+        ];
     }
 }
