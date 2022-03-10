@@ -8,8 +8,9 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use App\Repository\AdvertisementsRepository;
 use App\Repository\SpeciesRepository;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class DogsFixtures extends Fixture
+class DogsFixtures extends Fixture implements DependentFixtureInterface
 {
     protected $advertisementsRepository;
     protected $speciesRepository;
@@ -96,16 +97,11 @@ class DogsFixtures extends Fixture
         }
         $manager->flush();
     }
-    public function getSpeciesDependencies()
+    
+    public function getDependencies()
     {
         return [
-            SpeciesFixtures::class,
-        ];
-    }
-    public function getAdsDependencies()
-    {
-        return [
-            AdvertisementsFixtures::class,
+            AdvertisementsFixtures::class, SpeciesFixtures::class,
         ];
     }
 }

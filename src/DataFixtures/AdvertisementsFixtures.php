@@ -22,15 +22,15 @@ class AdvertisementsFixtures extends Fixture implements DependentFixtureInterfac
     {
         $associations = $this->associationsRepository->findAll();
 
-        $ad1 = new Advertisements();
-        $RandNb = mt_rand(0, count($associations) -1);
+        $ad1 = new Advertisements;
+        $RandNb = mt_rand(0, count($associations)-1);
         $ad1->setTitle("Chiens à adopter")
         ->setCreationDate(new DateTime())
         ->setAssociation($associations[$RandNb]);
         $manager->persist($ad1);
 
-        $ad2 = new Advertisements();
-        $RandNb = mt_rand(0, count($associations) -1);
+        $ad2 = new Advertisements;
+        $RandNb = mt_rand(0, count($associations)-1);
         $ad2->setTitle("Boules de poil cherchent foyers confortables")
         ->setCreationDate(new DateTime())
         ->setAssociation($associations[$RandNb]);

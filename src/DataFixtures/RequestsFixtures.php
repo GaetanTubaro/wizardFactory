@@ -7,9 +7,10 @@ use App\Repository\AdoptersRepository;
 use App\Repository\DogsRepository;
 use App\Repository\MessagesRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class RequestsFixtures extends Fixture
+class RequestsFixtures extends Fixture implements DependentFixtureInterface
 {
     protected $adoptersRepository;
     protected $dogsRepository;
