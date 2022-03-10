@@ -5,7 +5,6 @@ namespace App\DataFixtures;
 use App\Entity\Requests;
 use App\Repository\AdoptersRepository;
 use App\Repository\DogsRepository;
-use App\Repository\MessagesRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -16,18 +15,16 @@ class RequestsFixtures extends Fixture implements DependentFixtureInterface
     protected $dogsRepository;
     protected $messageRepository;
 
-    public function __construct(AdoptersRepository $adoptersRepository, DogsRepository $dogsRepository, MessagesRepository $messagesRepository)
+    public function __construct(AdoptersRepository $adoptersRepository, DogsRepository $dogsRepository)
     {
         $this->adoptersRepository = $adoptersRepository;
         $this->dogsRepository = $dogsRepository;
-        $this->messagesRepository = $messagesRepository;
     }
 
     public function load(ObjectManager $manager)
     {
         $adopters = $this->adoptersRepository->findAll();
         $dogs = $this->dogsRepository->findAll();
-        $messages = $this->messagesRepository->findAll();
 
         for ($i = 0; $i < 6; $i++) {
             $request = new Requests();
@@ -38,9 +35,6 @@ class RequestsFixtures extends Fixture implements DependentFixtureInterface
             $randomNumber = mt_rand(0, count($dogs) - 1);
             $request->setDog($dogs[$randomNumber]);
 
-            $randomNumber = mt_rand(0, count($messages) - 1);
-            $request->addMessage($messages[$randomNumber]);
-
             $manager->persist($request);
         }
 
@@ -50,7 +44,7 @@ class RequestsFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            AdoptersFixtures::class, DogsFixtures::class, MessagesFixtures::class
+            AdoptersFixtures::class, DogsFixtures::class
         ];
     }
 }

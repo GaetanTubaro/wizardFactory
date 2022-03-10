@@ -126,6 +126,7 @@ class AdoptersFixtures extends Fixture
             $adopter->setCreationDate($adoptersCreationDate[$i]);
             $adopter->setIsAdmin($adoptersIsAdmin[$i]);
             $adopter->setRoles($adoptersRoles);
+            $adopter->discr = 'adoptant';
 
             $manager->persist($adopter);
         }

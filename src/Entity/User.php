@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "discr", type: "string")]
-#[ORM\DiscriminatorMap(["adoptant" => "Adopters", "association" => "Associations"])]
+#[ORM\DiscriminatorMap(["adoptant" => "Adopters", "association" => "Associations", "user" => "User"])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface

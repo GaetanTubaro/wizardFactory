@@ -45,6 +45,7 @@ class DogsFixtures extends Fixture implements DependentFixtureInterface
             'dflkmohqohfdfqfqjd',
             'dfodsqddfqfqhqohfqjd',
             'dfsdqoghjlkhqohfqjd',
+            'lkgdjgjdhgkdjklg',
         ];
         $dogIsLOF = [
             true,
@@ -78,8 +79,8 @@ class DogsFixtures extends Fixture implements DependentFixtureInterface
             new DateTime(),
             new DateTime(),
         ];
-        $ads = $this->AdvertisementsRepository->findAll();
-        $species = $this->SpeciesRepository->findAll();
+        $ads = $this->advertisementsRepository->findAll();
+        $species = $this->speciesRepository->findAll();
         for ($i = 0; $i <= 5; $i++) {
             $dog = new Dogs();
             $dog->setName($dogNames[$i]);

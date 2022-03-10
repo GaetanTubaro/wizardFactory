@@ -27,6 +27,7 @@ class AssociationsFixtures extends Fixture
         $asso1->setCreationDate(new DateTime());
         $asso1->setName("30 Millions d'Amis");
         $asso1->setIsAdmin(false);
+        $asso1->discr = 'association';
         $manager->persist($asso1);
 
         $asso2 = new Associations;
@@ -37,6 +38,7 @@ class AssociationsFixtures extends Fixture
         $asso2->setCreationDate(new DateTime());
         $asso2->setName("Husky Addicts");
         $asso2->setIsAdmin(false);
+        $asso2->discr = 'association';
         $manager->persist($asso2);
 
         $asso3 = new Associations;
@@ -47,6 +49,7 @@ class AssociationsFixtures extends Fixture
         $asso3->setCreationDate(new DateTime());
         $asso3->setName("SPA Marennes");
         $asso3->setIsAdmin(false);
+        $asso3->discr = 'association';
         $manager->persist($asso3);
 
         $manager->flush();

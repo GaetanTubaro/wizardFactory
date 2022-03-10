@@ -23,7 +23,7 @@ class Requests
     #[ORM\JoinColumn(nullable: false)]
     private $dog;
 
-    #[ORM\OneToMany(mappedBy: 'request', targetEntity: messages::class)]
+    #[ORM\OneToMany(mappedBy: 'request', targetEntity: Messages::class)]
     private $message;
 
     public function __construct()
@@ -61,14 +61,14 @@ class Requests
     }
 
     /**
-     * @return Collection<int, messages>
+     * @return Collection<int, Messages>
      */
     public function getMessage(): Collection
     {
         return $this->message;
     }
 
-    public function addMessage(messages $Message): self
+    public function addMessage(Messages $Message): self
     {
         if (!$this->message->contains($Message)) {
             $this->message[] = $Message;
@@ -78,7 +78,7 @@ class Requests
         return $this;
     }
 
-    public function removeMessage(messages $Message): self
+    public function removeMessage(Messages $Message): self
     {
         if ($this->message->removeElement($Message)) {
             // set the owning side to null (unless already changed)
