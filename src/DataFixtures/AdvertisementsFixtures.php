@@ -10,16 +10,16 @@ use Doctrine\Persistence\ObjectManager;
 
 class AdvertisementsFixtures extends Fixture
 {
-    protected $AssociationsRepository;
+    protected $associationsRepository;
     
-    public function __construct(AssociationsRepository $AssociationsRepository)
+    public function __construct(AssociationsRepository $associationsRepository)
     {
-        $this->AssociationsRepository = $AssociationsRepository;
+        $this->associationsRepository = $associationsRepository;
     }
 
     public function load(ObjectManager $manager)
     {
-        $associations = $this->AssociationsRepository->findAll();
+        $associations = $this->associationsRepository->findAll();
 
         $ad1 = new Advertisements;
         $RandNb = mt_rand(0, count($associations) -1);
