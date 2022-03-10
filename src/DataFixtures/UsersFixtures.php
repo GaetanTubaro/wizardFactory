@@ -35,7 +35,10 @@ class UsersFixtures extends Fixture
             );
             $user->setCreationDate($tabUsers[$i][3]);
             $user->setIsAdmin($tabUsers[$i][4]);
+<<<<<<< HEAD
             $user->discr = 'user';
+=======
+>>>>>>> 924a1cc (creation fixtures)
             $manager->persist($user);
         }
         $manager->flush();
