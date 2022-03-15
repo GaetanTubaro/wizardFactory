@@ -6,14 +6,17 @@ use App\Repository\AssociationsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: AssociationsRepository::class)]
 class Associations extends User
 {
+    
+    #[Groups(['read:Advertisement'])]
     #[ORM\Column(type: 'string', length: 50)]
     private $name;
 
-    #[ORM\OneToMany(mappedBy: 'association', targetEntity: advertisements::class)]
+    #[ORM\OneToMany(mappedBy: 'association', targetEntity: Advertisements::class)]
     private $asso_ad;
 
     public function __construct()
@@ -34,14 +37,14 @@ class Associations extends User
     }
 
     /**
-     * @return Collection<int, advertisements>
+     * @return Collection<int, Advertisements>
      */
     public function getAssoAd(): Collection
     {
         return $this->asso_ad;
     }
 
-    public function addAssoAd(advertisements $assoAd): self
+    public function addAssoAd(Advertisements $assoAd): self
     {
         if (!$this->asso_ad->contains($assoAd)) {
             $this->asso_ad[] = $assoAd;
@@ -51,7 +54,7 @@ class Associations extends User
         return $this;
     }
 
-    public function removeAssoAd(advertisements $assoAd): self
+    public function removeAssoAd(Advertisements $assoAd): self
     {
         if ($this->asso_ad->removeElement($assoAd)) {
             // set the owning side to null (unless already changed)

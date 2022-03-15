@@ -4,7 +4,10 @@ namespace App\Entity;
 
 use App\Repository\SpeciesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use APIPlatform\Core\Annotation\APIResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource()]
 #[ORM\Entity(repositoryClass: SpeciesRepository::class)]
 class Species
 {
@@ -13,6 +16,7 @@ class Species
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Groups(["read:Dog", 'read:Advertisement'])]
     #[ORM\Column(type: 'string', length: 25)]
     private $name;
 

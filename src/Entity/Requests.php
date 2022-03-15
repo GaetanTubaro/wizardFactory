@@ -15,11 +15,11 @@ class Requests
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: adopters::class, inversedBy: 'requests')]
+    #[ORM\ManyToOne(targetEntity: Adopters::class, inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
     private $adopter;
 
-    #[ORM\ManyToOne(targetEntity: dogs::class, inversedBy: 'requests')]
+    #[ORM\ManyToOne(targetEntity: Dogs::class, inversedBy: 'requests')]
     #[ORM\JoinColumn(nullable: false)]
     private $dog;
 
@@ -36,24 +36,24 @@ class Requests
         return $this->id;
     }
 
-    public function getAdopter(): ?adopters
+    public function getAdopter(): ?Adopters
     {
         return $this->adopter;
     }
 
-    public function setAdopter(?adopters $adopter): self
+    public function setAdopter(?Adopters $adopter): self
     {
         $this->adopter = $adopter;
 
         return $this;
     }
 
-    public function getDog(): ?dogs
+    public function getDog(): ?Dogs
     {
         return $this->dog;
     }
 
-    public function setDog(?dogs $dog): self
+    public function setDog(?Dogs $dog): self
     {
         $this->dog = $dog;
 

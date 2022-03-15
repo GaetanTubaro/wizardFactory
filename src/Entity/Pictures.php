@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PicturesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PicturesRepository::class)]
 class Pictures
@@ -13,10 +14,11 @@ class Pictures
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Groups(['read:Advertisement', 'read:Dog'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $path;
 
-    #[ORM\ManyToOne(targetEntity: dogs::class, inversedBy: 'pictures')]
+    #[ORM\ManyToOne(targetEntity: Dogs::class, inversedBy: 'pictures')]
     #[ORM\JoinColumn(nullable: false)]
     private $dog;
 
@@ -37,12 +39,12 @@ class Pictures
         return $this;
     }
 
-    public function getDog(): ?dogs
+    public function getDog(): ?Dogs
     {
         return $this->dog;
     }
 
-    public function setDog(?dogs $dog): self
+    public function setDog(?Dogs $dog): self
     {
         $this->dog = $dog;
 

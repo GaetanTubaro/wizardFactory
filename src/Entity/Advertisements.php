@@ -6,30 +6,39 @@ use App\Repository\AdvertisementsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use APIPlatform\Core\Annotation\APIResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(normalizationContext: ['groups' => ['read:Advertisement']])]
 #[ORM\Entity(repositoryClass: AdvertisementsRepository::class)]
 class Advertisements
 {
+    #[Groups(['read:Advertisement'])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
-
+    
+    #[Groups(['read:Advertisement'])]
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
+    #[Groups(['read:Advertisement'])]
     #[ORM\Column(type: 'date')]
     private $creation_date;
 
+    #[Groups(['read:Advertisement'])]
     #[ORM\Column(type: 'date', nullable: true)]
     private $modification_date;
 
     #[ORM\Column(type: 'date', nullable: true)]
     private $suppression_date;
 
-    #[ORM\OneToMany(mappedBy: 'advertisement', targetEntity: dogs::class)]
+    #[Groups(['read:Advertisement'])]
+    #[ORM\OneToMany(mappedBy: 'advertisement', targetEntity: Dogs::class)]
     private $advertisement_dogs;
 
+    #[Groups(['read:Advertisement'])]
     #[ORM\ManyToOne(targetEntity: Associations::class, inversedBy: 'asso_ad')]
     #[ORM\JoinColumn(nullable: false)]
     private $association;
@@ -93,14 +102,14 @@ class Advertisements
     }
 
     /**
-     * @return Collection<int, dogs>
+     * @return Collection<int, Dogs>
      */
     public function getAdvertisementDogs(): Collection
     {
         return $this->advertisement_dogs;
     }
 
-    public function addAdvertisementDog(dogs $advertisementDog): self
+    public function addAdvertisementDog(Dogs $advertisementDog): self
     {
         if (!$this->advertisement_dogs->contains($advertisementDog)) {
             $this->advertisement_dogs[] = $advertisementDog;
@@ -110,7 +119,7 @@ class Advertisements
         return $this;
     }
 
-    public function removeAdvertisementDog(dogs $advertisementDog): self
+    public function removeAdvertisementDog(Dogs $advertisementDog): self
     {
         if ($this->advertisement_dogs->removeElement($advertisementDog)) {
             // set the owning side to null (unless already changed)

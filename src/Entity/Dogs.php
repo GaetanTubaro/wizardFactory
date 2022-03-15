@@ -6,42 +6,55 @@ use App\Repository\DogsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use APIPlatform\Core\Annotation\APIResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(normalizationContext: ['groups' => ['read:Dog']])]
 #[ORM\Entity(repositoryClass: DogsRepository::class)]
 class Dogs
 {
+    #[Groups(["read:Dog"])]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Groups(["read:Dog", 'read:Advertisement'])]
     #[ORM\Column(type: 'string', length: 30)]
     private $name;
 
+    #[Groups(["read:Dog", "read:Advertisement"])]
     #[ORM\Column(type: 'date')]
     private $birth_date;
 
+    #[Groups(["read:Dog", "read:Advertisement"])]
     #[ORM\Column(type: 'text', nullable: true)]
     private $past;
 
+    #[Groups(["read:Dog", "read:Advertisement"])]
     #[ORM\Column(type: 'text', nullable: true)]
     private $description;
 
+    #[Groups(["read:Dog", "read:Advertisement"])]
     #[ORM\Column(type: 'boolean')]
     private $isLOF;
 
+    #[Groups(["read:Dog", "read:Advertisement"])]
     #[ORM\Column(type: 'boolean')]
     private $otherAnimals;
 
+    #[Groups(["read:Dog", "read:Advertisement"])]
     #[ORM\Column(type: 'boolean')]
     private $isAdopted;
 
+    #[Groups(["read:Dog", "read:Advertisement"])]
     #[ORM\OneToMany(mappedBy: 'dog', targetEntity: Pictures::class)]
     private $pictures;
 
+    #[Groups(["read:Dog", "read:Advertisement"])]
     #[ORM\ManyToMany(targetEntity: Species::class)]
     private $dog_species;
-
+    
     #[ORM\ManyToOne(targetEntity: Advertisements::class, inversedBy: 'advertisement_dogs')]
     #[ORM\JoinColumn(nullable: false)]
     private $advertisement;
