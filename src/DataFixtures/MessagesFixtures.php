@@ -20,7 +20,7 @@ class MessagesFixtures extends Fixture
             5 => [new DateTime(), false, 'qldhhshsqldlhsidhzlandlqkhm'],
             6 => [new DateTime('2021-02-20'), true, 'qspdhqsdqsdhqlkdlqkhdlqklhl']
         ];
-        for ($i = 0; $i <= 6; $i++) {
+        for ($i = 0; $i < count($tabMessages); $i++) {
             $message = new Messages;
             $message->setCreationDate($tabMessages[$i][0]);
             $message->setIsRead($tabMessages[$i][1]);

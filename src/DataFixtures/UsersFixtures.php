@@ -26,7 +26,7 @@ class UsersFixtures extends Fixture
             2 => ['Ekki', ['ROLE_ADMIN'], 'hooty', new DateTime('2021-09-30'), true],
             3 => ['Shiryoa', ['ROLE_ADMIN'], 'mekouy', new DateTime(), true],
         ];
-        for ($i = 0; $i <= 1; $i++) {
+        for ($i = 0; $i < count($tabUsers); $i++) {
             $user = new User;
             $user->setUsername($tabUsers[$i][0]);
             $user->setRoles($tabUsers[$i][1]);
